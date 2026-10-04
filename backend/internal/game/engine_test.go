@@ -381,6 +381,8 @@ func TestPlayCard_DrawTwo_NextPlayerDraws(t *testing.T) {
 func TestDrawCard_BasicDraw(t *testing.T) {
 	g, pis := newTestGame(2)
 	p0 := pis[0].ID
+	g.CurrentPlayerIndex = 0
+	g.DrawPenalty = 0
 
 	handSizeBefore := len(g.Players[0].Hand)
 	card, err := g.DrawCard(p0)
@@ -394,6 +396,7 @@ func TestDrawCard_BasicDraw(t *testing.T) {
 func TestDrawCard_NotYourTurn(t *testing.T) {
 	g, pis := newTestGame(2)
 	p1 := pis[1].ID
+	g.CurrentPlayerIndex = 0
 
 	_, err := g.DrawCard(p1)
 	assert.ErrorIs(t, err, ErrNotYourTurn)
@@ -696,6 +699,7 @@ func TestApplyAction_DrawCard(t *testing.T) {
 	g, pis := newTestGame(2)
 	p0 := pis[0].ID
 	g.CurrentPlayerIndex = 0
+	g.DrawPenalty = 0
 	handBefore := len(g.Players[0].Hand)
 
 	err := g.ApplyAction(Action{
@@ -777,6 +781,7 @@ func TestTallyScores_WinnerGetsOpponentPoints(t *testing.T) {
 func TestVersion_IncrementsOnActions(t *testing.T) {
 	g, pis := newTestGame(2)
 	p0 := pis[0].ID
+	g.CurrentPlayerIndex = 0
 
 	v := g.Version
 	_, err := g.DrawCard(p0)
@@ -954,6 +959,7 @@ func TestPlayCard_ReverseFlipsDirection(t *testing.T) {
 	setTopCard(g, newCard(ColorYellow, CardTypeNumber, 1))
 	g.CurrentPlayerIndex = 0
 	g.CurrentColor = ColorYellow
+	g.Direction = DirectionClockwise
 
 	rev := newCard(ColorYellow, CardTypeReverse, 20)
 	clearHand(g, p0)
