@@ -1,7 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'card.dart';
-import 'game_state.dart';
-import 'player.dart';
+import 'package:wilddeck/core/models/card.dart';
+import 'package:wilddeck/core/models/game_state.dart';
+import 'package:wilddeck/core/models/player.dart';
 
 part 'message.freezed.dart';
 part 'message.g.dart';

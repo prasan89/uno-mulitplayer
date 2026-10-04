@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'core/router/wilddeck_router.dart';
-import 'shared/theme/wilddeck_theme.dart';
+import 'package:wilddeck/core/router/wilddeck_router.dart';
+import 'package:wilddeck/shared/theme/wilddeck_theme.dart';
 
 class WildDeckApp extends ConsumerWidget {
   const WildDeckApp({super.key});

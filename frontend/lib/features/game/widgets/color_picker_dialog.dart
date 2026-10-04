@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'card_widget.dart';
+import 'package:wilddeck/features/game/widgets/card_widget.dart';
 
 class ColorPickerDialog extends StatelessWidget {
   const ColorPickerDialog({super.key});

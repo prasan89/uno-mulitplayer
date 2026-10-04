@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'card_widget.dart';
+import 'package:wilddeck/features/game/widgets/card_widget.dart';
 
 class PlayerHand extends StatelessWidget {
   final List<WildCard> cards;

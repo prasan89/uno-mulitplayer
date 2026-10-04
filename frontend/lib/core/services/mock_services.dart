@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'wilddeck_services.dart';
+import 'package:wilddeck/core/services/wilddeck_services.dart';
 
 // ─── Mock Player Service ──────────────────────────────────────────────────────
 

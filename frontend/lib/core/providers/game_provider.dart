@@ -8,7 +8,7 @@ import 'package:wilddeck/core/models/game_state.dart';
 import 'package:wilddeck/core/models/message.dart';
 import 'package:wilddeck/core/network/api_client.dart';
 import 'package:wilddeck/core/network/websocket_client.dart';
-import 'auth_provider.dart';
+import 'package:wilddeck/core/providers/auth_provider.dart';
 
 // ---------------------------------------------------------------------------
 // Providers
