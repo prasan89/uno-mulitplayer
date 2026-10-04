@@ -12,16 +12,16 @@ class ProfileScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final player = ref.watch(currentPlayerProvider) ?? const WildDeckPlayer(
       id: 'mock', displayName: 'WildAce',
-      level: 7, xp: 630, xpToNextLevel: 1000,
+      level: 7, xp: 630,
       coins: 2400, gems: 45, wins: 42, losses: 18,
     );
 
     return Scaffold(
-      body: Container(
+      body: DecoratedBox(
         decoration: const BoxDecoration(gradient: WildDeckTheme.backgroundGradient),
         child: SafeArea(
           child: CustomScrollView(slivers: [
-            SliverToBoxAdapter(child: const WildDeckTopBar(title: 'Profile')),
+            const SliverToBoxAdapter(child: WildDeckTopBar(title: 'Profile')),
             SliverToBoxAdapter(child: _ProfileHero(player: player)),
             SliverToBoxAdapter(child: _StatsGrid(player: player)),
             SliverToBoxAdapter(child: _AchievementsSection()),

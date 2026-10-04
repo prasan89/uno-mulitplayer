@@ -16,12 +16,12 @@ class HomeScreen extends ConsumerWidget {
     final player = ref.watch(currentPlayerProvider);
     final mock = player ?? const WildDeckPlayer(
       id: 'mock', displayName: 'WildAce',
-      level: 7, xp: 630, xpToNextLevel: 1000, coins: 2400, gems: 45,
+      level: 7, xp: 630, coins: 2400, gems: 45,
       wins: 42, losses: 18,
     );
 
     return Scaffold(
-      body: Container(
+      body: DecoratedBox(
         decoration: const BoxDecoration(gradient: WildDeckTheme.backgroundGradient),
         child: SafeArea(
           child: CustomScrollView(
@@ -96,8 +96,8 @@ class _GemBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
           colors: [WildDeckTheme.cardWild, Color(0xFF4527A0)],
         ),
         borderRadius: WildDeckTheme.radiusSmall,
@@ -188,7 +188,7 @@ class _CardFanDecoration extends StatelessWidget {
                 decoration: BoxDecoration(
                   gradient: WildDeckTheme.cardGradient(color),
                   borderRadius: BorderRadius.circular(6),
-                  border: Border.all(color: Colors.white.withValues(alpha: 0.3), width: 1),
+                  border: Border.all(color: Colors.white.withValues(alpha: 0.3)),
                   boxShadow: WildDeckTheme.cardShadow(color),
                 ),
               ),
@@ -220,7 +220,7 @@ class _QuickStatsRow extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 6),
-          XPBar(xp: player.xp, xpToNext: player.xpToNextLevel, height: 5, showLabel: false),
+          XPBar(xp: player.xp, xpToNext: player.xpToNextLevel, height: 5),
           const SizedBox(height: 4),
           Text('${player.xp} / ${player.xpToNextLevel} XP to Lv.${player.level + 1}',
             style: const TextStyle(color: WildDeckTheme.textMuted, fontSize: 11)),
@@ -250,7 +250,7 @@ class _SectionGrid extends StatelessWidget {
             mainAxisSpacing: 12,
             crossAxisSpacing: 12,
             childAspectRatio: 1.1,
-            children: [
+            children: const [
               _GridTile(icon: Icons.people_alt_rounded, label: 'Friends',  color: WildDeckTheme.cardBlue,   route: WildRoutes.friends),
               _GridTile(icon: Icons.event_rounded,      label: 'Events',   color: WildDeckTheme.cardRed,    route: null),
               _GridTile(icon: Icons.assignment_rounded, label: 'Missions', color: WildDeckTheme.cardGreen,  route: WildRoutes.missions),
@@ -280,7 +280,7 @@ class _GridTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: route != null ? () => context.go(route!) : null,
-      child: Container(
+      child: DecoratedBox(
         decoration: BoxDecoration(
           color: WildDeckTheme.navySurface,
           borderRadius: WildDeckTheme.radiusMedium,

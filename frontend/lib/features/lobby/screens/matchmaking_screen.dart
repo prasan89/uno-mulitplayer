@@ -36,12 +36,14 @@ class _MatchmakingScreenState extends State<MatchmakingScreen>
     _rotateController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 1200),
-    )..repeat();
+    );
+    unawaited(_rotateController.repeat());
 
     _pulseController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 1000),
-    )..repeat(reverse: true);
+    );
+    unawaited(_pulseController.repeat(reverse: true));
 
     _pulseAnimation = Tween<double>(begin: 0.95, end: 1.05).animate(
       CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
@@ -117,7 +119,6 @@ class _MatchmakingScreenState extends State<MatchmakingScreen>
           padding: const EdgeInsets.all(32),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const Spacer(),
               // Animated WildDeck logo / spinner
@@ -238,7 +239,7 @@ class _MatchmakingScreenState extends State<MatchmakingScreen>
               ),
               const SizedBox(height: 12),
               // Players found indicator
-              _PlayersFoundRow(found: 1, total: 4),
+              const _PlayersFoundRow(found: 1, total: 4),
               const Spacer(),
               // Cancel button
               SizedBox(

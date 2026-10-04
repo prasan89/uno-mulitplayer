@@ -13,23 +13,21 @@ void main() {
 
   group('GameState fromJson roundtrip', () {
     test('serialises and deserialises a full GameState', () {
-      final original = TestGameState(
+      const original = TestGameState(
         gameId: 'game-abc',
         currentPlayerId: 'player-1',
-        players: const [
+        players: [
           TestPlayer(id: 'player-1', displayName: 'Alice', cardCount: 3),
           TestPlayer(id: 'player-2', displayName: 'Bob', cardCount: 5),
         ],
-        hand: const [
+        hand: [
           TestWildCard(color: TestCardColor.red, value: '5'),
           TestWildCard(color: TestCardColor.blue, value: 'skip'),
           TestWildCard(color: TestCardColor.wild, value: 'wild'),
         ],
-        topCard: const TestWildCard(color: TestCardColor.green, value: '7'),
+        topCard: TestWildCard(color: TestCardColor.green, value: '7'),
         activeColor: TestCardColor.green,
-        isClockwise: true,
         status: TestGameStatus.active,
-        winnerId: null,
       );
 
       final json = original.toJson();
@@ -73,10 +71,10 @@ void main() {
     });
 
     test('roundtrip preserves player connectivity flag', () {
-      final state = TestGameState(
+      const state = TestGameState(
         gameId: 'g',
         currentPlayerId: 'p2',
-        players: const [
+        players: [
           TestPlayer(
               id: 'p1',
               displayName: 'Disconnected',
@@ -84,7 +82,7 @@ void main() {
               isConnected: false),
           TestPlayer(id: 'p2', displayName: 'Connected', cardCount: 4),
         ],
-        hand: const [],
+        hand: [],
       );
 
       final restored = TestGameState.fromJson(state.toJson());
@@ -94,11 +92,11 @@ void main() {
     });
 
     test('roundtrip preserves anticlockwise direction', () {
-      final state = TestGameState(
+      const state = TestGameState(
         gameId: 'g',
         currentPlayerId: 'p1',
-        players: const [],
-        hand: const [],
+        players: [],
+        hand: [],
         isClockwise: false,
       );
 
@@ -108,11 +106,11 @@ void main() {
     });
 
     test('roundtrip preserves winnerId', () {
-      final state = TestGameState(
+      const state = TestGameState(
         gameId: 'g',
         currentPlayerId: 'p1',
-        players: const [],
-        hand: const [],
+        players: [],
+        hand: [],
         status: TestGameStatus.finished,
         winnerId: 'p1',
       );
@@ -132,19 +130,19 @@ void main() {
     late TestGameState gameState;
 
     setUp(() {
-      gameState = TestGameState(
+      gameState = const TestGameState(
         gameId: 'test-game',
         currentPlayerId: 'player-2',
-        players: const [
+        players: [
           TestPlayer(id: 'player-1', displayName: 'Alice', cardCount: 4),
           TestPlayer(id: 'player-2', displayName: 'Bob', cardCount: 2),
           TestPlayer(id: 'player-3', displayName: 'Charlie', cardCount: 6),
         ],
-        hand: const [
+        hand: [
           TestWildCard(color: TestCardColor.yellow, value: '3'),
           TestWildCard(color: TestCardColor.red, value: 'draw_two'),
         ],
-        topCard: const TestWildCard(color: TestCardColor.yellow, value: '8'),
+        topCard: TestWildCard(color: TestCardColor.yellow, value: '8'),
         status: TestGameStatus.active,
       );
     });
@@ -187,11 +185,11 @@ void main() {
 
   group('hand contains correct cards', () {
     test('hand length matches cards provided', () {
-      final state = TestGameState(
+      const state = TestGameState(
         gameId: 'g',
         currentPlayerId: 'p1',
-        players: const [],
-        hand: const [
+        players: [],
+        hand: [
           TestWildCard(color: TestCardColor.red, value: '1'),
           TestWildCard(color: TestCardColor.blue, value: '2'),
           TestWildCard(color: TestCardColor.green, value: 'skip'),
@@ -202,11 +200,11 @@ void main() {
     });
 
     test('hand card properties are preserved after fromJson', () {
-      final state = TestGameState(
+      const state = TestGameState(
         gameId: 'g',
         currentPlayerId: 'p1',
-        players: const [],
-        hand: const [
+        players: [],
+        hand: [
           TestWildCard(color: TestCardColor.yellow, value: '9'),
           TestWildCard(color: TestCardColor.wild, value: 'wildDrawFour'),
         ],
@@ -221,11 +219,11 @@ void main() {
     });
 
     test('empty hand is preserved after fromJson', () {
-      final state = TestGameState(
+      const state = TestGameState(
         gameId: 'g',
         currentPlayerId: 'p1',
-        players: const [],
-        hand: const [],
+        players: [],
+        hand: [],
       );
 
       final restored = TestGameState.fromJson(state.toJson());
@@ -274,36 +272,34 @@ void main() {
 
   group('winnerId is null during game, set when finished', () {
     test('winnerId is null during active game', () {
-      final state = TestGameState(
+      const state = TestGameState(
         gameId: 'g',
         currentPlayerId: 'p1',
-        players: const [],
-        hand: const [],
+        players: [],
+        hand: [],
         status: TestGameStatus.active,
-        winnerId: null,
       );
 
       expect(state.winnerId, isNull);
     });
 
     test('winnerId is null in waiting state', () {
-      final state = TestGameState(
+      const state = TestGameState(
         gameId: 'g',
         currentPlayerId: 'p1',
-        players: const [],
-        hand: const [],
-        status: TestGameStatus.waiting,
+        players: [],
+        hand: [],
       );
 
       expect(state.winnerId, isNull);
     });
 
     test('winnerId is set when game is finished', () {
-      final state = TestGameState(
+      const state = TestGameState(
         gameId: 'g',
         currentPlayerId: 'p1',
-        players: const [],
-        hand: const [],
+        players: [],
+        hand: [],
         status: TestGameStatus.finished,
         winnerId: 'p1',
       );
@@ -313,11 +309,11 @@ void main() {
     });
 
     test('winnerId survives JSON roundtrip', () {
-      final state = TestGameState(
+      const state = TestGameState(
         gameId: 'g',
         currentPlayerId: 'p2',
-        players: const [],
-        hand: const [],
+        players: [],
+        hand: [],
         status: TestGameStatus.finished,
         winnerId: 'p2',
       );
@@ -329,13 +325,12 @@ void main() {
     });
 
     test('null winnerId survives JSON roundtrip', () {
-      final state = TestGameState(
+      const state = TestGameState(
         gameId: 'g',
         currentPlayerId: 'p1',
-        players: const [],
-        hand: const [],
+        players: [],
+        hand: [],
         status: TestGameStatus.active,
-        winnerId: null,
       );
 
       final restored = TestGameState.fromJson(state.toJson());

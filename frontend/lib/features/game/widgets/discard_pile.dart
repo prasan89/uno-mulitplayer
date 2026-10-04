@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:wilddeck/features/game/widgets/card_widget.dart';
 
@@ -47,7 +48,7 @@ class _DiscardPileState extends State<DiscardPile>
   void didUpdateWidget(DiscardPile oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.topCard?.id != widget.topCard?.id) {
-      _animationController.forward(from: 0.0);
+      unawaited(_animationController.forward(from: 0.0));
     }
   }
 
@@ -96,7 +97,6 @@ class _DiscardPileState extends State<DiscardPile>
                     child: CardWidget(
                       card: widget.topCard!,
                       isPlayable: false,
-                      onTap: null,
                     ),
                   ),
                 )

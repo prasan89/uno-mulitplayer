@@ -1,5 +1,4 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:wilddeck/core/models/card.dart';
 import 'package:wilddeck/core/models/game_state.dart';
 import 'package:wilddeck/core/models/player.dart';
 

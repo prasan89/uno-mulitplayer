@@ -242,7 +242,7 @@ class _RoomCodeEntryState extends State<RoomCodeEntry> {
             ),
           ),
           inputFormatters: [
-            FilteringTextInputFormatter.allow(RegExp(r'[A-Za-z0-9]')),
+            FilteringTextInputFormatter.allow(RegExp('[A-Za-z0-9]')),
             TextInputFormatter.withFunction((oldValue, newValue) {
               return newValue.copyWith(
                 text: newValue.text.toUpperCase(),

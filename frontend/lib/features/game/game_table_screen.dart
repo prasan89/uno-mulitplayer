@@ -28,8 +28,8 @@ class _GameTableScreenState extends ConsumerState<GameTableScreen>
   @override
   void initState() {
     super.initState();
-    _turnCtrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 800))
-      ..repeat(reverse: true);
+    _turnCtrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 800));
+    unawaited(_turnCtrl.repeat(reverse: true));
     _loadMockState();
   }
 
@@ -51,7 +51,7 @@ class _GameTableScreenState extends ConsumerState<GameTableScreen>
     if (state == null) return;
 
     if (card.type == WildCardType.wild || card.type == WildCardType.wildDrawFour) {
-      context.push(WildRoutes.wildColorPicker, extra: card);
+      unawaited(context.push(WildRoutes.wildColorPicker, extra: card));
       return;
     }
 
@@ -91,7 +91,7 @@ class _GameTableScreenState extends ConsumerState<GameTableScreen>
     final isMyTurn = state.isMyTurn;
 
     return Scaffold(
-      body: Container(
+      body: DecoratedBox(
         decoration: const BoxDecoration(gradient: WildDeckTheme.backgroundGradient),
         child: SafeArea(
           child: Column(children: [
@@ -192,7 +192,7 @@ class _GameTable extends StatelessWidget {
             for (int i = 0; i < 3; i++)
               Transform.translate(
                 offset: Offset(i * 1.5, i * -1.5),
-                child: WildDeckCardWidget(color: WildCardColor.wild, type: WildCardType.wild, isFaceDown: true),
+                child: const WildDeckCardWidget(color: WildCardColor.wild, type: WildCardType.wild, isFaceDown: true),
               ),
           ]),
         ),
@@ -205,13 +205,13 @@ class _GameTable extends StatelessWidget {
       const SizedBox(width: 12),
       // Discard pile
       topCard != null
-          ? WildDeckCardWidget(color: topCard!.color, type: topCard!.type, number: topCard!.number, isFaceDown: false)
+          ? WildDeckCardWidget(color: topCard!.color, type: topCard!.type, number: topCard!.number)
           : Container(
               width: 56, height: 80,
               decoration: BoxDecoration(
                 color: WildDeckTheme.navySurface,
                 borderRadius: WildDeckTheme.radiusMedium,
-                border: Border.all(color: WildDeckTheme.navyBorder, style: BorderStyle.solid),
+                border: Border.all(color: WildDeckTheme.navyBorder),
               ),
             ),
       ...[
@@ -294,7 +294,6 @@ class _PlayerHand extends StatelessWidget {
                 color: card.color,
                 type: card.type,
                 number: card.number,
-                isFaceDown: false,
                 isSelected: selected,
                 onTap: () => onCardTap(i),
               ),

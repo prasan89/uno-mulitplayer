@@ -4,7 +4,6 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:wilddeck/core/services/mock_services.dart';
 import 'package:wilddeck/core/services/wilddeck_services.dart';
-import 'package:wilddeck/shared/theme/wilddeck_theme.dart';
 import 'package:wilddeck/shared/widgets/wilddeck_components.dart';
 
 void main() {
@@ -22,7 +21,7 @@ void main() {
     testWidgets('renders face-up number card', (tester) async {
       await tester.pumpWidget(const ProviderScope(
         child: MaterialApp(home: Scaffold(
-          body: WildDeckCardWidget(color: WildCardColor.blue, type: WildCardType.number, number: 3, isFaceDown: false),
+          body: WildDeckCardWidget(color: WildCardColor.blue, type: WildCardType.number, number: 3),
         )),
       ));
       expect(find.text('3'), findsWidgets);
@@ -31,7 +30,7 @@ void main() {
     testWidgets('selected card shows visual elevation', (tester) async {
       await tester.pumpWidget(const ProviderScope(
         child: MaterialApp(home: Scaffold(
-          body: WildDeckCardWidget(color: WildCardColor.green, type: WildCardType.skip, isFaceDown: false, isSelected: true),
+          body: WildDeckCardWidget(color: WildCardColor.green, type: WildCardType.skip, isSelected: true),
         )),
       ));
       // Selected card uses a Transform.translate — verify widget tree contains it
@@ -43,7 +42,7 @@ void main() {
       await tester.pumpWidget(ProviderScope(
         child: MaterialApp(home: Scaffold(
           body: WildDeckCardWidget(
-            color: WildCardColor.yellow, type: WildCardType.drawTwo, isFaceDown: false,
+            color: WildCardColor.yellow, type: WildCardType.drawTwo,
             onTap: () => tapped = true,
           ),
         )),

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:wilddeck/core/services/wilddeck_services.dart';
 import 'package:wilddeck/shared/theme/wilddeck_theme.dart';
@@ -27,7 +28,7 @@ class _WildColorPickerScreenState extends State<WildColorPickerScreen>
   void initState() {
     super.initState();
     _ctrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 400));
-    _ctrl.forward();
+    unawaited(_ctrl.forward());
   }
 
   @override
@@ -46,7 +47,7 @@ class _WildColorPickerScreenState extends State<WildColorPickerScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
+      body: DecoratedBox(
         decoration: const BoxDecoration(gradient: WildDeckTheme.backgroundGradient),
         child: SafeArea(
           child: FadeTransition(
@@ -142,9 +143,9 @@ class _ColorButtonState extends State<_ColorButton>
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTapDown: (_) => _pressCtrl.forward(),
-      onTapUp: (_) { _pressCtrl.reverse(); widget.onTap(); },
-      onTapCancel: () => _pressCtrl.reverse(),
+      onTapDown: (_) => unawaited(_pressCtrl.forward()),
+      onTapUp: (_) { unawaited(_pressCtrl.reverse()); widget.onTap(); },
+      onTapCancel: () => unawaited(_pressCtrl.reverse()),
       child: ScaleTransition(
         scale: _scale,
         child: AnimatedContainer(

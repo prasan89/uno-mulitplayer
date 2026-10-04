@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -34,7 +35,7 @@ class _WildDeckLoginScreenState extends ConsumerState<WildDeckLoginScreen>
     super.initState();
     _fadeCtrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 500));
     _fade = CurvedAnimation(parent: _fadeCtrl, curve: Curves.easeIn);
-    _fadeCtrl.forward();
+    unawaited(_fadeCtrl.forward());
   }
 
   @override
@@ -85,7 +86,7 @@ class _WildDeckLoginScreenState extends ConsumerState<WildDeckLoginScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
+      body: DecoratedBox(
         decoration: const BoxDecoration(gradient: WildDeckTheme.heroGradient),
         child: SafeArea(
           child: FadeTransition(

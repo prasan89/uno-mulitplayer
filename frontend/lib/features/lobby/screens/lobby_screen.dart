@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:wilddeck/features/lobby/widgets/room_code_entry.dart';
 
@@ -51,9 +52,9 @@ class _LobbyScreenState extends State<LobbyScreen>
   void _setMode(_LobbyMode mode) {
     setState(() => _mode = mode);
     if (mode == _LobbyMode.createPrivate || mode == _LobbyMode.joinPrivate) {
-      _expandController.forward();
+      unawaited(_expandController.forward());
     } else {
-      _expandController.reverse();
+      unawaited(_expandController.reverse());
     }
   }
 

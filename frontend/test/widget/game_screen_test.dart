@@ -120,7 +120,7 @@ void main() {
         _buildScreen(
           GameScreen(
             gameId: 'g1',
-            initialState: _activeState(isMyTurn: false),
+            initialState: _activeState(),
           ),
         ),
       );
@@ -178,7 +178,7 @@ void main() {
         _buildScreen(
           GameScreen(
             gameId: 'g4',
-            initialState: _activeState(opponents: const []),
+            initialState: _activeState(),
           ),
         ),
       );
@@ -247,7 +247,7 @@ void main() {
         _buildScreen(
           GameScreen(
             gameId: 'g8',
-            initialState: _activeState(winnerName: null),
+            initialState: _activeState(),
           ),
         ),
       );

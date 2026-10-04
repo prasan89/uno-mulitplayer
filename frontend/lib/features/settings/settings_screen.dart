@@ -27,7 +27,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     _settings = ref.watch(settingsProvider);
 
     return Scaffold(
-      body: Container(
+      body: DecoratedBox(
         decoration: const BoxDecoration(gradient: WildDeckTheme.backgroundGradient),
         child: SafeArea(
           child: Column(children: [
@@ -116,7 +116,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                             ],
                           ),
                         );
-                        if (confirm == true && mounted) context.go(WildRoutes.login);
+                        if (confirm == true && context.mounted) context.go(WildRoutes.login);
                       }),
                   ]),
                   const SizedBox(height: 32),
@@ -143,7 +143,7 @@ class _Section extends StatelessWidget {
         child: Text(title, style: const TextStyle(
           color: WildDeckTheme.textMuted, fontSize: 11,
           fontWeight: FontWeight.w700, letterSpacing: 1.5))),
-      Container(
+      DecoratedBox(
         decoration: BoxDecoration(
           color: WildDeckTheme.navySurface,
           borderRadius: WildDeckTheme.radiusLarge,
@@ -152,7 +152,7 @@ class _Section extends StatelessWidget {
           final isLast = e.key == children.length - 1;
           return Column(children: [
             e.value,
-            if (!isLast) Divider(
+            if (!isLast) const Divider(
               height: 1, color: WildDeckTheme.navyBorder, indent: 48, endIndent: 16),
           ]);
         }).toList()),
@@ -264,7 +264,7 @@ class _ActionRow extends StatelessWidget {
           Icon(icon, color: c, size: 20),
           const SizedBox(width: 14),
           Expanded(child: Text(label, style: TextStyle(color: c, fontSize: 14))),
-          Icon(Icons.chevron_right_rounded, color: WildDeckTheme.textMuted, size: 18),
+          const Icon(Icons.chevron_right_rounded, color: WildDeckTheme.textMuted, size: 18),
         ]),
       ),
     );

@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:wilddeck/features/game/widgets/card_widget.dart';
 import 'package:wilddeck/features/game/widgets/discard_pile.dart';
 import 'package:wilddeck/features/game/widgets/draw_pile.dart';
+import 'package:wilddeck/features/game/widgets/last_card_button.dart';
 import 'package:wilddeck/features/game/widgets/player_hand.dart';
 import 'package:wilddeck/features/game/widgets/player_info_row.dart';
-import 'package:wilddeck/features/game/widgets/last_card_button.dart';
 
 /// Represents another player in the game (not the current user)
 class OpponentPlayer {
@@ -41,12 +41,8 @@ class GameBoard extends StatelessWidget {
   final Future<CardColor?> Function() onColorPick;
 
   const GameBoard({
-    super.key,
-    required this.gameId,
+    required this.gameId, required this.opponents, required this.myHand, required this.playableCardIds, required this.onCardSelected, required this.onCardPlayed, required this.onDrawCard, required this.onCallLastCard, required this.onColorPick, super.key,
     this.turnTimeRemaining,
-    required this.opponents,
-    required this.myHand,
-    required this.playableCardIds,
     this.selectedCardId,
     this.discardTopCard,
     this.discardCount = 0,
@@ -54,11 +50,6 @@ class GameBoard extends StatelessWidget {
     this.isMyTurn = false,
     this.canDraw = false,
     this.showLastCardButton = false,
-    required this.onCardSelected,
-    required this.onCardPlayed,
-    required this.onDrawCard,
-    required this.onCallLastCard,
-    required this.onColorPick,
   });
 
   @override
@@ -85,7 +76,7 @@ class GameBoard extends StatelessWidget {
       decoration: const BoxDecoration(
         color: Color(0xFF121212),
         border: Border(
-          bottom: BorderSide(color: Colors.white12, width: 1),
+          bottom: BorderSide(color: Colors.white12),
         ),
       ),
       child: opponents.isEmpty
@@ -112,12 +103,11 @@ class GameBoard extends StatelessWidget {
   }
 
   Widget _buildCenterArea(BuildContext context) {
-    return Container(
+    return ColoredBox(
       color: const Color(0xFF121212),
       child: Center(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             DrawPile(
               cardCount: drawPileCount,
@@ -226,7 +216,6 @@ class _TurnTimer extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
         border: Border.all(
           color: isUrgent ? const Color(0xFFE53935) : Colors.white24,
-          width: 1,
         ),
       ),
       child: Text(

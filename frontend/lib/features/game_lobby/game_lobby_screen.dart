@@ -7,7 +7,7 @@ import 'package:wilddeck/shared/widgets/wilddeck_components.dart';
 
 class GameLobbyScreen extends StatefulWidget {
   final String gameId;
-  const GameLobbyScreen({super.key, required this.gameId});
+  const GameLobbyScreen({required this.gameId, super.key});
 
   @override
   State<GameLobbyScreen> createState() => _GameLobbyScreenState();
@@ -17,10 +17,10 @@ class _GameLobbyScreenState extends State<GameLobbyScreen> {
   bool _starting = false;
 
   static final List<WildGamePlayer> _mockSeats = [
-    const WildGamePlayer(id: 'me',  displayName: 'WildAce',   cardCount: 0),
-    const WildGamePlayer(id: 'p2',  displayName: 'Blaze',     cardCount: 0),
-    WildGamePlayer(id: 'p3', displayName: 'Bot Alpha', cardCount: 0, isBot: true),
-    WildGamePlayer(id: 'p4', displayName: 'Bot Beta',  cardCount: 0, isBot: true),
+    const WildGamePlayer(id: 'me',  displayName: 'WildAce'),
+    const WildGamePlayer(id: 'p2',  displayName: 'Blaze'),
+    const WildGamePlayer(id: 'p3', displayName: 'Bot Alpha', isBot: true),
+    const WildGamePlayer(id: 'p4', displayName: 'Bot Beta', isBot: true),
   ];
 
   Future<void> _startGame() async {
@@ -32,7 +32,7 @@ class _GameLobbyScreenState extends State<GameLobbyScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
+      body: DecoratedBox(
         decoration: const BoxDecoration(gradient: WildDeckTheme.backgroundGradient),
         child: SafeArea(
           child: Column(

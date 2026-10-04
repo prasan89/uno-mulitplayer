@@ -11,7 +11,7 @@ class GameModeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
+      body: DecoratedBox(
         decoration: const BoxDecoration(gradient: WildDeckTheme.backgroundGradient),
         child: SafeArea(
           child: Column(
@@ -51,7 +51,7 @@ class GameModeScreen extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 16),
-                      _ModeCard(
+                      const _ModeCard(
                         title: '2v2 TEAM',
                         subtitle: '4 players  •  Team play',
                         description: 'Play with a partner against another team. Coordinate your wild cards.',
@@ -74,7 +74,7 @@ class GameModeScreen extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 16),
-                      _ModeCard(
+                      const _ModeCard(
                         title: 'TOURNAMENT',
                         subtitle: 'Bracket style  •  Prize pool',
                         description: 'Compete in scheduled tournaments for big coin prizes.',
@@ -114,10 +114,9 @@ class _ModeCard extends StatelessWidget {
     required this.description,
     required this.icon,
     required this.iconColor,
-    this.badge,
+    required this.onTap, this.badge,
     this.badgeColor,
     this.locked = false,
-    required this.onTap,
   });
 
   @override

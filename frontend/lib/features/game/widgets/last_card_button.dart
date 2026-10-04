@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 
 class LastCardButton extends StatefulWidget {
@@ -40,7 +41,7 @@ class _LastCardButtonState extends State<LastCardButton>
   void didUpdateWidget(LastCardButton oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.isVisible && !oldWidget.isVisible) {
-      _flashController.repeat(reverse: true);
+      unawaited(_flashController.repeat(reverse: true));
     } else if (!widget.isVisible && oldWidget.isVisible) {
       _flashController.stop();
       _flashController.reset();

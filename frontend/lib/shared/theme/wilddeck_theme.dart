@@ -146,21 +146,21 @@ class WildDeckTheme {
         iconTheme: IconThemeData(color: textPrimary),
       ),
       textTheme: _textTheme,
-      cardTheme: CardThemeData(
+      cardTheme: const CardThemeData(
         color: navySurface,
         elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: radiusMedium,
-          side: const BorderSide(color: navyBorder, width: 1),
+          side: BorderSide(color: navyBorder),
         ),
       ),
       dividerTheme: const DividerThemeData(
         color: navyBorder,
         thickness: 1,
       ),
-      snackBarTheme: SnackBarThemeData(
+      snackBarTheme: const SnackBarThemeData(
         backgroundColor: navySurface,
-        contentTextStyle: const TextStyle(color: textPrimary),
+        contentTextStyle: TextStyle(color: textPrimary),
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: radiusMedium),
       ),
@@ -170,23 +170,23 @@ class WildDeckTheme {
         unselectedItemColor: textMuted,
         elevation: 0,
       ),
-      inputDecorationTheme: InputDecorationTheme(
+      inputDecorationTheme: const InputDecorationTheme(
         filled: true,
         fillColor: navySurface,
         border: OutlineInputBorder(
           borderRadius: radiusMedium,
-          borderSide: const BorderSide(color: navyBorder),
+          borderSide: BorderSide(color: navyBorder),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: radiusMedium,
-          borderSide: const BorderSide(color: navyBorder),
+          borderSide: BorderSide(color: navyBorder),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: radiusMedium,
-          borderSide: const BorderSide(color: cardRed, width: 2),
+          borderSide: BorderSide(color: cardRed, width: 2),
         ),
-        labelStyle: const TextStyle(color: textSecond),
-        hintStyle: const TextStyle(color: textMuted),
+        labelStyle: TextStyle(color: textSecond),
+        hintStyle: TextStyle(color: textMuted),
         prefixIconColor: textMuted,
         suffixIconColor: textMuted,
       ),

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:wilddeck/shared/theme/wilddeck_theme.dart';
 
@@ -16,9 +17,7 @@ class WildDeckCardWidget extends StatefulWidget {
   final double height;
 
   const WildDeckCardWidget({
-    super.key,
-    required this.color,
-    required this.type,
+    required this.color, required this.type, super.key,
     this.number,
     this.isPlayable = true,
     this.isSelected = false,
@@ -73,9 +72,9 @@ class _WildDeckCardWidgetState extends State<WildDeckCardWidget>
         scale: _scale,
         child: GestureDetector(
           onTap: widget.isPlayable ? widget.onTap : null,
-          onTapDown: (_) { if (widget.isPlayable) _ctrl.forward(); },
-          onTapUp: (_) => _ctrl.reverse(),
-          onTapCancel: () => _ctrl.reverse(),
+          onTapDown: (_) { if (widget.isPlayable) unawaited(_ctrl.forward()); },
+          onTapUp: (_) => unawaited(_ctrl.reverse()),
+          onTapCancel: () => unawaited(_ctrl.reverse()),
           child: Opacity(
             opacity: widget.isPlayable ? 1.0 : 0.45,
             child: widget.isFaceDown ? _buildBack() : _buildFront(),
@@ -139,7 +138,7 @@ class _WildDeckCardWidgetState extends State<WildDeckCardWidget>
               decoration: BoxDecoration(
                 color: Colors.white.withValues(alpha: 0.12),
                 borderRadius: BorderRadius.circular(widget.width * 0.28),
-                border: Border.all(color: Colors.white.withValues(alpha: 0.08), width: 1),
+                border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
               ),
             ),
           ),
@@ -202,9 +201,8 @@ class PlayerAvatar extends StatelessWidget {
   final bool showBorder;
 
   const PlayerAvatar({
-    super.key,
+    required this.displayName, super.key,
     this.avatarId,
-    required this.displayName,
     this.size = 48,
     this.isCurrentTurn = false,
     this.isBot = false,
@@ -267,7 +265,7 @@ class CoinBadge extends StatelessWidget {
   final int amount;
   final bool compact;
 
-  const CoinBadge({super.key, required this.amount, this.compact = false});
+  const CoinBadge({required this.amount, super.key, this.compact = false});
 
   @override
   Widget build(BuildContext context) {
@@ -314,9 +312,7 @@ class XPBar extends StatelessWidget {
   final bool showLabel;
 
   const XPBar({
-    super.key,
-    required this.xp,
-    required this.xpToNext,
+    required this.xp, required this.xpToNext, super.key,
     this.height = 6,
     this.showLabel = false,
   });
@@ -368,8 +364,7 @@ class PrimaryButton extends StatelessWidget {
   final EdgeInsets? padding;
 
   const PrimaryButton({
-    super.key,
-    required this.label,
+    required this.label, super.key,
     this.onPressed,
     this.icon,
     this.isLoading = false,
@@ -397,7 +392,7 @@ class PrimaryButton extends StatelessWidget {
             backgroundColor: Colors.transparent,
             shadowColor: Colors.transparent,
             padding: padding ?? const EdgeInsets.symmetric(vertical: 16),
-            shape: RoundedRectangleBorder(borderRadius: WildDeckTheme.radiusMedium),
+            shape: const RoundedRectangleBorder(borderRadius: WildDeckTheme.radiusMedium),
           ),
           child: isLoading
               ? const SizedBox(
@@ -430,8 +425,7 @@ class SecondaryButton extends StatelessWidget {
   final Color? borderColor;
 
   const SecondaryButton({
-    super.key,
-    required this.label,
+    required this.label, super.key,
     this.onPressed,
     this.icon,
     this.borderColor,
@@ -447,7 +441,7 @@ class SecondaryButton extends StatelessWidget {
           foregroundColor: WildDeckTheme.textPrimary,
           padding: const EdgeInsets.symmetric(vertical: 16),
           side: BorderSide(color: borderColor ?? WildDeckTheme.navyBorder, width: 1.5),
-          shape: RoundedRectangleBorder(borderRadius: WildDeckTheme.radiusMedium),
+          shape: const RoundedRectangleBorder(borderRadius: WildDeckTheme.radiusMedium),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -470,8 +464,7 @@ class TurnIndicator extends StatefulWidget {
   final String? currentPlayerName;
 
   const TurnIndicator({
-    super.key,
-    required this.isMyTurn,
+    required this.isMyTurn, super.key,
     this.currentPlayerName,
   });
 
@@ -487,8 +480,8 @@ class _TurnIndicatorState extends State<TurnIndicator>
   @override
   void initState() {
     super.initState();
-    _ctrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 900))
-      ..repeat(reverse: true);
+    _ctrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 900));
+    unawaited(_ctrl.repeat(reverse: true));
     _pulse = Tween<double>(begin: 0.85, end: 1.0).animate(
       CurvedAnimation(parent: _ctrl, curve: Curves.easeInOut),
     );
@@ -536,11 +529,7 @@ class GameStatusBar extends StatelessWidget {
   final bool isClockwise;
 
   const GameStatusBar({
-    super.key,
-    required this.gameId,
-    required this.drawPileCount,
-    required this.discardCount,
-    required this.isClockwise,
+    required this.gameId, required this.drawPileCount, required this.discardCount, required this.isClockwise, super.key,
   });
 
   @override
@@ -581,17 +570,15 @@ class WildDeckBottomNav extends StatelessWidget {
   final ValueChanged<int> onTap;
 
   const WildDeckBottomNav({
-    super.key,
-    required this.currentIndex,
-    required this.onTap,
+    required this.currentIndex, required this.onTap, super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return DecoratedBox(
       decoration: const BoxDecoration(
         color: WildDeckTheme.navyMid,
-        border: Border(top: BorderSide(color: WildDeckTheme.navyBorder, width: 1)),
+        border: Border(top: BorderSide(color: WildDeckTheme.navyBorder)),
       ),
       child: SafeArea(
         top: false,
@@ -668,8 +655,7 @@ class WildDeckTopBar extends StatelessWidget implements PreferredSizeWidget {
   final Widget? leading;
 
   const WildDeckTopBar({
-    super.key,
-    required this.title,
+    required this.title, super.key,
     this.showBack = true,
     this.actions,
     this.leading,
@@ -708,9 +694,7 @@ class WildDeckModal extends StatelessWidget {
   final List<Widget>? actions;
 
   const WildDeckModal({
-    super.key,
-    required this.title,
-    required this.child,
+    required this.title, required this.child, super.key,
     this.actions,
   });
 
@@ -724,7 +708,7 @@ class WildDeckModal extends StatelessWidget {
       context: context,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
-      builder: (_) => WildDeckModal(title: title, child: child, actions: actions),
+      builder: (_) => WildDeckModal(title: title, actions: actions, child: child),
     );
   }
 
@@ -779,10 +763,8 @@ class PlayerSeat extends StatelessWidget {
   final bool showCardCount;
 
   const PlayerSeat({
-    super.key,
-    required this.displayName,
+    required this.displayName, required this.cardCount, super.key,
     this.avatarId,
-    required this.cardCount,
     this.isCurrentTurn = false,
     this.isBot = false,
     this.isConnected = true,

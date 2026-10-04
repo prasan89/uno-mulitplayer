@@ -27,22 +27,22 @@ class _MissionsScreenState extends State<MissionsScreen>
   }
 
   static List<MissionData> get _weekly => [
-    MissionData(id: 'w1', title: 'Win 10 matches',
+    const MissionData(id: 'w1', title: 'Win 10 matches',
       description: 'Win any 10 games this week', progress: 4, goal: 10,
       coinReward: 500, xpReward: 200, type: MissionType.weekly),
-    MissionData(id: 'w2', title: 'Play 50 cards',
+    const MissionData(id: 'w2', title: 'Play 50 cards',
       description: 'Play a total of 50 cards', progress: 23, goal: 50,
       coinReward: 300, xpReward: 120, type: MissionType.weekly),
   ];
 
   static List<MissionData> get _achievements => [
-    MissionData(id: 'a1', title: 'First Steps',
+    const MissionData(id: 'a1', title: 'First Steps',
       description: 'Play your first match', progress: 1, goal: 1,
       coinReward: 100, xpReward: 50, type: MissionType.achievement),
-    MissionData(id: 'a2', title: 'Wild Mastery',
+    const MissionData(id: 'a2', title: 'Wild Mastery',
       description: 'Play 50 wild cards total', progress: 32, goal: 50,
       coinReward: 1000, xpReward: 400, type: MissionType.achievement),
-    MissionData(id: 'a3', title: 'Unstoppable',
+    const MissionData(id: 'a3', title: 'Unstoppable',
       description: 'Win 100 matches', progress: 42, goal: 100,
       coinReward: 2000, xpReward: 800, type: MissionType.achievement),
   ];
@@ -52,7 +52,7 @@ class _MissionsScreenState extends State<MissionsScreen>
     final daily = MockData.dailyMissions;
 
     return Scaffold(
-      body: Container(
+      body: DecoratedBox(
         decoration: const BoxDecoration(gradient: WildDeckTheme.backgroundGradient),
         child: SafeArea(
           child: Column(children: [
@@ -68,7 +68,7 @@ class _MissionsScreenState extends State<MissionsScreen>
               child: TabBar(
                 controller: _tab,
                 tabs: const [Tab(text: 'DAILY'), Tab(text: 'WEEKLY'), Tab(text: 'ACHIEVEMENTS')],
-                indicator: BoxDecoration(
+                indicator: const BoxDecoration(
                   gradient: WildDeckTheme.primaryButtonGradient,
                   borderRadius: WildDeckTheme.radiusMedium),
                 indicatorSize: TabBarIndicatorSize.tab,
@@ -121,8 +121,8 @@ class _MissionsSummary extends StatelessWidget {
               style: const TextStyle(color: WildDeckTheme.gold, fontSize: 13,
                 fontWeight: FontWeight.w700)),
           ]),
-          Text('Resets in 14h 22m',
-            style: const TextStyle(color: WildDeckTheme.textMuted, fontSize: 11)),
+          const Text('Resets in 14h 22m',
+            style: TextStyle(color: WildDeckTheme.textMuted, fontSize: 11)),
         ]),
       ]),
     );
@@ -192,8 +192,7 @@ class _MissionCard extends StatelessWidget {
         const SizedBox(height: 10),
         Row(children: [
           Expanded(child: XPBar(
-            xp: mission.progress, xpToNext: mission.goal,
-            height: 6, showLabel: false)),
+            xp: mission.progress, xpToNext: mission.goal)),
           const SizedBox(width: 10),
           Text('${mission.progress}/${mission.goal}',
             style: const TextStyle(color: WildDeckTheme.textMuted, fontSize: 11)),
@@ -205,10 +204,10 @@ class _MissionCard extends StatelessWidget {
             decoration: BoxDecoration(
               color: WildDeckTheme.success.withValues(alpha: 0.08),
               borderRadius: WildDeckTheme.radiusSmall),
-            child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              const Icon(Icons.check, color: WildDeckTheme.success, size: 14),
-              const SizedBox(width: 6),
-              const Text('Completed — rewards collected', style: TextStyle(
+            child: const Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+              Icon(Icons.check, color: WildDeckTheme.success, size: 14),
+              SizedBox(width: 6),
+              Text('Completed — rewards collected', style: TextStyle(
                 color: WildDeckTheme.success, fontSize: 11, fontWeight: FontWeight.w600)),
             ])),
         ],

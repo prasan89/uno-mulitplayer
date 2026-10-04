@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:wilddeck/core/router/wilddeck_router.dart';
@@ -38,14 +39,14 @@ class _WildDeckSplashScreenState extends State<WildDeckSplashScreen>
       CurvedAnimation(parent: _taglineCtrl, curve: Curves.easeOut),
     );
 
-    _runSequence();
+    unawaited(_runSequence());
   }
 
   Future<void> _runSequence() async {
     await Future<void>.delayed(const Duration(milliseconds: 200));
-    _logoCtrl.forward();
+    unawaited(_logoCtrl.forward());
     await Future<void>.delayed(const Duration(milliseconds: 500));
-    _taglineCtrl.forward();
+    unawaited(_taglineCtrl.forward());
     await Future<void>.delayed(const Duration(milliseconds: 1400));
     if (mounted) context.go(WildRoutes.login);
   }
@@ -60,7 +61,7 @@ class _WildDeckSplashScreenState extends State<WildDeckSplashScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
+      body: DecoratedBox(
         decoration: const BoxDecoration(gradient: WildDeckTheme.heroGradient),
         child: SafeArea(
           child: Center(
@@ -72,7 +73,7 @@ class _WildDeckSplashScreenState extends State<WildDeckSplashScreen>
                   scale: _logoScale,
                   child: FadeTransition(
                     opacity: _logoOpacity,
-                    child: _WildDeckLogo(size: 120),
+                    child: const _WildDeckLogo(size: 120),
                   ),
                 ),
                 const SizedBox(height: 28),

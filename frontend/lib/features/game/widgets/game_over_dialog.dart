@@ -21,9 +21,7 @@ class GameOverDialog extends StatelessWidget {
   final VoidCallback? onBackToLobby;
 
   const GameOverDialog({
-    super.key,
-    required this.winnerName,
-    required this.playerScores,
+    required this.winnerName, required this.playerScores, super.key,
     this.onPlayAgain,
     this.onBackToLobby,
   });

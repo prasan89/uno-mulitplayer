@@ -14,11 +14,7 @@ class MockPlayerService implements IPlayerService {
     _current = WildDeckPlayer(
       id: 'guest_001',
       displayName: displayName,
-      level: 1,
       xp: 150,
-      xpToNextLevel: 1000,
-      coins: 500,
-      gems: 10,
       isGuest: true,
     );
     return _current!;
@@ -32,7 +28,6 @@ class MockPlayerService implements IPlayerService {
       displayName: email.split('@').first,
       level: 7,
       xp: 630,
-      xpToNextLevel: 1000,
       coins: 2400,
       gems: 45,
       wins: 42,
@@ -47,10 +42,6 @@ class MockPlayerService implements IPlayerService {
     _current = WildDeckPlayer(
       id: 'user_new',
       displayName: displayName,
-      level: 1,
-      xp: 0,
-      coins: 500,
-      gems: 10,
     );
     return _current!;
   }
@@ -114,7 +105,7 @@ class MockMatchmakingService implements IMatchmakingService {
 
       final updatedSlots = List<MatchmakingSlot>.from(state.slots);
       // Add a simulated player every 2–3 seconds
-      if (elapsed % 2 == 0 || elapsed % 3 == 0) {
+      if (elapsed.isEven || elapsed % 3 == 0) {
         final emptyIdx = updatedSlots.indexWhere((s) => !s.isOccupied && !s.isCurrentPlayer);
         if (emptyIdx != -1) {
           final isBot = elapsed > 8 && fillWithBots;
@@ -164,7 +155,7 @@ class MockMatchmakingService implements IMatchmakingService {
 
   void dispose() {
     _simulationTimer?.cancel();
-    _controller.close();
+    unawaited(_controller.close());
   }
 }
 
@@ -211,7 +202,6 @@ class MockData {
     displayName: 'WildAce',
     level: 7,
     xp: 630,
-    xpToNextLevel: 1000,
     coins: 2400,
     gems: 45,
     wins: 42,
@@ -230,7 +220,7 @@ class MockData {
   ];
 
   static List<WildGamePlayer> get mockGamePlayers => const [
-    WildGamePlayer(id: 'p1', displayName: 'Blaze',      cardCount: 3, isCurrentTurn: false),
+    WildGamePlayer(id: 'p1', displayName: 'Blaze',      cardCount: 3),
     WildGamePlayer(id: 'p2', displayName: 'ShadowKing', cardCount: 7),
     WildGamePlayer(id: 'p3', displayName: 'FrostBot',   cardCount: 2, isBot: true),
   ];

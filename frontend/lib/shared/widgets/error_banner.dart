@@ -6,8 +6,7 @@ class ErrorBanner extends StatefulWidget {
   final VoidCallback? onDismiss;
 
   const ErrorBanner({
-    super.key,
-    required this.message,
+    required this.message, super.key,
     this.onRetry,
     this.onDismiss,
   });

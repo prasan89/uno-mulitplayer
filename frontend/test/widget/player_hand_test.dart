@@ -4,11 +4,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
 import 'package:wilddeck/features/game/widgets/card_widget.dart';
-import 'package:wilddeck/features/game/widgets/player_hand.dart';
 import 'package:wilddeck/features/game/widgets/game_board.dart';
 import 'package:wilddeck/features/game/widgets/last_card_button.dart';
+import 'package:wilddeck/features/game/widgets/player_hand.dart';
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -46,7 +45,6 @@ Widget _buildBoard({
         myHand: hand,
         playableCardIds: hand.map((c) => c.id).toSet(),
         isMyTurn: isMyTurn,
-        canDraw: false,
         showLastCardButton: showLastCardButton,
         onCardSelected: (_) {},
         onCardPlayed: (_) {},
@@ -141,7 +139,6 @@ void main() {
         _buildBoard(
           hand: cards,
           showLastCardButton: true,
-          isMyTurn: true,
         ),
       );
 
@@ -162,7 +159,6 @@ void main() {
         _buildBoard(
           hand: cards,
           showLastCardButton: true,
-          isMyTurn: true,
         ),
       );
 

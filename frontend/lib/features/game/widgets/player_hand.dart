@@ -8,11 +8,8 @@ class PlayerHand extends StatelessWidget {
   final void Function(WildCard card) onCardTap;
 
   const PlayerHand({
-    super.key,
-    required this.cards,
-    required this.playableCardIds,
+    required this.cards, required this.playableCardIds, required this.onCardTap, super.key,
     this.selectedCardId,
-    required this.onCardTap,
   });
 
   @override
@@ -23,7 +20,7 @@ class PlayerHand extends StatelessWidget {
       decoration: const BoxDecoration(
         color: Color(0xFF1E1E1E),
         border: Border(
-          top: BorderSide(color: Colors.white12, width: 1),
+          top: BorderSide(color: Colors.white12),
         ),
       ),
       child: cards.isEmpty

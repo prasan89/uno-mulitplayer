@@ -232,10 +232,10 @@ class _WildDeckBottomNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return DecoratedBox(
       decoration: const BoxDecoration(
         color: Color(0xFF141829),
-        border: Border(top: BorderSide(color: Color(0xFF2E3550), width: 1)),
+        border: Border(top: BorderSide(color: Color(0xFF2E3550))),
       ),
       child: SafeArea(
         top: false,

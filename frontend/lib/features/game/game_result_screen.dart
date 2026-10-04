@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -8,7 +9,7 @@ import 'package:wilddeck/shared/widgets/wilddeck_components.dart';
 /// Game result screen — win/lose, reward summary, play-again and home buttons.
 class GameResultScreen extends ConsumerStatefulWidget {
   final String gameId;
-  const GameResultScreen({super.key, required this.gameId});
+  const GameResultScreen({required this.gameId, super.key});
 
   @override
   ConsumerState<GameResultScreen> createState() => _GameResultScreenState();
@@ -31,11 +32,11 @@ class _GameResultScreenState extends ConsumerState<GameResultScreen>
   void initState() {
     super.initState();
     _entranceCtrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 600));
-    _shimmerCtrl  = AnimationController(vsync: this, duration: const Duration(milliseconds: 1200))
-      ..repeat();
+    _shimmerCtrl  = AnimationController(vsync: this, duration: const Duration(milliseconds: 1200));
+    unawaited(_shimmerCtrl.repeat());
     _scale = CurvedAnimation(parent: _entranceCtrl, curve: Curves.elasticOut);
     _fade  = CurvedAnimation(parent: _entranceCtrl, curve: Curves.easeIn);
-    _entranceCtrl.forward();
+    unawaited(_entranceCtrl.forward());
   }
 
   @override
@@ -48,8 +49,8 @@ class _GameResultScreenState extends ConsumerState<GameResultScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
+      body: DecoratedBox(
+        decoration: const BoxDecoration(
           gradient: _didWin ? WildDeckTheme.heroGradient : WildDeckTheme.backgroundGradient,
         ),
         child: SafeArea(
@@ -59,9 +60,9 @@ class _GameResultScreenState extends ConsumerState<GameResultScreen>
               padding: const EdgeInsets.symmetric(horizontal: 24),
               child: Column(children: [
                 const SizedBox(height: 32),
-                ScaleTransition(scale: _scale, child: _ResultBadge(didWin: _didWin)),
+                ScaleTransition(scale: _scale, child: const _ResultBadge(didWin: _didWin)),
                 const SizedBox(height: 24),
-                Text(_didWin ? 'YOU WIN!' : 'BETTER LUCK NEXT TIME',
+                const Text(_didWin ? 'YOU WIN!' : 'BETTER LUCK NEXT TIME',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: _didWin ? WildDeckTheme.gold : WildDeckTheme.textSecond,
@@ -70,12 +71,12 @@ class _GameResultScreenState extends ConsumerState<GameResultScreen>
                     letterSpacing: 3,
                   )),
                 const SizedBox(height: 8),
-                Text(_didWin ? 'Rank $_rank  •  First to empty hand'
+                const Text(_didWin ? 'Rank $_rank  •  First to empty hand'
                               : 'You finished rank $_rank',
-                  style: const TextStyle(color: WildDeckTheme.textMuted, fontSize: 14)),
+                  style: TextStyle(color: WildDeckTheme.textMuted, fontSize: 14)),
                 const SizedBox(height: 32),
                 // Rewards
-                _RewardsPanel(coins: _coinsEarned, xp: _xpEarned, didWin: _didWin),
+                const _RewardsPanel(coins: _coinsEarned, xp: _xpEarned, didWin: _didWin),
                 const SizedBox(height: 28),
                 // XP bar
                 const _XPProgress(xpEarned: _xpEarned, total: 1000, prev: 630),
@@ -127,7 +128,8 @@ class _ResultBadge extends StatelessWidget {
 }
 
 class _RewardsPanel extends StatelessWidget {
-  final int coins, xp;
+  final int coins;
+  final int xp;
   final bool didWin;
   const _RewardsPanel({required this.coins, required this.xp, required this.didWin});
 
@@ -154,7 +156,7 @@ class _RewardsPanel extends StatelessWidget {
             color: WildDeckTheme.cardBlue, value: '+$xp', label: 'XP'),
           if (didWin) ...[
             Container(width: 1, height: 40, color: WildDeckTheme.navyBorder),
-            _RewardItem(icon: Icons.local_fire_department_rounded,
+            const _RewardItem(icon: Icons.local_fire_department_rounded,
               color: WildDeckTheme.cardRed, value: '+1', label: 'Win Streak'),
           ],
         ]),
@@ -166,7 +168,8 @@ class _RewardsPanel extends StatelessWidget {
 class _RewardItem extends StatelessWidget {
   final IconData icon;
   final Color color;
-  final String value, label;
+  final String value;
+  final String label;
   const _RewardItem({required this.icon, required this.color,
     required this.value, required this.label});
 
@@ -183,7 +186,9 @@ class _RewardItem extends StatelessWidget {
 }
 
 class _XPProgress extends StatelessWidget {
-  final int xpEarned, total, prev;
+  final int xpEarned;
+  final int total;
+  final int prev;
   const _XPProgress({required this.xpEarned, required this.total, required this.prev});
 
   @override
@@ -195,7 +200,7 @@ class _XPProgress extends StatelessWidget {
           style: const TextStyle(color: WildDeckTheme.textMuted, fontSize: 12)),
       ]),
       const SizedBox(height: 8),
-      XPBar(xp: prev + xpEarned, xpToNext: total, height: 8, showLabel: false),
+      XPBar(xp: prev + xpEarned, xpToNext: total, height: 8),
     ]);
   }
 }

@@ -10,16 +10,15 @@ class AppTheme {
   static const Color backgroundLight = Color(0xFFFAFAFA);
 
   static ThemeData get darkTheme {
-    final colorScheme = ColorScheme(
+    const colorScheme = ColorScheme(
       brightness: Brightness.dark,
       primary: primaryRed,
       onPrimary: Colors.white,
       secondary: secondaryYellowDark,
       onSecondary: Colors.black,
-      error: const Color(0xFFCF6679),
+      error: Color(0xFFCF6679),
       onError: Colors.black,
       surface: backgroundDark,
-      surface: surfaceDark,
       onSurface: Colors.white,
     );
 
@@ -29,11 +28,11 @@ class AppTheme {
       scaffoldBackgroundColor: backgroundDark,
       fontFamily: 'Roboto',
       textTheme: _buildTextTheme(Colors.white),
-      appBarTheme: AppBarTheme(
+      appBarTheme: const AppBarTheme(
         backgroundColor: surfaceDark,
         foregroundColor: Colors.white,
         elevation: 0,
-        titleTextStyle: const TextStyle(
+        titleTextStyle: TextStyle(
           fontFamily: 'Roboto',
           fontSize: 20,
           fontWeight: FontWeight.w600,
@@ -118,16 +117,15 @@ class AppTheme {
   }
 
   static ThemeData get lightTheme {
-    final colorScheme = ColorScheme(
+    const colorScheme = ColorScheme(
       brightness: Brightness.light,
       primary: primaryRed,
       onPrimary: Colors.white,
       secondary: secondaryYellowLight,
       onSecondary: Colors.black,
-      error: const Color(0xFFB00020),
+      error: Color(0xFFB00020),
       onError: Colors.white,
       surface: backgroundLight,
-      surface: Colors.white,
       onSurface: Colors.black,
     );
 

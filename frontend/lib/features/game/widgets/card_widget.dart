@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 
 enum CardColor { red, blue, green, yellow, wild }
@@ -79,8 +80,7 @@ class CardWidget extends StatefulWidget {
   final double height;
 
   const CardWidget({
-    super.key,
-    required this.card,
+    required this.card, super.key,
     this.isPlayable = true,
     this.isSelected = false,
     this.onTap,
@@ -169,14 +169,14 @@ class _CardWidgetState extends State<CardWidget>
             onTap: widget.onTap,
             onTapDown: (_) {
               if (widget.isPlayable) {
-                _animationController.forward();
+                unawaited(_animationController.forward());
               }
             },
             onTapUp: (_) {
-              _animationController.reverse();
+              unawaited(_animationController.reverse());
             },
             onTapCancel: () {
-              _animationController.reverse();
+              unawaited(_animationController.reverse());
             },
             child: Opacity(
               opacity: widget.isPlayable ? 1.0 : 0.5,

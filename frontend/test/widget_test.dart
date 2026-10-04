@@ -162,7 +162,7 @@ class _TestRegisterScreenState extends State<_TestRegisterScreen> {
   String? _validatePassword(String? v) {
     if (v == null || v.isEmpty) return 'Password is required';
     if (v.length < 8) return 'Password must be at least 8 characters';
-    if (!v.contains(RegExp(r'[0-9]'))) {
+    if (!v.contains(RegExp('[0-9]'))) {
       return 'Password must contain at least one number';
     }
     return null;

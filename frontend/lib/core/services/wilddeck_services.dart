@@ -2,6 +2,7 @@
 /// All service layers are abstracted behind interfaces so mock implementations
 /// can be swapped for real implementations in future milestones.
 /// No game rules or business logic live inside UI components.
+library;
 
 import 'package:wilddeck/shared/theme/wilddeck_theme.dart' show WildCardColor, WildCardType;
 
@@ -166,9 +167,8 @@ class ShopItem {
     required this.id,
     required this.name,
     required this.description,
-    this.coinPrice = 0,
+    required this.category, this.coinPrice = 0,
     this.gemPrice = 0,
-    required this.category,
     this.owned = false,
     this.isFeatured = false,
   });
@@ -229,8 +229,7 @@ class WildGameState {
     required this.currentPlayerId,
     required this.players,
     required this.myHand,
-    this.topCard,
-    required this.activeColor,
+    required this.activeColor, this.topCard,
     this.drawPileCount = 0,
     this.discardCount = 0,
     this.isClockwise = true,

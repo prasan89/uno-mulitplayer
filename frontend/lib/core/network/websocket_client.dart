@@ -201,7 +201,7 @@ class WebSocketClient {
     _pongTimeoutTimer = null;
     _reconnectTimer?.cancel();
     _reconnectTimer = null;
-    _channelSubscription?.cancel();
+    unawaited(_channelSubscription?.cancel());
     _channelSubscription = null;
   }
 

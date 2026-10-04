@@ -12,8 +12,8 @@ class ShopScreen extends StatefulWidget {
 class _ShopScreenState extends State<ShopScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tab;
-  int _coins = 2400;
-  int _gems = 45;
+  final int _coins = 2400;
+  final int _gems = 45;
 
   @override
   void initState() {
@@ -59,7 +59,7 @@ class _ShopScreenState extends State<ShopScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
+      body: DecoratedBox(
         decoration: const BoxDecoration(gradient: WildDeckTheme.backgroundGradient),
         child: SafeArea(
           child: Column(children: [
@@ -72,8 +72,8 @@ class _ShopScreenState extends State<ShopScreen>
                 const SizedBox(width: 8),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
                       colors: [WildDeckTheme.cardWild, Color(0xFF4527A0)]),
                     borderRadius: WildDeckTheme.radiusSmall),
                   child: Row(mainAxisSize: MainAxisSize.min, children: [
@@ -95,7 +95,7 @@ class _ShopScreenState extends State<ShopScreen>
                 controller: _tab,
                 tabs: const [Tab(text: 'CARDS'), Tab(text: 'AVATARS'),
                   Tab(text: 'TABLES'), Tab(text: 'EMOTES')],
-                indicator: BoxDecoration(
+                indicator: const BoxDecoration(
                   gradient: WildDeckTheme.primaryButtonGradient,
                   borderRadius: WildDeckTheme.radiusMedium),
                 indicatorSize: TabBarIndicatorSize.tab,
@@ -176,7 +176,7 @@ class _ItemCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final canAfford = item.owned || (item.gemPrice > 0 ? item.gems >= item.gemPrice : item.coins >= item.price);
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
         color: WildDeckTheme.navySurface,
         borderRadius: WildDeckTheme.radiusLarge,

@@ -12,7 +12,7 @@ import 'package:wilddeck/shared/widgets/wilddeck_components.dart';
 /// Uses IMatchmakingService; mock implementation used in M1.
 class MatchmakingScreen extends ConsumerStatefulWidget {
   final String gameMode;
-  const MatchmakingScreen({super.key, required this.gameMode});
+  const MatchmakingScreen({required this.gameMode, super.key});
 
   @override
   ConsumerState<MatchmakingScreen> createState() => _MatchmakingScreenState();
@@ -34,10 +34,10 @@ class _MatchmakingScreenState extends ConsumerState<MatchmakingScreen>
   @override
   void initState() {
     super.initState();
-    _spinCtrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 1200))
-      ..repeat();
-    _pulseCtrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 900))
-      ..repeat(reverse: true);
+    _spinCtrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 1200));
+    unawaited(_spinCtrl.repeat());
+    _pulseCtrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 900));
+    unawaited(_pulseCtrl.repeat(reverse: true));
     _pulse = Tween<double>(begin: 0.92, end: 1.08).animate(
       CurvedAnimation(parent: _pulseCtrl, curve: Curves.easeInOut),
     );
@@ -45,7 +45,7 @@ class _MatchmakingScreenState extends ConsumerState<MatchmakingScreen>
   }
 
   void _startSearch() {
-    _sub?.cancel();
+    unawaited(_sub?.cancel());
     _sub = _service.searchForMatch(
       gameMode: widget.gameMode,
       maxPlayers: 4,
@@ -74,7 +74,7 @@ class _MatchmakingScreenState extends ConsumerState<MatchmakingScreen>
   void dispose() {
     _spinCtrl.dispose();
     _pulseCtrl.dispose();
-    _sub?.cancel();
+    unawaited(_sub?.cancel());
     _service.dispose();
     super.dispose();
   }
@@ -92,7 +92,7 @@ class _MatchmakingScreenState extends ConsumerState<MatchmakingScreen>
     final isFound = _state.status == MatchmakingStatus.found;
 
     return Scaffold(
-      body: Container(
+      body: DecoratedBox(
         decoration: const BoxDecoration(gradient: WildDeckTheme.backgroundGradient),
         child: SafeArea(
           child: Column(
@@ -121,8 +121,8 @@ class _MatchmakingScreenState extends ConsumerState<MatchmakingScreen>
                             ? const Text('Match Found!', key: ValueKey('found'),
                                 style: TextStyle(color: WildDeckTheme.success, fontSize: 22,
                                     fontWeight: FontWeight.w800))
-                            : Text('Finding Players…', key: const ValueKey('searching'),
-                                style: const TextStyle(color: Colors.white, fontSize: 20,
+                            : const Text('Finding Players…', key: ValueKey('searching'),
+                                style: TextStyle(color: Colors.white, fontSize: 20,
                                     fontWeight: FontWeight.w700)),
                       ),
                       const SizedBox(height: 8),
@@ -143,11 +143,11 @@ class _MatchmakingScreenState extends ConsumerState<MatchmakingScreen>
                         _SlotsPanel(slots: _state.slots, gameMode: _modeLabel),
                       const Spacer(),
                       if (widget.gameMode == 'classic' || widget.gameMode == 'quick')
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 8),
+                        const Padding(
+                          padding: EdgeInsets.only(bottom: 8),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
-                            children: const [
+                            children: [
                               Icon(Icons.info_outline, color: WildDeckTheme.textMuted, size: 13),
                               SizedBox(width: 6),
                               Text('Real players preferred • AI fills if needed',
@@ -311,7 +311,6 @@ class _SlotRow extends StatelessWidget {
                       color: WildDeckTheme.navyCard,
                       border: Border.all(
                         color: WildDeckTheme.navyBorder,
-                        style: BorderStyle.solid,
                       ),
                     ),
                     child: const Icon(Icons.person_outline,

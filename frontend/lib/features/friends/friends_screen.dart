@@ -40,7 +40,7 @@ class _FriendsScreenState extends State<FriendsScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
+      body: DecoratedBox(
         decoration: const BoxDecoration(gradient: WildDeckTheme.backgroundGradient),
         child: SafeArea(
           child: Column(children: [
@@ -54,7 +54,7 @@ class _FriendsScreenState extends State<FriendsScreen>
               child: TabBar(
                 controller: _tab,
                 tabs: const [Tab(text: 'Online'), Tab(text: 'All'), Tab(text: 'Requests')],
-                indicator: BoxDecoration(
+                indicator: const BoxDecoration(
                   gradient: WildDeckTheme.primaryButtonGradient,
                   borderRadius: WildDeckTheme.radiusMedium),
                 indicatorSize: TabBarIndicatorSize.tab,
@@ -66,8 +66,8 @@ class _FriendsScreenState extends State<FriendsScreen>
             const SizedBox(height: 8),
             Expanded(child: TabBarView(controller: _tab, children: [
               _FriendsList(friends: _friends.where((f) => f.$3).toList()),
-              _FriendsList(friends: _friends),
-              _RequestsList(requests: _requests),
+              const _FriendsList(friends: _friends),
+              const _RequestsList(requests: _requests),
             ])),
             _InviteBar(),
           ]),

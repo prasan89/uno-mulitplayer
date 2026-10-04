@@ -1,8 +1,9 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:wilddeck/features/game/widgets/card_widget.dart';
-import 'package:wilddeck/features/game/widgets/game_board.dart';
 import 'package:wilddeck/features/game/widgets/color_picker_dialog.dart';
+import 'package:wilddeck/features/game/widgets/game_board.dart';
 import 'package:wilddeck/features/game/widgets/game_over_dialog.dart';
 
 /// Represents the current state of the game.
@@ -23,12 +24,11 @@ class GameState {
   const GameState({
     required this.gameId,
     required this.myHand,
-    this.discardTopCard,
+    required this.opponents, this.discardTopCard,
     this.discardCount = 0,
     this.drawPileCount = 108,
     this.isMyTurn = false,
     this.canDraw = false,
-    required this.opponents,
     this.turnTimeRemaining,
     this.winnerName,
     this.finalScores = const [],
@@ -45,8 +45,7 @@ class GameScreen extends StatefulWidget {
   final GameState? initialState;
 
   const GameScreen({
-    super.key,
-    required this.gameId,
+    required this.gameId, super.key,
     this.initialState,
   });
 
@@ -102,7 +101,7 @@ class _GameScreenState extends State<GameScreen> {
       canDraw: true,
       opponents: const [
         OpponentPlayer(id: 'p2', name: 'Alice', cardCount: 3),
-        OpponentPlayer(id: 'p3', name: 'Bob', cardCount: 7, isCurrentTurn: false),
+        OpponentPlayer(id: 'p3', name: 'Bob', cardCount: 7),
         OpponentPlayer(id: 'p4', name: 'Charlie', cardCount: 2),
       ],
       turnTimeRemaining: const Duration(seconds: 30),
@@ -193,10 +192,7 @@ class _GameScreenState extends State<GameScreen> {
         discardTopCard: card,
         discardCount: _gameState.discardCount + 1,
         drawPileCount: _gameState.drawPileCount,
-        isMyTurn: false,
-        canDraw: false,
         opponents: _gameState.opponents,
-        turnTimeRemaining: null,
         winnerName: newHand.isEmpty ? 'You' : _gameState.winnerName,
         finalScores: _gameState.finalScores,
       );
@@ -223,10 +219,7 @@ class _GameScreenState extends State<GameScreen> {
         discardTopCard: _gameState.discardTopCard,
         discardCount: _gameState.discardCount,
         drawPileCount: _gameState.drawPileCount - 1,
-        isMyTurn: false,
-        canDraw: false,
         opponents: _gameState.opponents,
-        turnTimeRemaining: null,
         winnerName: _gameState.winnerName,
         finalScores: _gameState.finalScores,
       );
@@ -393,7 +386,7 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   void _showGameMenu(BuildContext context) {
-    showModalBottomSheet<void>(
+    unawaited(showModalBottomSheet<void>(
       context: context,
       backgroundColor: const Color(0xFF1E1E1E),
       shape: const RoundedRectangleBorder(
@@ -421,7 +414,7 @@ class _GameScreenState extends State<GameScreen> {
           ],
         ),
       ),
-    );
+    ));
   }
 }
 

@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
-
 import 'package:wilddeck/core/router/wilddeck_router.dart';
-import 'package:wilddeck/features/splash/splash_screen.dart';
 import 'package:wilddeck/features/auth/screens/wilddeck_login_screen.dart';
 import 'package:wilddeck/features/home/home_screen.dart';
+import 'package:wilddeck/features/splash/splash_screen.dart';
 import 'package:wilddeck/shared/theme/wilddeck_theme.dart';
 
 /// Builds a testable MaterialApp backed by a given [GoRouter].

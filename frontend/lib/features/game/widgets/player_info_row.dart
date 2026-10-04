@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 
 class PlayerInfoRow extends StatefulWidget {
@@ -8,9 +9,9 @@ class PlayerInfoRow extends StatefulWidget {
   final String? avatarUrl;
 
   const PlayerInfoRow({
-    super.key,
     required this.playerName,
     required this.cardCount,
+    super.key,
     this.isCurrentTurn = false,
     this.isCurrentPlayer = false,
     this.avatarUrl,
@@ -42,7 +43,7 @@ class _PlayerInfoRowState extends State<PlayerInfoRow>
     ).animate(CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut));
 
     if (widget.isCurrentTurn) {
-      _pulseController.repeat(reverse: true);
+      unawaited(_pulseController.repeat(reverse: true));
     }
   }
 
@@ -50,7 +51,7 @@ class _PlayerInfoRowState extends State<PlayerInfoRow>
   void didUpdateWidget(PlayerInfoRow oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.isCurrentTurn && !oldWidget.isCurrentTurn) {
-      _pulseController.repeat(reverse: true);
+      unawaited(_pulseController.repeat(reverse: true));
     } else if (!widget.isCurrentTurn && oldWidget.isCurrentTurn) {
       _pulseController.stop();
       _pulseController.reset();

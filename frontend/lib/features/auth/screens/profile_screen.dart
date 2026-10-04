@@ -176,7 +176,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                         Positioned(
                           bottom: 0,
                           right: 0,
-                          child: Container(
+                          child: DecoratedBox(
                             decoration: BoxDecoration(
                               color: theme.colorScheme.secondary,
                               shape: BoxShape.circle,

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 
 class DrawPile extends StatefulWidget {
@@ -6,8 +7,7 @@ class DrawPile extends StatefulWidget {
   final bool canDraw;
 
   const DrawPile({
-    super.key,
-    required this.cardCount,
+    required this.cardCount, super.key,
     this.onDraw,
     this.canDraw = false,
   });
@@ -37,7 +37,7 @@ class _DrawPileState extends State<DrawPile>
   void didUpdateWidget(DrawPile oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.canDraw && !oldWidget.canDraw) {
-      _pulseController.repeat(reverse: true);
+      unawaited(_pulseController.repeat(reverse: true));
     } else if (!widget.canDraw && oldWidget.canDraw) {
       _pulseController.stop();
       _pulseController.reset();
@@ -84,7 +84,6 @@ class _DrawPileState extends State<DrawPile>
                           borderRadius: BorderRadius.circular(8),
                           border: Border.all(
                             color: Colors.white12,
-                            width: 1,
                           ),
                         ),
                       ),

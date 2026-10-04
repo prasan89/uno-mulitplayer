@@ -53,7 +53,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
+      body: DecoratedBox(
         decoration: const BoxDecoration(gradient: WildDeckTheme.backgroundGradient),
         child: SafeArea(
           child: Column(children: [
@@ -70,7 +70,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen>
               child: TabBar(
                 controller: _tab,
                 tabs: const [Tab(text: 'GLOBAL'), Tab(text: 'FRIENDS'), Tab(text: 'SEASON')],
-                indicator: BoxDecoration(
+                indicator: const BoxDecoration(
                   gradient: WildDeckTheme.primaryButtonGradient,
                   borderRadius: WildDeckTheme.radiusMedium),
                 indicatorSize: TabBarIndicatorSize.tab,
@@ -81,7 +81,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen>
               ),
             ),
             const SizedBox(height: 8),
-            Expanded(child: TabBarView(controller: _tab, children: [
+            Expanded(child: TabBarView(controller: _tab, children: const [
               _LeaderList(entries: _global),
               _LeaderList(entries: _friends),
               _LeaderList(entries: _season),
@@ -101,8 +101,8 @@ class _Podium extends StatelessWidget {
   Widget build(BuildContext context) {
     if (leaders.length < 3) return const SizedBox(height: 80);
     final (n1, s1, _, c1, me1) = leaders[0];
-    final (n2, s2, __, c2, me2) = leaders[1];
-    final (n3, s3, ___, c3, me3) = leaders[2];
+    final (n2, s2, _, c2, me2) = leaders[1];
+    final (n3, s3, _, c3, me3) = leaders[2];
 
     return Container(
       height: 120,
@@ -123,7 +123,9 @@ class _Podium extends StatelessWidget {
 
 class _PodiumSlot extends StatelessWidget {
   final String name;
-  final int score, rank, height;
+  final int score;
+  final int rank;
+  final int height;
   final Color color;
   final bool isMe;
   const _PodiumSlot({required this.name, required this.score, required this.rank,

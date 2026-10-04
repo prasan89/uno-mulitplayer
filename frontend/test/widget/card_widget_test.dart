@@ -76,7 +76,7 @@ void main() {
       final redContainer = containers.firstWhere(
         (c) =>
             c.decoration is BoxDecoration &&
-            (c.decoration as BoxDecoration).color ==
+            (c.decoration! as BoxDecoration).color ==
                 const Color(0xFFE53935),
         orElse: () => throw TestFailure('No red container found'),
       );
@@ -103,7 +103,7 @@ void main() {
       final gradientContainer = containers.firstWhere(
         (c) =>
             c.decoration is BoxDecoration &&
-            (c.decoration as BoxDecoration).gradient != null,
+            (c.decoration! as BoxDecoration).gradient != null,
         orElse: () => throw TestFailure('No gradient container found'),
       );
 
@@ -151,7 +151,6 @@ void main() {
       await tester.pumpWidget(
         _buildCard(
           card: card,
-          isPlayable: true,
           onTap: () => tapped = true,
         ),
       );
@@ -170,7 +169,7 @@ void main() {
         id: 'play-card',
       );
 
-      await tester.pumpWidget(_buildCard(card: card, isPlayable: true));
+      await tester.pumpWidget(_buildCard(card: card));
 
       final ignorePointers = tester.widgetList<IgnorePointer>(
         find.byType(IgnorePointer),
@@ -275,7 +274,7 @@ void main() {
         id: 'unsel-card',
       );
 
-      await tester.pumpWidget(_buildCard(card: card, isSelected: false));
+      await tester.pumpWidget(_buildCard(card: card));
 
       // For an unselected card the shadow blurRadius should be 6, not 12.
       final containers = tester
