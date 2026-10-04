@@ -3,12 +3,12 @@ FROM golang:1.22-alpine AS builder
 
 WORKDIR /app
 
-COPY go.mod go.sum ./
-RUN go mod download
-
+# Copy all source first so go mod tidy can resolve actual imports
 COPY . .
 
-RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-w -s" -o server ./cmd/server
+# Tidy resolves all dependencies and writes go.sum, then build
+RUN go mod tidy && \
+    CGO_ENABLED=0 GOOS=linux go build -ldflags="-w -s" -o server ./cmd/server
 
 # ---- Runtime Stage ----
 FROM gcr.io/distroless/static:nonroot
