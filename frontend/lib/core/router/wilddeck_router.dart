@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../providers/wilddeck_providers.dart';
+import '../services/wilddeck_services.dart';
 import '../../features/splash/splash_screen.dart';
 import '../../features/auth/screens/wilddeck_login_screen.dart';
 import '../../features/home/home_screen.dart';
@@ -11,6 +12,7 @@ import '../../features/matchmaking/matchmaking_screen.dart';
 import '../../features/game_lobby/game_lobby_screen.dart';
 import '../../features/game/game_table_screen.dart';
 import '../../features/game/wild_color_picker_screen.dart';
+import '../../features/game/game_result_screen.dart';
 import '../../features/profile/profile_screen.dart';
 import '../../features/friends/friends_screen.dart';
 import '../../features/shop/shop_screen.dart';
@@ -34,7 +36,11 @@ class WildRoutes {
   static const leaderboard = '/leaderboard';
   static const settings    = '/settings';
 
+  static const wildColorPicker = '/wild-color';
+  static const gameResult      = '/result/:gameId';
+
   static String gamePath(String gameId) => '/game/$gameId';
+  static String resultPath(String gameId) => '/result/$gameId';
 }
 
 final routerProvider = Provider<GoRouter>((ref) {
@@ -121,6 +127,22 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) {
           final gameId = state.pathParameters['gameId'] ?? 'demo';
           return GameTableScreen(gameId: gameId);
+        },
+      ),
+      GoRoute(
+        path: WildRoutes.wildColorPicker,
+        name: 'wild-color',
+        builder: (context, state) {
+          final card = state.extra as WildGameCard?;
+          return WildColorPickerScreen(card: card);
+        },
+      ),
+      GoRoute(
+        path: WildRoutes.gameResult,
+        name: 'game-result',
+        builder: (context, state) {
+          final gameId = state.pathParameters['gameId'] ?? 'demo';
+          return GameResultScreen(gameId: gameId);
         },
       ),
       GoRoute(

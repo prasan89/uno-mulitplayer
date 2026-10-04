@@ -78,18 +78,11 @@ class GameNotifier extends AutoDisposeNotifier<WildGameState?> {
   @override
   WildGameState? build() => null;
 
-  void loadMockGame(String gameId) {
-    state = MockData.buildMockGameState(gameId);
+  void loadMockGame(WildGameState mockState) {
+    state = mockState;
   }
 
-  void selectCard(String cardId) {
-    final s = state;
-    if (s == null) return;
-    // Toggle selection — UI concern only, no rule checking here
-    // Real playability will be determined by IGameEngine in a future milestone
-  }
-
-  void drawCard() {
+  Future<void> drawCard() async {
     final s = state;
     if (s == null || !s.isMyTurn) return;
     final drawn = WildGameCard(
@@ -108,7 +101,7 @@ class GameNotifier extends AutoDisposeNotifier<WildGameState?> {
     );
   }
 
-  void playCard(String cardId, {WildCardColor? chosenColor}) {
+  Future<void> playCard(String cardId, {WildCardColor? chosenColor}) async {
     final s = state;
     if (s == null) return;
     final card = s.myHand.firstWhere((c) => c.id == cardId, orElse: () => s.myHand.first);
@@ -135,31 +128,41 @@ class SettingsState {
   final bool musicEnabled;
   final bool notificationsEnabled;
   final bool vibrationEnabled;
+  final bool showOnlineStatus;
+  final bool analyticsEnabled;
   final String language;
   final double sfxVolume;
   final double musicVolume;
+  final double masterVolume;
 
   const SettingsState({
     this.soundEnabled = true,
     this.musicEnabled = true,
     this.notificationsEnabled = true,
     this.vibrationEnabled = true,
+    this.showOnlineStatus = true,
+    this.analyticsEnabled = true,
     this.language = 'English',
     this.sfxVolume = 0.8,
     this.musicVolume = 0.6,
+    this.masterVolume = 0.8,
   });
 
   SettingsState copyWith({
     bool? soundEnabled, bool? musicEnabled, bool? notificationsEnabled,
-    bool? vibrationEnabled, String? language, double? sfxVolume, double? musicVolume,
+    bool? vibrationEnabled, bool? showOnlineStatus, bool? analyticsEnabled,
+    String? language, double? sfxVolume, double? musicVolume, double? masterVolume,
   }) => SettingsState(
     soundEnabled: soundEnabled ?? this.soundEnabled,
     musicEnabled: musicEnabled ?? this.musicEnabled,
     notificationsEnabled: notificationsEnabled ?? this.notificationsEnabled,
     vibrationEnabled: vibrationEnabled ?? this.vibrationEnabled,
+    showOnlineStatus: showOnlineStatus ?? this.showOnlineStatus,
+    analyticsEnabled: analyticsEnabled ?? this.analyticsEnabled,
     language: language ?? this.language,
     sfxVolume: sfxVolume ?? this.sfxVolume,
     musicVolume: musicVolume ?? this.musicVolume,
+    masterVolume: masterVolume ?? this.masterVolume,
   );
 }
 
@@ -167,18 +170,16 @@ class SettingsNotifier extends Notifier<SettingsState> {
   @override
   SettingsState build() => const SettingsState();
 
-  void toggle(String key) {
-    switch (key) {
-      case 'sound':         state = state.copyWith(soundEnabled: !state.soundEnabled); break;
-      case 'music':         state = state.copyWith(musicEnabled: !state.musicEnabled); break;
-      case 'notifications': state = state.copyWith(notificationsEnabled: !state.notificationsEnabled); break;
-      case 'vibration':     state = state.copyWith(vibrationEnabled: !state.vibrationEnabled); break;
-    }
-  }
-
-  void setSfxVolume(double v)   => state = state.copyWith(sfxVolume: v);
-  void setMusicVolume(double v) => state = state.copyWith(musicVolume: v);
-  void setLanguage(String lang) => state = state.copyWith(language: lang);
+  void setSoundEnabled(bool v)         => state = state.copyWith(soundEnabled: v);
+  void setMusicEnabled(bool v)         => state = state.copyWith(musicEnabled: v);
+  void setNotificationsEnabled(bool v) => state = state.copyWith(notificationsEnabled: v);
+  void setVibrationEnabled(bool v)     => state = state.copyWith(vibrationEnabled: v);
+  void setShowOnlineStatus(bool v)     => state = state.copyWith(showOnlineStatus: v);
+  void setAnalyticsEnabled(bool v)     => state = state.copyWith(analyticsEnabled: v);
+  void setMasterVolume(double v)       => state = state.copyWith(masterVolume: v);
+  void setSfxVolume(double v)          => state = state.copyWith(sfxVolume: v);
+  void setMusicVolume(double v)        => state = state.copyWith(musicVolume: v);
+  void setLanguage(String lang)        => state = state.copyWith(language: lang);
 }
 
 final settingsProvider = NotifierProvider<SettingsNotifier, SettingsState>(
