@@ -1,0 +1,170 @@
+name: Deploy to Production
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: "Type 'deploy' to confirm production deployment"
+        required: true
+        default: ""
+  push:
+    tags:
+      - "v*.*.*"
+
+jobs:
+  deploy-production:
+    name: Deploy to Cloud Run (Production)
+    runs-on: ubuntu-latest
+    environment: production
+
+    permissions:
+      contents: write
+      id-token: write
+
+    steps:
+      - name: Validate manual trigger confirmation
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          if [ "${{ github.event.inputs.confirm }}" != "deploy" ]; then
+            echo "Confirmation required: type 'deploy' in the confirm input."
+            exit 1
+          fi
+
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Configure Docker for Artifact Registry
+        run: gcloud auth configure-docker us-central1-docker.pkg.dev --quiet
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Resolve image tag
+        id: image-tag
+        run: |
+          # For tag pushes use the tag name; for workflow_dispatch use the git SHA
+          if [ "${{ github.event_name }}" = "push" ]; then
+            TAG="${GITHUB_REF_NAME}"
+          else
+            TAG="${{ github.sha }}"
+          fi
+          echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
+
+      - name: Build and push backend image to Artifact Registry
+        uses: docker/build-push-action@v6
+        with:
+          context: ./backend
+          file: ./backend/Dockerfile
+          push: true
+          tags: |
+            us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/uno-multiplayer/backend:${{ steps.image-tag.outputs.tag }}
+            us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/uno-multiplayer/backend:production-latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Capture current Cloud Run revision (for rollback)
+        id: current-revision
+        run: |
+          CURRENT=$(gcloud run services describe uno-multiplayer-production \
+            --region us-central1 \
+            --project ${{ secrets.GCP_PROJECT_ID }} \
+            --format 'value(status.latestReadyRevisionName)' 2>/dev/null || echo "")
+          echo "revision=${CURRENT}" >> "$GITHUB_OUTPUT"
+
+      - name: Deploy to Cloud Run (Production)
+        id: deploy
+        uses: google-github-actions/deploy-cloudrun@v2
+        with:
+          service: uno-multiplayer-production
+          region: us-central1
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          image: us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/uno-multiplayer/backend:${{ steps.image-tag.outputs.tag }}
+          flags: >-
+            --allow-unauthenticated
+            --min-instances=1
+            --max-instances=20
+            --memory=512Mi
+            --cpu=1
+
+      - name: Health check production deployment
+        id: health-check
+        run: |
+          SERVICE_URL="${{ steps.deploy.outputs.url }}"
+          echo "Checking health at ${SERVICE_URL}/health"
+          STATUS=$(curl --silent --output /dev/null --write-out "%{http_code}" \
+            --retry 5 --retry-delay 5 --retry-connrefused \
+            "${SERVICE_URL}/health")
+          echo "HTTP status: ${STATUS}"
+          if [ "${STATUS}" != "200" ]; then
+            echo "Health check failed with status ${STATUS}"
+            exit 1
+          fi
+          echo "Health check passed"
+
+      - name: Rollback to previous revision on failure
+        if: failure() && steps.current-revision.outputs.revision != ''
+        run: |
+          echo "Rolling back to revision: ${{ steps.current-revision.outputs.revision }}"
+          gcloud run services update-traffic uno-multiplayer-production \
+            --region us-central1 \
+            --project ${{ secrets.GCP_PROJECT_ID }} \
+            --to-revisions=${{ steps.current-revision.outputs.revision }}=100
+          echo "Rollback complete"
+
+      - name: Generate changelog from git log
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
+        id: changelog
+        run: |
+          CURRENT_TAG="${GITHUB_REF_NAME}"
+          # Find the previous tag to diff against
+          PREV_TAG=$(git tag --sort=-version:refname | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | sed -n '2p' || echo "")
+          if [ -n "${PREV_TAG}" ]; then
+            RANGE="${PREV_TAG}..${CURRENT_TAG}"
+          else
+            RANGE="${CURRENT_TAG}"
+          fi
+          CHANGELOG=$(git log "${RANGE}" --pretty=format:"- %s (%h)" --no-merges)
+          # Write multiline output safely
+          {
+            echo "changelog<<EOF"
+            echo "${CHANGELOG}"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+          echo "previous_tag=${PREV_TAG}" >> "$GITHUB_OUTPUT"
+
+      - name: Create GitHub release
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: "Release ${{ github.ref_name }}"
+          body: |
+            ## Changes in ${{ github.ref_name }}
+
+            ${{ steps.changelog.outputs.changelog }}
+
+            ## Deployment
+
+            - **Environment**: Production
+            - **Image**: `us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/uno-multiplayer/backend:${{ github.ref_name }}`
+            - **Service URL**: ${{ steps.deploy.outputs.url }}
+          draft: false
+          prerelease: ${{ contains(github.ref_name, '-rc') || contains(github.ref_name, '-beta') || contains(github.ref_name, '-alpha') }}
+          generate_release_notes: false
+
+      - name: Deployment summary
+        if: success()
+        run: |
+          echo "Production deployment succeeded"
+          echo "Image tag: ${{ steps.image-tag.outputs.tag }}"
+          echo "Service URL: ${{ steps.deploy.outputs.url }}"
