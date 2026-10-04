@@ -63,7 +63,7 @@ class _ShopScreenState extends State<ShopScreen>
         decoration: const BoxDecoration(gradient: WildDeckTheme.backgroundGradient),
         child: SafeArea(
           child: Column(children: [
-            WildDeckTopBar(title: 'Shop'),
+            const WildDeckTopBar(title: 'Shop'),
             // Balance row
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),

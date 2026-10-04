@@ -31,7 +31,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         decoration: const BoxDecoration(gradient: WildDeckTheme.backgroundGradient),
         child: SafeArea(
           child: Column(children: [
-            WildDeckTopBar(title: 'Settings'),
+            const WildDeckTopBar(title: 'Settings'),
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.all(16),

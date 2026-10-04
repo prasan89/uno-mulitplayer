@@ -38,7 +38,7 @@ class _GameLobbyScreenState extends State<GameLobbyScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              WildDeckTopBar(title: 'Game Lobby'),
+              const WildDeckTopBar(title: 'Game Lobby'),
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.all(20),

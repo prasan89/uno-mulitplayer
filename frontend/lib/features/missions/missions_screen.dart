@@ -56,7 +56,7 @@ class _MissionsScreenState extends State<MissionsScreen>
         decoration: const BoxDecoration(gradient: WildDeckTheme.backgroundGradient),
         child: SafeArea(
           child: Column(children: [
-            WildDeckTopBar(title: 'Missions'),
+            const WildDeckTopBar(title: 'Missions'),
             // XP summary
             _MissionsSummary(daily: daily),
             Container(

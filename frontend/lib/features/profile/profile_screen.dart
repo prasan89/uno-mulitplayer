@@ -21,7 +21,7 @@ class ProfileScreen extends ConsumerWidget {
         decoration: const BoxDecoration(gradient: WildDeckTheme.backgroundGradient),
         child: SafeArea(
           child: CustomScrollView(slivers: [
-            SliverToBoxAdapter(child: WildDeckTopBar(title: 'Profile')),
+            SliverToBoxAdapter(child: const WildDeckTopBar(title: 'Profile')),
             SliverToBoxAdapter(child: _ProfileHero(player: player)),
             SliverToBoxAdapter(child: _StatsGrid(player: player)),
             SliverToBoxAdapter(child: _AchievementsSection()),

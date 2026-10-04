@@ -17,7 +17,7 @@ class GameModeScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              WildDeckTopBar(title: 'Choose Mode'),
+              const WildDeckTopBar(title: 'Choose Mode'),
               Expanded(
                 child: SingleChildScrollView(
                   padding: const EdgeInsets.all(20),

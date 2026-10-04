@@ -44,7 +44,7 @@ class _FriendsScreenState extends State<FriendsScreen>
         decoration: const BoxDecoration(gradient: WildDeckTheme.backgroundGradient),
         child: SafeArea(
           child: Column(children: [
-            WildDeckTopBar(title: 'Friends'),
+            const WildDeckTopBar(title: 'Friends'),
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 16),
               decoration: BoxDecoration(

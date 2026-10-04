@@ -57,7 +57,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen>
         decoration: const BoxDecoration(gradient: WildDeckTheme.backgroundGradient),
         child: SafeArea(
           child: Column(children: [
-            WildDeckTopBar(title: 'Leaderboard'),
+            const WildDeckTopBar(title: 'Leaderboard'),
             // Top 3 podium for global
             _Podium(leaders: _global.take(3).toList()),
             const SizedBox(height: 8),

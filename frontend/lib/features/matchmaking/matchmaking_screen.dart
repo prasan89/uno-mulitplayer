@@ -97,7 +97,7 @@ class _MatchmakingScreenState extends ConsumerState<MatchmakingScreen>
         child: SafeArea(
           child: Column(
             children: [
-              WildDeckTopBar(title: 'Finding Players'),
+              const WildDeckTopBar(title: 'Finding Players'),
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.all(24),
