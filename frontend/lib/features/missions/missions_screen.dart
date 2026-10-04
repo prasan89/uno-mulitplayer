@@ -29,22 +29,22 @@ class _MissionsScreenState extends State<MissionsScreen>
   static List<MissionData> get _weekly => [
     MissionData(id: 'w1', title: 'Win 10 matches',
       description: 'Win any 10 games this week', progress: 4, goal: 10,
-      coinReward: 500, xpReward: 200),
+      coinReward: 500, xpReward: 200, type: MissionType.weekly),
     MissionData(id: 'w2', title: 'Play 50 cards',
       description: 'Play a total of 50 cards', progress: 23, goal: 50,
-      coinReward: 300, xpReward: 120),
+      coinReward: 300, xpReward: 120, type: MissionType.weekly),
   ];
 
   static List<MissionData> get _achievements => [
     MissionData(id: 'a1', title: 'First Steps',
       description: 'Play your first match', progress: 1, goal: 1,
-      coinReward: 100, xpReward: 50),
+      coinReward: 100, xpReward: 50, type: MissionType.achievement),
     MissionData(id: 'a2', title: 'Wild Mastery',
       description: 'Play 50 wild cards total', progress: 32, goal: 50,
-      coinReward: 1000, xpReward: 400),
+      coinReward: 1000, xpReward: 400, type: MissionType.achievement),
     MissionData(id: 'a3', title: 'Unstoppable',
       description: 'Win 100 matches', progress: 42, goal: 100,
-      coinReward: 2000, xpReward: 800),
+      coinReward: 2000, xpReward: 800, type: MissionType.achievement),
   ];
 
   @override
@@ -150,7 +150,6 @@ class _MissionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final done = mission.progress >= mission.goal;
-    final pct = (mission.progress / mission.goal).clamp(0.0, 1.0);
 
     return Container(
       margin: const EdgeInsets.only(bottom: 10),

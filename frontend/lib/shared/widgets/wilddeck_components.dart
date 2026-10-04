@@ -67,7 +67,7 @@ class _WildDeckCardWidgetState extends State<WildDeckCardWidget>
     return AnimatedContainer(
       duration: const Duration(milliseconds: 180),
       transform: widget.isSelected
-          ? (Matrix4.identity()..translate(0.0, -12.0))
+          ? Matrix4.translationValues(0.0, -12.0, 0)
           : Matrix4.identity(),
       child: ScaleTransition(
         scale: _scale,

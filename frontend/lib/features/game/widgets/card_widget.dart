@@ -159,7 +159,7 @@ class _CardWidgetState extends State<CardWidget>
       duration: const Duration(milliseconds: 200),
       curve: Curves.easeInOut,
       transform: widget.isSelected
-          ? (Matrix4.identity()..translate(0.0, -10.0))
+          ? Matrix4.translationValues(0.0, -10.0, 0)
           : Matrix4.identity(),
       child: ScaleTransition(
         scale: _scaleAnimation,

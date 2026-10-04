@@ -1,17 +1,18 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:wilddeck/core/providers/wilddeck_providers.dart';
 import 'package:wilddeck/core/router/wilddeck_router.dart';
-import 'package:wilddeck/core/services/wilddeck_services.dart';
 import 'package:wilddeck/core/services/mock_services.dart';
+import 'package:wilddeck/core/services/wilddeck_services.dart';
 import 'package:wilddeck/shared/theme/wilddeck_theme.dart';
 import 'package:wilddeck/shared/widgets/wilddeck_components.dart';
 
 /// Main game table screen — card play, hand, discard pile, player seats.
 class GameTableScreen extends ConsumerStatefulWidget {
   final String gameId;
-  const GameTableScreen({super.key, required this.gameId});
+  const GameTableScreen({required this.gameId, super.key});
 
   @override
   ConsumerState<GameTableScreen> createState() => _GameTableScreenState();
@@ -85,7 +86,6 @@ class _GameTableScreenState extends ConsumerState<GameTableScreen>
         body: Center(child: CircularProgressIndicator()),
       );
     }
-    final myPlayer = state.players.isNotEmpty ? state.players[0] : null;
     final hand = state.myHand.isNotEmpty ? state.myHand : MockData.mockHand;
     final topCard = state.topCard;
     final isMyTurn = state.isMyTurn;
@@ -109,12 +109,12 @@ class _GameTableScreenState extends ConsumerState<GameTableScreen>
               topCard: topCard,
               deckEmpty: state.drawPileCount == 0,
               currentColor: state.activeColor,
-              onDraw: isMyTurn ? _drawCard : null,
+              onDraw: isMyTurn ? () { unawaited(_drawCard()); } : null,
               drawPileCount: state.drawPileCount,
             ),
             const Spacer(),
             // Turn indicator
-            TurnIndicator(isMyTurn: isMyTurn, currentPlayer: state.currentPlayerId),
+            TurnIndicator(isMyTurn: isMyTurn, currentPlayerName: state.currentPlayerId),
             const SizedBox(height: 8),
             // My hand
             _PlayerHand(
@@ -127,7 +127,7 @@ class _GameTableScreenState extends ConsumerState<GameTableScreen>
                 final card = hand[index];
                 if (!_canPlay(card, topCard)) return;
                 if (_selectedCardIndex == index) {
-                  _playCard(card);
+                  unawaited(_playCard(card));
                 } else {
                   setState(() => _selectedCardIndex = index);
                 }
@@ -154,9 +154,11 @@ class _OpponentRow extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: players.map((p) => PlayerSeat(
-          player: p,
-          isCurrentTurn: false,
-          alignment: Axis.vertical,
+          displayName: p.displayName,
+          cardCount: p.cardCount,
+          isCurrentTurn: p.isCurrentTurn,
+          isBot: p.isBot,
+          isConnected: p.isConnected,
         )).toList(),
       ),
     );
@@ -190,7 +192,7 @@ class _GameTable extends StatelessWidget {
             for (int i = 0; i < 3; i++)
               Transform.translate(
                 offset: Offset(i * 1.5, i * -1.5),
-                child: WildDeckCardWidget(card: null, faceDown: true),
+                child: WildDeckCardWidget(color: WildCardColor.wild, type: WildCardType.wild, isFaceDown: true),
               ),
           ]),
         ),
@@ -203,7 +205,7 @@ class _GameTable extends StatelessWidget {
       const SizedBox(width: 12),
       // Discard pile
       topCard != null
-          ? WildDeckCardWidget(card: topCard, faceDown: false)
+          ? WildDeckCardWidget(color: topCard!.color, type: topCard!.type, number: topCard!.number, isFaceDown: false)
           : Container(
               width: 56, height: 80,
               decoration: BoxDecoration(
@@ -289,8 +291,10 @@ class _PlayerHand extends StatelessWidget {
             child: Opacity(
               opacity: isMyTurn && !playable ? 0.4 : 1.0,
               child: WildDeckCardWidget(
-                card: card,
-                faceDown: false,
+                color: card.color,
+                type: card.type,
+                number: card.number,
+                isFaceDown: false,
                 isSelected: selected,
                 onTap: () => onCardTap(i),
               ),

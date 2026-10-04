@@ -18,8 +18,7 @@ class AppTheme {
       onSecondary: Colors.black,
       error: const Color(0xFFCF6679),
       onError: Colors.black,
-      background: backgroundDark,
-      onSurface: Colors.white,
+      surface: backgroundDark,
       surface: surfaceDark,
       onSurface: Colors.white,
     );
@@ -41,8 +40,7 @@ class AppTheme {
           color: Colors.white,
         ),
       ),
-      cardTheme: CardTheme(
-        color: surfaceDark,
+      cardTheme: CardThemeData(
         elevation: 2,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
@@ -128,8 +126,7 @@ class AppTheme {
       onSecondary: Colors.black,
       error: const Color(0xFFB00020),
       onError: Colors.white,
-      background: backgroundLight,
-      onSurface: Colors.black,
+      surface: backgroundLight,
       surface: Colors.white,
       onSurface: Colors.black,
     );
@@ -151,8 +148,7 @@ class AppTheme {
           color: Colors.black,
         ),
       ),
-      cardTheme: CardTheme(
-        color: Colors.white,
+      cardTheme: CardThemeData(
         elevation: 2,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),

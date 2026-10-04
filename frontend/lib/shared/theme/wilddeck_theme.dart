@@ -129,8 +129,6 @@ class WildDeckTheme {
         onSecondary: Colors.black,
         error: error,
         onError: Colors.white,
-        background: navyDeep,
-        onSurface: textPrimary,
         surface: navySurface,
         onSurface: textPrimary,
       ),
@@ -148,7 +146,7 @@ class WildDeckTheme {
         iconTheme: IconThemeData(color: textPrimary),
       ),
       textTheme: _textTheme,
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         color: navySurface,
         elevation: 0,
         shape: RoundedRectangleBorder(

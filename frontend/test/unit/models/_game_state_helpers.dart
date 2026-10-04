@@ -1,20 +1,20 @@
 // Standalone GameState model used in unit tests, independent of generated code.
 // This mirrors the structure of lib/core/models/game_state.dart.
 
-enum _CardColor { red, green, blue, yellow, wild }
-enum _GameStatus { waiting, active, finished }
+enum TestCardColor { red, green, blue, yellow, wild }
+enum TestGameStatus { waiting, active, finished }
 
-class _WildCard {
-  final _CardColor color;
+class TestWildCard {
+  final TestCardColor color;
   final String value;
 
-  const _WildCard({required this.color, required this.value});
+  const TestWildCard({required this.color, required this.value});
 
-  factory _WildCard.fromJson(Map<String, dynamic> json) {
-    return _WildCard(
-      color: _CardColor.values.firstWhere(
+  factory TestWildCard.fromJson(Map<String, dynamic> json) {
+    return TestWildCard(
+      color: TestCardColor.values.firstWhere(
         (c) => c.name == (json['color'] as String),
-        orElse: () => _CardColor.wild,
+        orElse: () => TestCardColor.wild,
       ),
       value: json['value'] as String,
     );
@@ -27,27 +27,27 @@ class _WildCard {
 
   @override
   bool operator ==(Object other) =>
-      other is _WildCard && other.color == color && other.value == value;
+      other is TestWildCard && other.color == color && other.value == value;
 
   @override
   int get hashCode => Object.hash(color, value);
 }
 
-class _Player {
+class TestPlayer {
   final String id;
   final String displayName;
   final int cardCount;
   final bool isConnected;
 
-  const _Player({
+  const TestPlayer({
     required this.id,
     required this.displayName,
     required this.cardCount,
     this.isConnected = true,
   });
 
-  factory _Player.fromJson(Map<String, dynamic> json) {
-    return _Player(
+  factory TestPlayer.fromJson(Map<String, dynamic> json) {
+    return TestPlayer(
       id: json['id'] as String,
       displayName: json['displayName'] as String,
       cardCount: json['cardCount'] as int,
@@ -63,18 +63,18 @@ class _Player {
       };
 }
 
-class _GameState {
+class TestGameState {
   final String gameId;
   final String currentPlayerId;
-  final List<_Player> players;
-  final List<_WildCard> hand;
-  final _WildCard? topCard;
-  final _CardColor? activeColor;
+  final List<TestPlayer> players;
+  final List<TestWildCard> hand;
+  final TestWildCard? topCard;
+  final TestCardColor? activeColor;
   final bool isClockwise;
-  final _GameStatus status;
+  final TestGameStatus status;
   final String? winnerId;
 
-  const _GameState({
+  const TestGameState({
     required this.gameId,
     required this.currentPlayerId,
     required this.players,
@@ -82,33 +82,33 @@ class _GameState {
     this.topCard,
     this.activeColor,
     this.isClockwise = true,
-    this.status = _GameStatus.waiting,
+    this.status = TestGameStatus.waiting,
     this.winnerId,
   });
 
-  factory _GameState.fromJson(Map<String, dynamic> json) {
-    return _GameState(
+  factory TestGameState.fromJson(Map<String, dynamic> json) {
+    return TestGameState(
       gameId: json['gameId'] as String,
       currentPlayerId: json['currentPlayerId'] as String,
       players: (json['players'] as List<dynamic>)
-          .map((p) => _Player.fromJson(p as Map<String, dynamic>))
+          .map((p) => TestPlayer.fromJson(p as Map<String, dynamic>))
           .toList(),
       hand: (json['hand'] as List<dynamic>)
-          .map((c) => _WildCard.fromJson(c as Map<String, dynamic>))
+          .map((c) => TestWildCard.fromJson(c as Map<String, dynamic>))
           .toList(),
       topCard: json['topCard'] != null
-          ? _WildCard.fromJson(json['topCard'] as Map<String, dynamic>)
+          ? TestWildCard.fromJson(json['topCard'] as Map<String, dynamic>)
           : null,
       activeColor: json['activeColor'] != null
-          ? _CardColor.values.firstWhere(
+          ? TestCardColor.values.firstWhere(
               (c) => c.name == (json['activeColor'] as String),
-              orElse: () => _CardColor.wild,
+              orElse: () => TestCardColor.wild,
             )
           : null,
       isClockwise: json['isClockwise'] as bool? ?? true,
-      status: _GameStatus.values.firstWhere(
+      status: TestGameStatus.values.firstWhere(
         (s) => s.name == (json['status'] as String? ?? 'waiting'),
-        orElse: () => _GameStatus.waiting,
+        orElse: () => TestGameStatus.waiting,
       ),
       winnerId: json['winnerId'] as String?,
     );
@@ -128,7 +128,7 @@ class _GameState {
 
   bool isCurrentPlayer(String playerId) => currentPlayerId == playerId;
 
-  _Player? playerById(String playerId) {
+  TestPlayer? playerById(String playerId) {
     try {
       return players.firstWhere((p) => p.id == playerId);
     } catch (_) {

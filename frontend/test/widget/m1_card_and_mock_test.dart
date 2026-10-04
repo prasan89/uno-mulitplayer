@@ -10,12 +10,9 @@ import 'package:wilddeck/shared/widgets/wilddeck_components.dart';
 void main() {
   group('WildDeckCardWidget', () {
     testWidgets('renders face-down card without revealing content', (tester) async {
-      const card = WildGameCard(
-        id: 't1', color: WildCardColor.red, type: WildCardType.number, number: 7,
-      );
       await tester.pumpWidget(const ProviderScope(
         child: MaterialApp(home: Scaffold(
-          body: WildDeckCardWidget(card: card, faceDown: true),
+          body: WildDeckCardWidget(color: WildCardColor.red, type: WildCardType.number, number: 7, isFaceDown: true),
         )),
       ));
       expect(find.text('7'), findsNothing);
@@ -23,24 +20,18 @@ void main() {
     });
 
     testWidgets('renders face-up number card', (tester) async {
-      const card = WildGameCard(
-        id: 't2', color: WildCardColor.blue, type: WildCardType.number, number: 3,
-      );
       await tester.pumpWidget(const ProviderScope(
         child: MaterialApp(home: Scaffold(
-          body: WildDeckCardWidget(card: card, faceDown: false),
+          body: WildDeckCardWidget(color: WildCardColor.blue, type: WildCardType.number, number: 3, isFaceDown: false),
         )),
       ));
       expect(find.text('3'), findsWidgets);
     });
 
     testWidgets('selected card shows visual elevation', (tester) async {
-      const card = WildGameCard(
-        id: 't3', color: WildCardColor.green, type: WildCardType.skip,
-      );
       await tester.pumpWidget(const ProviderScope(
         child: MaterialApp(home: Scaffold(
-          body: WildDeckCardWidget(card: card, faceDown: false, isSelected: true),
+          body: WildDeckCardWidget(color: WildCardColor.green, type: WildCardType.skip, isFaceDown: false, isSelected: true),
         )),
       ));
       // Selected card uses a Transform.translate — verify widget tree contains it
@@ -49,13 +40,10 @@ void main() {
 
     testWidgets('card onTap fires callback', (tester) async {
       var tapped = false;
-      const card = WildGameCard(
-        id: 't4', color: WildCardColor.yellow, type: WildCardType.drawTwo,
-      );
       await tester.pumpWidget(ProviderScope(
         child: MaterialApp(home: Scaffold(
           body: WildDeckCardWidget(
-            card: card, faceDown: false,
+            color: WildCardColor.yellow, type: WildCardType.drawTwo, isFaceDown: false,
             onTap: () => tapped = true,
           ),
         )),
@@ -92,7 +80,7 @@ void main() {
       final sub = svc.searchForMatch(gameMode: 'classic', maxPlayers: 4, fillWithBots: false)
           .listen(states.add);
 
-      await Future.delayed(const Duration(milliseconds: 300));
+      await Future<void>.delayed(const Duration(milliseconds: 300));
       await svc.cancelSearch();
       await sub.cancel();
       svc.dispose();

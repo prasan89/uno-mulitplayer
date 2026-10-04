@@ -13,7 +13,7 @@ class WildDeckApp extends ConsumerWidget {
     return MaterialApp.router(
       title: 'WildDeck',
       debugShowCheckedModeBanner: false,
-      theme: WildDeckTheme.themeData,
+      theme: WildDeckTheme.theme,
       routerConfig: router,
     );
   }

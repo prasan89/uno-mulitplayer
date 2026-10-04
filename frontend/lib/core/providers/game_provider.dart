@@ -89,7 +89,7 @@ class GameNotifier extends AutoDisposeAsyncNotifier<GameState?> {
       await _ws.connect(wsUrl, token);
 
       // Subscribe to incoming messages.
-      _messageSubscription?.cancel();
+      unawaited(_messageSubscription?.cancel());
       _messageSubscription = _ws.messages.listen(
         _handleServerMessage,
         onError: (Object e) {
@@ -203,7 +203,7 @@ class GameNotifier extends AutoDisposeAsyncNotifier<GameState?> {
         final current = state.valueOrNull;
         if (current == null) return;
         final updated = current.copyWith(
-          phase: GamePhase.finished,
+          status: GameStatus.finished,
           winnerId: m.winnerId,
         );
         state = AsyncData(updated);
@@ -214,7 +214,7 @@ class GameNotifier extends AutoDisposeAsyncNotifier<GameState?> {
   void _applyState(GameState newState) {
     state = AsyncData(newState);
     developer.log(
-      'Game state updated: phase=${newState.phase.name} '
+      'Game state updated: phase=${newState.status.name} '
       'turn=${newState.currentPlayerId}',
       name: 'GameNotifier',
     );
@@ -231,7 +231,7 @@ class GameNotifier extends AutoDisposeAsyncNotifier<GameState?> {
   }
 
   void _dispose() {
-    _messageSubscription?.cancel();
+    unawaited(_messageSubscription?.cancel());
     _messageSubscription = null;
     _currentGameId = null;
   }

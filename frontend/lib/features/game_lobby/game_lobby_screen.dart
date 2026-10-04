@@ -25,7 +25,7 @@ class _GameLobbyScreenState extends State<GameLobbyScreen> {
 
   Future<void> _startGame() async {
     setState(() => _starting = true);
-    await Future.delayed(const Duration(milliseconds: 600));
+    await Future<void>.delayed(const Duration(milliseconds: 600));
     if (mounted) context.pushReplacement(WildRoutes.gamePath(widget.gameId));
   }
 

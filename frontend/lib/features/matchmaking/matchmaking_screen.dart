@@ -2,10 +2,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:wilddeck/core/providers/wilddeck_providers.dart';
 import 'package:wilddeck/core/router/wilddeck_router.dart';
-import 'package:wilddeck/core/services/wilddeck_services.dart';
 import 'package:wilddeck/core/services/mock_services.dart';
+import 'package:wilddeck/core/services/wilddeck_services.dart';
 import 'package:wilddeck/shared/theme/wilddeck_theme.dart';
 import 'package:wilddeck/shared/widgets/wilddeck_components.dart';
 

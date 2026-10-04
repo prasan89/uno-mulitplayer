@@ -51,7 +51,7 @@ class PlayerHand extends StatelessWidget {
                     duration: const Duration(milliseconds: 200),
                     curve: Curves.easeOut,
                     transform: isSelected
-                        ? (Matrix4.identity()..translate(0.0, -10.0))
+                        ? Matrix4.translationValues(0.0, -10.0, 0)
                         : Matrix4.identity(),
                     child: CardWidget(
                       card: card,

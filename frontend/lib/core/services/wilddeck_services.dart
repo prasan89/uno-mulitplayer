@@ -3,6 +3,13 @@
 /// can be swapped for real implementations in future milestones.
 /// No game rules or business logic live inside UI components.
 
+import 'package:wilddeck/shared/theme/wilddeck_theme.dart' show WildCardColor, WildCardType;
+
+// ─── Enums reexport (shared by theme + services) ─────────────────────────────
+// WildCardColor and WildCardType are defined in wilddeck_theme.dart
+export 'package:wilddeck/shared/theme/wilddeck_theme.dart'
+    show WildCardColor, WildCardType;
+
 // ─── Player / Auth ────────────────────────────────────────────────────────────
 
 abstract class IPlayerService {
@@ -256,8 +263,3 @@ class WildGamePlayer {
     this.hasCalledLastCard = false,
   });
 }
-
-// ─── Enums reexport (shared by theme + services) ─────────────────────────────
-// WildCardColor and WildCardType are defined in wilddeck_theme.dart
-export 'package:wilddeck/shared/theme/wilddeck_theme.dart'
-    show WildCardColor, WildCardType;

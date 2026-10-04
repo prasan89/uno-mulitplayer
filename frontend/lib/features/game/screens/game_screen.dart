@@ -290,7 +290,7 @@ class _GameScreenState extends State<GameScreen> {
   Widget build(BuildContext context) {
     // Show game over dialog after the frame builds
     if (_gameState.isGameOver) {
-      WidgetsBinding.instance.addPostFrameCallback((_) => _showGameOver());
+      WidgetsBinding.instance.addPostFrameCallback((_) => unawaited(_showGameOver()));
     }
 
     return Scaffold(
@@ -326,7 +326,7 @@ class _GameScreenState extends State<GameScreen> {
       elevation: 0,
       leading: IconButton(
         icon: const Icon(Icons.arrow_back_ios, color: Colors.white70, size: 20),
-        onPressed: () => _confirmLeave(context),
+        onPressed: () => unawaited(_confirmLeave(context)),
       ),
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -409,7 +409,7 @@ class _GameScreenState extends State<GameScreen> {
                   style: TextStyle(color: Colors.white70)),
               onTap: () {
                 Navigator.pop(context);
-                _confirmLeave(context);
+                unawaited(_confirmLeave(context));
               },
             ),
             ListTile(

@@ -42,11 +42,11 @@ class _WildDeckSplashScreenState extends State<WildDeckSplashScreen>
   }
 
   Future<void> _runSequence() async {
-    await Future.delayed(const Duration(milliseconds: 200));
+    await Future<void>.delayed(const Duration(milliseconds: 200));
     _logoCtrl.forward();
-    await Future.delayed(const Duration(milliseconds: 500));
+    await Future<void>.delayed(const Duration(milliseconds: 500));
     _taglineCtrl.forward();
-    await Future.delayed(const Duration(milliseconds: 1400));
+    await Future<void>.delayed(const Duration(milliseconds: 1400));
     if (mounted) context.go(WildRoutes.login);
   }
 

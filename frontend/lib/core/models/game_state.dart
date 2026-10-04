@@ -3,11 +3,11 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:wilddeck/core/models/card.dart';
 import 'package:wilddeck/core/models/player.dart';
 
-part 'game_state.freezed.dart';
-part 'game_state.g.dart';
-
 export 'package:wilddeck/core/models/card.dart' show CardColor, CardType, WildCard;
 export 'package:wilddeck/core/models/player.dart' show PlayerState;
+
+part 'game_state.freezed.dart';
+part 'game_state.g.dart';
 
 enum GameStatus {
   @JsonValue('waiting')

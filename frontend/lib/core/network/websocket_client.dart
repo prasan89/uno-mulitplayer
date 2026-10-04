@@ -46,10 +46,12 @@ class WebSocketClient {
   }
 
   Future<void> _connect() async {
-    if (_baseUrl == null || _token == null) return;
+    final url = _baseUrl;
+    final token = _token;
+    if (url == null || token == null) return;
 
-    final uri = Uri.parse(_baseUrl!).replace(
-      queryParameters: {'token': _token!},
+    final uri = Uri.parse(url).replace(
+      queryParameters: {'token': token},
     );
 
     developer.log('WebSocket connecting to $uri', name: 'WebSocketClient');
@@ -204,7 +206,7 @@ class WebSocketClient {
   }
 
   void dispose() {
-    disconnect();
-    _messageController.close();
+    unawaited(disconnect());
+    unawaited(_messageController.close());
   }
 }

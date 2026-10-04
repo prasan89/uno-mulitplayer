@@ -4,8 +4,6 @@ import 'package:wilddeck/features/game/widgets/discard_pile.dart';
 import 'package:wilddeck/features/game/widgets/draw_pile.dart';
 import 'package:wilddeck/features/game/widgets/player_hand.dart';
 import 'package:wilddeck/features/game/widgets/player_info_row.dart';
-import 'package:wilddeck/features/game/widgets/color_picker_dialog.dart';
-import 'package:wilddeck/features/game/widgets/game_over_dialog.dart';
 import 'package:wilddeck/features/game/widgets/last_card_button.dart';
 
 /// Represents another player in the game (not the current user)

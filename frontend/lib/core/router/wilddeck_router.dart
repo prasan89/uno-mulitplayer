@@ -4,21 +4,21 @@ import 'package:go_router/go_router.dart';
 
 import 'package:wilddeck/core/providers/wilddeck_providers.dart';
 import 'package:wilddeck/core/services/wilddeck_services.dart';
-import 'package:wilddeck/features/splash/splash_screen.dart';
 import 'package:wilddeck/features/auth/screens/wilddeck_login_screen.dart';
-import 'package:wilddeck/features/home/home_screen.dart';
-import 'package:wilddeck/features/game_mode/game_mode_screen.dart';
-import 'package:wilddeck/features/matchmaking/matchmaking_screen.dart';
-import 'package:wilddeck/features/game_lobby/game_lobby_screen.dart';
+import 'package:wilddeck/features/friends/friends_screen.dart';
+import 'package:wilddeck/features/game/game_result_screen.dart';
 import 'package:wilddeck/features/game/game_table_screen.dart';
 import 'package:wilddeck/features/game/wild_color_picker_screen.dart';
-import 'package:wilddeck/features/game/game_result_screen.dart';
-import 'package:wilddeck/features/profile/profile_screen.dart';
-import 'package:wilddeck/features/friends/friends_screen.dart';
-import 'package:wilddeck/features/shop/shop_screen.dart';
-import 'package:wilddeck/features/missions/missions_screen.dart';
+import 'package:wilddeck/features/game_lobby/game_lobby_screen.dart';
+import 'package:wilddeck/features/game_mode/game_mode_screen.dart';
+import 'package:wilddeck/features/home/home_screen.dart';
 import 'package:wilddeck/features/leaderboard/leaderboard_screen.dart';
+import 'package:wilddeck/features/matchmaking/matchmaking_screen.dart';
+import 'package:wilddeck/features/missions/missions_screen.dart';
+import 'package:wilddeck/features/profile/profile_screen.dart';
 import 'package:wilddeck/features/settings/settings_screen.dart';
+import 'package:wilddeck/features/shop/shop_screen.dart';
+import 'package:wilddeck/features/splash/splash_screen.dart';
 
 // Route name constants — use these everywhere instead of raw strings.
 class WildRoutes {

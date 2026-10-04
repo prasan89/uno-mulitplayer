@@ -26,7 +26,7 @@ class MockPlayerService implements IPlayerService {
 
   @override
   Future<WildDeckPlayer> signInWithEmail(String email, String password) async {
-    await Future.delayed(const Duration(milliseconds: 800));
+    await Future<void>.delayed(const Duration(milliseconds: 800));
     _current = WildDeckPlayer(
       id: 'user_001',
       displayName: email.split('@').first,
@@ -43,7 +43,7 @@ class MockPlayerService implements IPlayerService {
 
   @override
   Future<WildDeckPlayer> register(String email, String password, String displayName) async {
-    await Future.delayed(const Duration(milliseconds: 800));
+    await Future<void>.delayed(const Duration(milliseconds: 800));
     _current = WildDeckPlayer(
       id: 'user_new',
       displayName: displayName,
@@ -153,13 +153,13 @@ class MockMatchmakingService implements IMatchmakingService {
 
   @override
   Future<String> createPrivateRoom() async {
-    await Future.delayed(const Duration(milliseconds: 400));
+    await Future<void>.delayed(const Duration(milliseconds: 400));
     return 'W7D9K2';
   }
 
   @override
   Future<void> joinPrivateRoom(String roomCode) async {
-    await Future.delayed(const Duration(milliseconds: 600));
+    await Future<void>.delayed(const Duration(milliseconds: 600));
   }
 
   void dispose() {
@@ -177,13 +177,13 @@ class MockWalletService implements IWalletService {
 
   @override
   Future<void> purchaseProduct(String productId) async {
-    await Future.delayed(const Duration(milliseconds: 500));
+    await Future<void>.delayed(const Duration(milliseconds: 500));
     // No-op for M1
   }
 
   @override
   Future<List<ShopItem>> getCatalog(ShopCategory category) async {
-    await Future.delayed(const Duration(milliseconds: 200));
+    await Future<void>.delayed(const Duration(milliseconds: 200));
     return _mockCatalog.where((item) => item.category == category).toList();
   }
 

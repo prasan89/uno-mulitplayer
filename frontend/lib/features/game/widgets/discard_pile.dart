@@ -20,7 +20,6 @@ class _DiscardPileState extends State<DiscardPile>
   late AnimationController _animationController;
   late Animation<Offset> _slideAnimation;
   late Animation<double> _fadeAnimation;
-  WildCard? _previousCard;
 
   @override
   void initState() {
@@ -48,7 +47,6 @@ class _DiscardPileState extends State<DiscardPile>
   void didUpdateWidget(DiscardPile oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.topCard?.id != widget.topCard?.id) {
-      _previousCard = oldWidget.topCard;
       _animationController.forward(from: 0.0);
     }
   }

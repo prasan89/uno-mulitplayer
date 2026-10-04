@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:wilddeck/core/services/wilddeck_services.dart';
 import 'package:wilddeck/shared/theme/wilddeck_theme.dart';
 

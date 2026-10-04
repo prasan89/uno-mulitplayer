@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:wilddeck/core/services/wilddeck_services.dart';
 import 'package:wilddeck/core/services/mock_services.dart';
+import 'package:wilddeck/core/services/wilddeck_services.dart';
 
 // ─── Service Providers ────────────────────────────────────────────────────────
 // Swap mock implementations for real ones in future milestones.
@@ -96,7 +96,7 @@ class GameNotifier extends AutoDisposeNotifier<WildGameState?> {
       currentPlayerId: s.currentPlayerId, players: s.players,
       myHand: [...s.myHand, drawn], topCard: s.topCard,
       activeColor: s.activeColor, drawPileCount: s.drawPileCount - 1,
-      discardCount: s.discardCount, isMyTurn: false,
+      discardCount: s.discardCount,
       winnerId: s.winnerId,
     );
   }
@@ -112,7 +112,7 @@ class GameNotifier extends AutoDisposeNotifier<WildGameState?> {
       myHand: newHand, topCard: card,
       activeColor: chosenColor ?? card.color,
       drawPileCount: s.drawPileCount, discardCount: s.discardCount + 1,
-      isMyTurn: false, winnerId: newHand.isEmpty ? 'me' : s.winnerId,
+      winnerId: newHand.isEmpty ? 'me' : s.winnerId,
     );
   }
 }
@@ -170,12 +170,12 @@ class SettingsNotifier extends Notifier<SettingsState> {
   @override
   SettingsState build() => const SettingsState();
 
-  void setSoundEnabled(bool v)         => state = state.copyWith(soundEnabled: v);
-  void setMusicEnabled(bool v)         => state = state.copyWith(musicEnabled: v);
-  void setNotificationsEnabled(bool v) => state = state.copyWith(notificationsEnabled: v);
-  void setVibrationEnabled(bool v)     => state = state.copyWith(vibrationEnabled: v);
-  void setShowOnlineStatus(bool v)     => state = state.copyWith(showOnlineStatus: v);
-  void setAnalyticsEnabled(bool v)     => state = state.copyWith(analyticsEnabled: v);
+  void setSoundEnabled({required bool value})         => state = state.copyWith(soundEnabled: value);
+  void setMusicEnabled({required bool value})         => state = state.copyWith(musicEnabled: value);
+  void setNotificationsEnabled({required bool value}) => state = state.copyWith(notificationsEnabled: value);
+  void setVibrationEnabled({required bool value})     => state = state.copyWith(vibrationEnabled: value);
+  void setShowOnlineStatus({required bool value})     => state = state.copyWith(showOnlineStatus: value);
+  void setAnalyticsEnabled({required bool value})     => state = state.copyWith(analyticsEnabled: value);
   void setMasterVolume(double v)       => state = state.copyWith(masterVolume: v);
   void setSfxVolume(double v)          => state = state.copyWith(sfxVolume: v);
   void setMusicVolume(double v)        => state = state.copyWith(musicVolume: v);

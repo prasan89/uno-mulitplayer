@@ -41,12 +41,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       icon: Icons.volume_up_rounded,
                       label: 'Sound Effects',
                       value: _settings.soundEnabled,
-                      onChanged: (v) => ref.read(settingsProvider.notifier).setSoundEnabled(v)),
+                      onChanged: (v) => ref.read(settingsProvider.notifier).setSoundEnabled(value: v)),
                     _SwitchRow(
                       icon: Icons.music_note_rounded,
                       label: 'Background Music',
                       value: _settings.musicEnabled,
-                      onChanged: (v) => ref.read(settingsProvider.notifier).setMusicEnabled(v)),
+                      onChanged: (v) => ref.read(settingsProvider.notifier).setMusicEnabled(value: v)),
                     _SliderRow(
                       icon: Icons.volume_down_rounded,
                       label: 'Master Volume',
@@ -59,12 +59,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       icon: Icons.vibration_rounded,
                       label: 'Vibration',
                       value: _settings.vibrationEnabled,
-                      onChanged: (v) => ref.read(settingsProvider.notifier).setVibrationEnabled(v)),
+                      onChanged: (v) => ref.read(settingsProvider.notifier).setVibrationEnabled(value: v)),
                     _SwitchRow(
                       icon: Icons.notifications_rounded,
                       label: 'Push Notifications',
                       value: _settings.notificationsEnabled,
-                      onChanged: (v) => ref.read(settingsProvider.notifier).setNotificationsEnabled(v)),
+                      onChanged: (v) => ref.read(settingsProvider.notifier).setNotificationsEnabled(value: v)),
                     _SelectRow(
                       icon: Icons.language_rounded,
                       label: 'Language',
@@ -78,12 +78,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       icon: Icons.remove_red_eye_rounded,
                       label: 'Show Online Status',
                       value: _settings.showOnlineStatus,
-                      onChanged: (v) => ref.read(settingsProvider.notifier).setShowOnlineStatus(v)),
+                      onChanged: (v) => ref.read(settingsProvider.notifier).setShowOnlineStatus(value: v)),
                     _SwitchRow(
                       icon: Icons.bar_chart_rounded,
                       label: 'Analytics',
                       value: _settings.analyticsEnabled,
-                      onChanged: (v) => ref.read(settingsProvider.notifier).setAnalyticsEnabled(v)),
+                      onChanged: (v) => ref.read(settingsProvider.notifier).setAnalyticsEnabled(value: v)),
                   ]),
                   const SizedBox(height: 16),
                   _Section(title: 'ACCOUNT', children: [
@@ -179,7 +179,7 @@ class _SwitchRow extends StatelessWidget {
         Expanded(child: Text(label, style: const TextStyle(color: Colors.white, fontSize: 14))),
         Switch(
           value: value, onChanged: onChanged,
-          activeColor: WildDeckTheme.cardRed,
+          activeThumbColor: WildDeckTheme.cardRed,
           activeTrackColor: WildDeckTheme.cardRed.withValues(alpha: 0.3)),
       ]),
     );

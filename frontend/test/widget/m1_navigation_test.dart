@@ -4,7 +4,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:wilddeck/core/router/wilddeck_router.dart';
-import 'package:wilddeck/core/services/wilddeck_services.dart';
 import 'package:wilddeck/features/splash/splash_screen.dart';
 import 'package:wilddeck/features/auth/screens/wilddeck_login_screen.dart';
 import 'package:wilddeck/features/home/home_screen.dart';
@@ -14,7 +13,7 @@ import 'package:wilddeck/shared/theme/wilddeck_theme.dart';
 Widget _routerApp(GoRouter router) {
   return MaterialApp.router(
     routerConfig: router,
-    theme: WildDeckTheme.themeData,
+    theme: WildDeckTheme.theme,
   );
 }
 

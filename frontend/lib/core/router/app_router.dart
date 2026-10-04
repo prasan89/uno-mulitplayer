@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:wilddeck/features/auth/screens/login_screen.dart';
-import 'package:wilddeck/features/auth/screens/register_screen.dart';
 import 'package:wilddeck/features/auth/screens/profile_screen.dart';
+import 'package:wilddeck/features/auth/screens/register_screen.dart';
 import 'package:wilddeck/features/auth/screens/splash_screen.dart';
-import 'package:wilddeck/features/lobby/screens/lobby_screen.dart';
 import 'package:wilddeck/features/game/screens/game_screen.dart';
 import 'package:wilddeck/features/leaderboard/screens/leaderboard_screen.dart';
+import 'package:wilddeck/features/lobby/screens/lobby_screen.dart';
 
 /// Returns whether the current user is authenticated.
 /// Replace this with a real check against your auth provider (e.g. Riverpod).

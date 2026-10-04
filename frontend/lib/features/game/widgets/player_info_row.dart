@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:wilddeck/features/game/widgets/card_widget.dart';
 
 class PlayerInfoRow extends StatefulWidget {
   final String playerName;

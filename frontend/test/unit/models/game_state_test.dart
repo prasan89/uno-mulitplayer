@@ -13,27 +13,27 @@ void main() {
 
   group('GameState fromJson roundtrip', () {
     test('serialises and deserialises a full GameState', () {
-      final original = _GameState(
+      final original = TestGameState(
         gameId: 'game-abc',
         currentPlayerId: 'player-1',
         players: const [
-          _Player(id: 'player-1', displayName: 'Alice', cardCount: 3),
-          _Player(id: 'player-2', displayName: 'Bob', cardCount: 5),
+          TestPlayer(id: 'player-1', displayName: 'Alice', cardCount: 3),
+          TestPlayer(id: 'player-2', displayName: 'Bob', cardCount: 5),
         ],
         hand: const [
-          _WildCard(color: _CardColor.red, value: '5'),
-          _WildCard(color: _CardColor.blue, value: 'skip'),
-          _WildCard(color: _CardColor.wild, value: 'wild'),
+          TestWildCard(color: TestCardColor.red, value: '5'),
+          TestWildCard(color: TestCardColor.blue, value: 'skip'),
+          TestWildCard(color: TestCardColor.wild, value: 'wild'),
         ],
-        topCard: const _WildCard(color: _CardColor.green, value: '7'),
-        activeColor: _CardColor.green,
+        topCard: const TestWildCard(color: TestCardColor.green, value: '7'),
+        activeColor: TestCardColor.green,
         isClockwise: true,
-        status: _GameStatus.active,
+        status: TestGameStatus.active,
         winnerId: null,
       );
 
       final json = original.toJson();
-      final restored = _GameState.fromJson(json);
+      final restored = TestGameState.fromJson(json);
 
       expect(restored.gameId, equals(original.gameId));
       expect(restored.currentPlayerId, equals(original.currentPlayerId));
@@ -43,14 +43,14 @@ void main() {
       expect(restored.players[0].cardCount, equals(3));
       expect(restored.players[1].id, equals('player-2'));
       expect(restored.hand.length, equals(3));
-      expect(restored.hand[0].color, equals(_CardColor.red));
+      expect(restored.hand[0].color, equals(TestCardColor.red));
       expect(restored.hand[0].value, equals('5'));
-      expect(restored.hand[2].color, equals(_CardColor.wild));
+      expect(restored.hand[2].color, equals(TestCardColor.wild));
       expect(restored.topCard,
-          equals(const _WildCard(color: _CardColor.green, value: '7')));
-      expect(restored.activeColor, equals(_CardColor.green));
+          equals(const TestWildCard(color: TestCardColor.green, value: '7')));
+      expect(restored.activeColor, equals(TestCardColor.green));
       expect(restored.isClockwise, isTrue);
-      expect(restored.status, equals(_GameStatus.active));
+      expect(restored.status, equals(TestGameStatus.active));
       expect(restored.winnerId, isNull);
     });
 
@@ -62,39 +62,39 @@ void main() {
         'hand': <dynamic>[],
       };
 
-      final state = _GameState.fromJson(minimalJson);
+      final state = TestGameState.fromJson(minimalJson);
 
       expect(state.gameId, equals('game-min'));
       expect(state.topCard, isNull);
       expect(state.activeColor, isNull);
       expect(state.isClockwise, isTrue);
-      expect(state.status, equals(_GameStatus.waiting));
+      expect(state.status, equals(TestGameStatus.waiting));
       expect(state.winnerId, isNull);
     });
 
     test('roundtrip preserves player connectivity flag', () {
-      final state = _GameState(
+      final state = TestGameState(
         gameId: 'g',
         currentPlayerId: 'p2',
         players: const [
-          _Player(
+          TestPlayer(
               id: 'p1',
               displayName: 'Disconnected',
               cardCount: 2,
               isConnected: false),
-          _Player(id: 'p2', displayName: 'Connected', cardCount: 4),
+          TestPlayer(id: 'p2', displayName: 'Connected', cardCount: 4),
         ],
         hand: const [],
       );
 
-      final restored = _GameState.fromJson(state.toJson());
+      final restored = TestGameState.fromJson(state.toJson());
 
       expect(restored.players[0].isConnected, isFalse);
       expect(restored.players[1].isConnected, isTrue);
     });
 
     test('roundtrip preserves anticlockwise direction', () {
-      final state = _GameState(
+      final state = TestGameState(
         gameId: 'g',
         currentPlayerId: 'p1',
         players: const [],
@@ -102,25 +102,25 @@ void main() {
         isClockwise: false,
       );
 
-      final restored = _GameState.fromJson(state.toJson());
+      final restored = TestGameState.fromJson(state.toJson());
 
       expect(restored.isClockwise, isFalse);
     });
 
     test('roundtrip preserves winnerId', () {
-      final state = _GameState(
+      final state = TestGameState(
         gameId: 'g',
         currentPlayerId: 'p1',
         players: const [],
         hand: const [],
-        status: _GameStatus.finished,
+        status: TestGameStatus.finished,
         winnerId: 'p1',
       );
 
-      final restored = _GameState.fromJson(state.toJson());
+      final restored = TestGameState.fromJson(state.toJson());
 
       expect(restored.winnerId, equals('p1'));
-      expect(restored.status, equals(_GameStatus.finished));
+      expect(restored.status, equals(TestGameStatus.finished));
     });
   });
 
@@ -129,23 +129,23 @@ void main() {
   // -------------------------------------------------------------------------
 
   group('GameState identifies correct current player', () {
-    late _GameState gameState;
+    late TestGameState gameState;
 
     setUp(() {
-      gameState = _GameState(
+      gameState = TestGameState(
         gameId: 'test-game',
         currentPlayerId: 'player-2',
         players: const [
-          _Player(id: 'player-1', displayName: 'Alice', cardCount: 4),
-          _Player(id: 'player-2', displayName: 'Bob', cardCount: 2),
-          _Player(id: 'player-3', displayName: 'Charlie', cardCount: 6),
+          TestPlayer(id: 'player-1', displayName: 'Alice', cardCount: 4),
+          TestPlayer(id: 'player-2', displayName: 'Bob', cardCount: 2),
+          TestPlayer(id: 'player-3', displayName: 'Charlie', cardCount: 6),
         ],
         hand: const [
-          _WildCard(color: _CardColor.yellow, value: '3'),
-          _WildCard(color: _CardColor.red, value: 'draw_two'),
+          TestWildCard(color: TestCardColor.yellow, value: '3'),
+          TestWildCard(color: TestCardColor.red, value: 'draw_two'),
         ],
-        topCard: const _WildCard(color: _CardColor.yellow, value: '8'),
-        status: _GameStatus.active,
+        topCard: const TestWildCard(color: TestCardColor.yellow, value: '8'),
+        status: TestGameStatus.active,
       );
     });
 
@@ -187,14 +187,14 @@ void main() {
 
   group('hand contains correct cards', () {
     test('hand length matches cards provided', () {
-      final state = _GameState(
+      final state = TestGameState(
         gameId: 'g',
         currentPlayerId: 'p1',
         players: const [],
         hand: const [
-          _WildCard(color: _CardColor.red, value: '1'),
-          _WildCard(color: _CardColor.blue, value: '2'),
-          _WildCard(color: _CardColor.green, value: 'skip'),
+          TestWildCard(color: TestCardColor.red, value: '1'),
+          TestWildCard(color: TestCardColor.blue, value: '2'),
+          TestWildCard(color: TestCardColor.green, value: 'skip'),
         ],
       );
 
@@ -202,33 +202,33 @@ void main() {
     });
 
     test('hand card properties are preserved after fromJson', () {
-      final state = _GameState(
+      final state = TestGameState(
         gameId: 'g',
         currentPlayerId: 'p1',
         players: const [],
         hand: const [
-          _WildCard(color: _CardColor.yellow, value: '9'),
-          _WildCard(color: _CardColor.wild, value: 'wildDrawFour'),
+          TestWildCard(color: TestCardColor.yellow, value: '9'),
+          TestWildCard(color: TestCardColor.wild, value: 'wildDrawFour'),
         ],
       );
 
-      final restored = _GameState.fromJson(state.toJson());
+      final restored = TestGameState.fromJson(state.toJson());
 
-      expect(restored.hand[0].color, equals(_CardColor.yellow));
+      expect(restored.hand[0].color, equals(TestCardColor.yellow));
       expect(restored.hand[0].value, equals('9'));
-      expect(restored.hand[1].color, equals(_CardColor.wild));
+      expect(restored.hand[1].color, equals(TestCardColor.wild));
       expect(restored.hand[1].value, equals('wildDrawFour'));
     });
 
     test('empty hand is preserved after fromJson', () {
-      final state = _GameState(
+      final state = TestGameState(
         gameId: 'g',
         currentPlayerId: 'p1',
         players: const [],
         hand: const [],
       );
 
-      final restored = _GameState.fromJson(state.toJson());
+      final restored = TestGameState.fromJson(state.toJson());
 
       expect(restored.hand, isEmpty);
     });
@@ -243,22 +243,22 @@ void main() {
     // UI-level concept in game_screen.dart). We verify hand card count here
     // as the model-level equivalent of "cards remaining".
     test('player cardCount matches expected value', () {
-      const player = _Player(id: 'p1', displayName: 'Test', cardCount: 42);
+      const player = TestPlayer(id: 'p1', displayName: 'Test', cardCount: 42);
       expect(player.cardCount, equals(42));
     });
 
     test('player cardCount survives a JSON roundtrip', () {
-      const player = _Player(id: 'p1', displayName: 'Test', cardCount: 17);
-      final restored = _Player.fromJson(player.toJson());
+      const player = TestPlayer(id: 'p1', displayName: 'Test', cardCount: 17);
+      final restored = TestPlayer.fromJson(player.toJson());
       expect(restored.cardCount, equals(17));
     });
 
     test('hand card count equals number of cards in list', () {
       final cards = List.generate(
         7,
-        (i) => _WildCard(color: _CardColor.red, value: '$i'),
+        (i) => TestWildCard(color: TestCardColor.red, value: '$i'),
       );
-      final state = _GameState(
+      final state = TestGameState(
         gameId: 'g',
         currentPlayerId: 'p1',
         players: const [],
@@ -274,12 +274,12 @@ void main() {
 
   group('winnerId is null during game, set when finished', () {
     test('winnerId is null during active game', () {
-      final state = _GameState(
+      final state = TestGameState(
         gameId: 'g',
         currentPlayerId: 'p1',
         players: const [],
         hand: const [],
-        status: _GameStatus.active,
+        status: TestGameStatus.active,
         winnerId: null,
       );
 
@@ -287,58 +287,58 @@ void main() {
     });
 
     test('winnerId is null in waiting state', () {
-      final state = _GameState(
+      final state = TestGameState(
         gameId: 'g',
         currentPlayerId: 'p1',
         players: const [],
         hand: const [],
-        status: _GameStatus.waiting,
+        status: TestGameStatus.waiting,
       );
 
       expect(state.winnerId, isNull);
     });
 
     test('winnerId is set when game is finished', () {
-      final state = _GameState(
+      final state = TestGameState(
         gameId: 'g',
         currentPlayerId: 'p1',
         players: const [],
         hand: const [],
-        status: _GameStatus.finished,
+        status: TestGameStatus.finished,
         winnerId: 'p1',
       );
 
       expect(state.winnerId, equals('p1'));
-      expect(state.status, equals(_GameStatus.finished));
+      expect(state.status, equals(TestGameStatus.finished));
     });
 
     test('winnerId survives JSON roundtrip', () {
-      final state = _GameState(
+      final state = TestGameState(
         gameId: 'g',
         currentPlayerId: 'p2',
         players: const [],
         hand: const [],
-        status: _GameStatus.finished,
+        status: TestGameStatus.finished,
         winnerId: 'p2',
       );
 
-      final restored = _GameState.fromJson(state.toJson());
+      final restored = TestGameState.fromJson(state.toJson());
 
       expect(restored.winnerId, equals('p2'));
-      expect(restored.status, equals(_GameStatus.finished));
+      expect(restored.status, equals(TestGameStatus.finished));
     });
 
     test('null winnerId survives JSON roundtrip', () {
-      final state = _GameState(
+      final state = TestGameState(
         gameId: 'g',
         currentPlayerId: 'p1',
         players: const [],
         hand: const [],
-        status: _GameStatus.active,
+        status: TestGameStatus.active,
         winnerId: null,
       );
 
-      final restored = _GameState.fromJson(state.toJson());
+      final restored = TestGameState.fromJson(state.toJson());
 
       expect(restored.winnerId, isNull);
     });
