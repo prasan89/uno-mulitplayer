@@ -66,7 +66,7 @@ func clearHand(g *GameState, playerID string) {
 
 func TestNewDeck_Size(t *testing.T) {
 	deck := NewDeck()
-	assert.Equal(t, 108, len(deck), "standard UNO deck must have 108 cards")
+	assert.Equal(t, 108, len(deck), "standard WildDeck deck must have 108 cards")
 }
 
 func TestNewDeck_Composition(t *testing.T) {
@@ -207,6 +207,8 @@ func TestPlayCard_ColorMatch(t *testing.T) {
 func TestPlayCard_NotYourTurn(t *testing.T) {
 	g, pis := newTestGame(2)
 	p1 := pis[1].ID
+	// Ensure p0 is the current player so playing as p1 is "not your turn".
+	g.CurrentPlayerIndex = 0
 
 	c := newCard(ColorRed, CardTypeNumber, 1)
 	giveCard(g, p1, c)
@@ -218,7 +220,7 @@ func TestPlayCard_NotYourTurn(t *testing.T) {
 func TestPlayCard_CardNotInHand(t *testing.T) {
 	g, pis := newTestGame(2)
 	p0 := pis[0].ID
-
+	g.CurrentPlayerIndex = 0
 	fakeCard := newCard(ColorRed, CardTypeNumber, 9)
 	err := g.PlayCard(p0, fakeCard.ID, "")
 	assert.ErrorIs(t, err, ErrCardNotInHand)
@@ -412,26 +414,26 @@ func TestDrawCard_DrawPenaltyApplied(t *testing.T) {
 	assert.Equal(t, 0, g.DrawPenalty)
 }
 
-// ─── CallUNO Tests ────────────────────────────────────────────────────────────
+// ─── CallLastCard Tests ────────────────────────────────────────────────────────────
 
-func TestCallUNO_Success(t *testing.T) {
+func TestCallLastCard_Success(t *testing.T) {
 	g, pis := newTestGame(2)
 	p0 := pis[0].ID
 
 	clearHand(g, p0)
 	giveCard(g, p0, newCard(ColorRed, CardTypeNumber, 1))
 
-	err := g.CallUNO(p0)
+	err := g.CallLastCard(p0)
 	require.NoError(t, err)
-	assert.True(t, g.Players[0].HasCalledUno)
+	assert.True(t, g.Players[0].HasCalledLastCard)
 }
 
-func TestCallUNO_TooManyCards(t *testing.T) {
+func TestCallLastCard_TooManyCards(t *testing.T) {
 	g, pis := newTestGame(2)
 	p0 := pis[0].ID
 
 	// Player has 7 cards by default.
-	err := g.CallUNO(p0)
+	err := g.CallLastCard(p0)
 	assert.Error(t, err)
 }
 
@@ -482,8 +484,9 @@ func TestChallengeDraw4_NoChallengeAvailable(t *testing.T) {
 func TestReshuffleIfNeeded_RefillsFromDiscard(t *testing.T) {
 	g, _ := newTestGame(2)
 
-	// Empty the draw pile and fill discard with dummy cards.
+	// Replace discard pile entirely with 5 dummy cards.
 	g.DrawPile = nil
+	g.DiscardPile = nil
 	for i := 0; i < 5; i++ {
 		g.DiscardPile = append(g.DiscardPile, newCard(ColorRed, CardTypeNumber, i))
 	}
@@ -692,6 +695,7 @@ func TestApplyAction_PlayCard(t *testing.T) {
 func TestApplyAction_DrawCard(t *testing.T) {
 	g, pis := newTestGame(2)
 	p0 := pis[0].ID
+	g.CurrentPlayerIndex = 0
 	handBefore := len(g.Players[0].Hand)
 
 	err := g.ApplyAction(Action{
@@ -1021,44 +1025,44 @@ func TestWinCondition_PlayLastCardEndsGame(t *testing.T) {
 	assert.Equal(t, p0, g.WinnerID)
 }
 
-// TestUNO_CallBeforePlayingSecondToLast verifies calling UNO requires exactly 1 card.
-func TestUNO_CallBeforePlayingSecondToLast(t *testing.T) {
+// TestLastCard_CallBeforePlayingSecondToLast verifies declaring Last Card requires exactly 1 card.
+func TestLastCard_CallBeforePlayingSecondToLast(t *testing.T) {
 	g, pis := newTestGame(2)
 	p0 := pis[0].ID
 
-	// Give player exactly 1 card so CallUNO works.
+	// Give player exactly 1 card so CallLastCard works.
 	clearHand(g, p0)
 	last := newCard(ColorRed, CardTypeNumber, 1)
 	giveCard(g, p0, last)
 
-	err := g.CallUNO(p0)
+	err := g.CallLastCard(p0)
 	require.NoError(t, err)
-	assert.True(t, g.Players[0].HasCalledUno)
+	assert.True(t, g.Players[0].HasCalledLastCard)
 }
 
-// TestUNO_PenaltyForNotCalling verifies player draws 2 for missing UNO.
-func TestUNO_PenaltyForNotCalling(t *testing.T) {
+// TestLastCard_PenaltyForNotCalling verifies player draws 2 for missing Last Card declaration.
+func TestLastCard_PenaltyForNotCalling(t *testing.T) {
 	g, pis := newTestGame(2)
 	p0 := pis[0].ID
 
 	setTopCard(g, newCard(ColorRed, CardTypeNumber, 5))
 	g.CurrentPlayerIndex = 0
 
-	// Give p0 exactly 2 cards; HasCalledUno is false
+	// Give p0 exactly 2 cards; HasCalledLastCard is false
 	playable := newCard(ColorRed, CardTypeNumber, 3)
 	remaining := newCard(ColorBlue, CardTypeNumber, 1)
 	clearHand(g, p0)
 	giveCard(g, p0, playable)
 	giveCard(g, p0, remaining)
-	g.Players[0].HasCalledUno = false
+	g.Players[0].HasCalledLastCard = false
 
-	// Playing down to 1 without calling UNO should trigger penalty: 2 extra draws
+	// Playing down to 1 without declaring Last Card should trigger penalty: 2 extra draws
 	err := g.PlayCard(p0, playable.ID, "")
 	require.NoError(t, err)
 
 	// After penalty, p0 should have 3 cards (1 remaining + 2 penalty)
 	handLen := len(g.Players[0].Hand)
-	assert.Equal(t, 3, handLen, "UNO penalty: player should have 3 cards after missing call")
+	assert.Equal(t, 3, handLen, "Last Card penalty: player should have 3 cards after missing declaration")
 }
 
 // TestChallengeDraw4_BluffingPlayerOnly draws 2 for challenger (bluff confirmed, wd4 player draws 4).
@@ -1239,7 +1243,7 @@ func TestNotYourTurnError(t *testing.T) {
 func TestCardNotInHandError(t *testing.T) {
 	g, pis := newTestGame(2)
 	p0 := pis[0].ID
-
+	g.CurrentPlayerIndex = 0
 	ghost := newCard(ColorGreen, CardTypeNumber, 4) // not given to player
 	err := g.PlayCard(p0, ghost.ID, "")
 	assert.ErrorIs(t, err, ErrCardNotInHand)
@@ -1363,9 +1367,9 @@ func TestFullGameSimulation_2Players(t *testing.T) {
 		// Snapshot hand size before acting (Player is a value copy).
 		handSize := len(g.Players[currentIdx].Hand)
 
-		// Call UNO pre-emptively when holding exactly 1 card.
+		// Declare Last Card pre-emptively when holding exactly 1 card.
 		if handSize == 1 {
-			_ = g.CallUNO(currentID)
+			_ = g.CallLastCard(currentID)
 		}
 
 		legalMoves := g.GetLegalMoves(currentID, false)

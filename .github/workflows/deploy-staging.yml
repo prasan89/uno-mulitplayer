@@ -40,15 +40,15 @@ jobs:
           file: ./backend/Dockerfile
           push: true
           tags: |
-            us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/uno-multiplayer/backend:${{ github.sha }}
-            us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/uno-multiplayer/backend:staging-latest
+            us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/wilddeck/backend:${{ github.sha }}
+            us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/wilddeck/backend:staging-latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
       - name: Capture current Cloud Run revision (for rollback)
         id: current-revision
         run: |
-          CURRENT=$(gcloud run services describe uno-multiplayer-staging \
+          CURRENT=$(gcloud run services describe wilddeck-staging \
             --region us-central1 \
             --project ${{ secrets.GCP_PROJECT_ID }} \
             --format 'value(status.latestReadyRevisionName)' 2>/dev/null || echo "")
@@ -58,10 +58,10 @@ jobs:
         id: deploy
         uses: google-github-actions/deploy-cloudrun@v2
         with:
-          service: uno-multiplayer-staging
+          service: wilddeck-staging
           region: us-central1
           project_id: ${{ secrets.GCP_PROJECT_ID }}
-          image: us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/uno-multiplayer/backend:${{ github.sha }}
+          image: us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/wilddeck/backend:${{ github.sha }}
           flags: >-
             --allow-unauthenticated
             --min-instances=0
@@ -88,7 +88,7 @@ jobs:
         if: failure() && steps.current-revision.outputs.revision != ''
         run: |
           echo "Rolling back to revision: ${{ steps.current-revision.outputs.revision }}"
-          gcloud run services update-traffic uno-multiplayer-staging \
+          gcloud run services update-traffic wilddeck-staging \
             --region us-central1 \
             --project ${{ secrets.GCP_PROJECT_ID }} \
             --to-revisions=${{ steps.current-revision.outputs.revision }}=100
@@ -98,5 +98,5 @@ jobs:
         if: success()
         run: |
           echo "Staging deployment succeeded"
-          echo "Image: us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/uno-multiplayer/backend:${{ github.sha }}"
+          echo "Image: us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/wilddeck/backend:${{ github.sha }}"
           echo "Service URL: ${{ steps.deploy.outputs.url }}"

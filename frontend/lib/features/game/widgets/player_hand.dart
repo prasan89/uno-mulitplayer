@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'card_widget.dart';
 
 class PlayerHand extends StatelessWidget {
-  final List<UnoCard> cards;
+  final List<WildCard> cards;
   final Set<String> playableCardIds;
   final String? selectedCardId;
-  final void Function(UnoCard card) onCardTap;
+  final void Function(WildCard card) onCardTap;
 
   const PlayerHand({
     super.key,

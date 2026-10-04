@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:uno_multiplayer/core/services/mock_services.dart';
-import 'package:uno_multiplayer/core/services/wilddeck_services.dart';
-import 'package:uno_multiplayer/shared/theme/wilddeck_theme.dart';
-import 'package:uno_multiplayer/shared/widgets/wilddeck_components.dart';
+import 'package:wilddeck/core/services/mock_services.dart';
+import 'package:wilddeck/core/services/wilddeck_services.dart';
+import 'package:wilddeck/shared/theme/wilddeck_theme.dart';
+import 'package:wilddeck/shared/widgets/wilddeck_components.dart';
 
 void main() {
   group('WildDeckCardWidget', () {

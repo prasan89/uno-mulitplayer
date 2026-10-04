@@ -1,4 +1,4 @@
-# UNO Multiplayer Production Runbook
+# WildDeck Production Runbook
 
 > Last updated: 2026-10-04
 > On-call rotation: check PagerDuty for current owner.
@@ -13,8 +13,8 @@
           |
           | HTTPS / WSS (port 443)
           v
-  Cloud Run (uno-server)
-  https://uno-server-<hash>-uc.a.run.app
+  Cloud Run (wilddeck-server)
+  https://wilddeck-server-<hash>-uc.a.run.app
   Internal container port: 8080 (HTTP/2 cleartext, h2c)
   Metrics port: 9090 (/metrics, Prometheus)
   Max concurrency per instance: 80
@@ -24,9 +24,9 @@
           |-- PostgreSQL (Cloud SQL)
           |   Host: private IP via VPC connector
           |   Port: 5432
-          |   Instance: uno-postgres-production (POSTGRES_15, REGIONAL HA)
-          |   Database: uno
-          |   User: uno
+          |   Instance: wilddeck-postgres-production (POSTGRES_15, REGIONAL HA)
+          |   Database: wilddeck
+          |   User: wilddeck
           |   Max connections: 100
           |   Backups: daily at 02:00 UTC, 7-day retention, PITR enabled
           |
@@ -41,7 +41,7 @@
               Firebase project: see FIREBASE_PROJECT_ID secret
 
 Cloud Storage (Flutter web static hosting):
-  https://storage.googleapis.com/<GCP_PROJECT_ID>-uno-web
+  https://storage.googleapis.com/<GCP_PROJECT_ID>-wilddeck-web
 
 VPC: private egress only for Cloud SQL and Redis (PRIVATE_RANGES_ONLY)
 Region: us-central1 (default; check infra/variables.tf)
@@ -50,15 +50,15 @@ Region: us-central1 (default; check infra/variables.tf)
 **Service URLs** — retrieve with:
 
 ```sh
-gcloud run services describe uno-server --region us-central1 \
+gcloud run services describe wilddeck-server --region us-central1 \
   --format 'value(status.url)'
 
 # Cloud SQL connection name (for proxy / migrations):
-gcloud sql instances describe uno-postgres-production \
+gcloud sql instances describe wilddeck-postgres-production \
   --format 'value(connectionName)'
 
 # Redis host:
-gcloud redis instances describe uno-redis-production \
+gcloud redis instances describe wilddeck-redis-production \
   --region us-central1 --format 'value(host)'
 ```
 
@@ -92,12 +92,12 @@ Ensure the following environment variables are set in your shell (or CI environm
 
 | Variable               | Description                                              | Example                                      |
 |------------------------|----------------------------------------------------------|----------------------------------------------|
-| `GCP_PROJECT_ID`       | **Required.** GCP project ID                             | `uno-multiplayer-prod`                       |
+| `GCP_PROJECT_ID`       | **Required.** GCP project ID                             | `wilddeck-prod`                       |
 | `CLOUD_RUN_REGION`     | Cloud Run region (default: `us-central1`)                | `us-central1`                                |
-| `CLOUD_RUN_SERVICE`    | Cloud Run service name (default: `uno-server`)           | `uno-server`                                 |
-| `GCR_REPO`             | GCR image repository (default: `gcr.io/$GCP_PROJECT_ID/uno-server`) | `gcr.io/uno-multiplayer-prod/uno-server` |
-| `CLOUD_SQL_INSTANCE`   | Cloud SQL connection name for migration proxy            | `uno-multiplayer-prod:us-central1:uno-postgres-production` |
-| `DATABASE_URL`         | PostgreSQL connection URL (used by migrate.sh)           | `postgres://uno:PASSWORD@127.0.0.1:5432/uno` |
+| `CLOUD_RUN_SERVICE`    | Cloud Run service name (default: `wilddeck-server`)           | `wilddeck-server`                                 |
+| `GCR_REPO`             | GCR image repository (default: `gcr.io/$GCP_PROJECT_ID/wilddeck-server`) | `gcr.io/wilddeck-prod/wilddeck-server` |
+| `CLOUD_SQL_INSTANCE`   | Cloud SQL connection name for migration proxy            | `wilddeck-prod:us-central1:wilddeck-postgres-production` |
+| `DATABASE_URL`         | PostgreSQL connection URL (used by migrate.sh)           | `postgres://wilddeck:PASSWORD@127.0.0.1:5432/wilddeck` |
 
 Application runtime secrets are injected via Secret Manager — do **not** set them as plain environment variables in Cloud Run:
 
@@ -120,9 +120,9 @@ echo -n "new-value" | gcloud secrets versions add database-url --data-file=-
 gcloud auth configure-docker
 
 # 2. Set required variables
-export GCP_PROJECT_ID=uno-multiplayer-prod
-export CLOUD_SQL_INSTANCE=uno-multiplayer-prod:us-central1:uno-postgres-production
-export DATABASE_URL="postgres://uno:PASSWORD@127.0.0.1:5432/uno"
+export GCP_PROJECT_ID=wilddeck-prod
+export CLOUD_SQL_INSTANCE=wilddeck-prod:us-central1:wilddeck-postgres-production
+export DATABASE_URL="postgres://wilddeck:PASSWORD@127.0.0.1:5432/wilddeck"
 
 # 3. Run the deploy script (build -> push -> migrate -> deploy -> health-check)
 ./scripts/deploy.sh
@@ -143,19 +143,19 @@ The script automatically:
 
 ```sh
 # List revisions to find the last known-good one
-gcloud run revisions list --service uno-server --region us-central1
+gcloud run revisions list --service wilddeck-server --region us-central1
 
 # Roll 100% traffic back to that revision
-gcloud run services update-traffic uno-server \
+gcloud run services update-traffic wilddeck-server \
   --region us-central1 \
   --to-revisions=REVISION_ID=100
 
 # Verify
-gcloud run services describe uno-server --region us-central1 \
+gcloud run services describe wilddeck-server --region us-central1 \
   --format 'value(status.traffic)'
 ```
 
-Replace `REVISION_ID` with the actual revision name, e.g. `uno-server-00042-xyz`.
+Replace `REVISION_ID` with the actual revision name, e.g. `wilddeck-server-00042-xyz`.
 
 ### 3.4 Migration Rollback
 
@@ -183,7 +183,7 @@ kill %1  # stop proxy
 
 ```sh
 # Retrieve service URL
-SERVICE_URL=$(gcloud run services describe uno-server --region us-central1 \
+SERVICE_URL=$(gcloud run services describe wilddeck-server --region us-central1 \
   --format 'value(status.url)')
 
 # Check health (expects HTTP 200 with {"status":"ok"})
@@ -305,19 +305,19 @@ firebase auth:revoke-refresh-tokens PLAYER_ID
 
 ```sh
 # Scale to N minimum and M maximum instances
-gcloud run services update uno-server \
+gcloud run services update wilddeck-server \
   --region us-central1 \
   --min-instances N \
   --max-instances M
 
 # Example: scale up for an expected spike
-gcloud run services update uno-server \
+gcloud run services update wilddeck-server \
   --region us-central1 \
   --min-instances 5 \
   --max-instances 20
 
 # Return to defaults after the spike
-gcloud run services update uno-server \
+gcloud run services update wilddeck-server \
   --region us-central1 \
   --min-instances 1 \
   --max-instances 10
@@ -347,23 +347,23 @@ redis-cli -h REDIS_HOST -p 6379 FLUSHDB
 ```sh
 # Last 100 Cloud Run log lines
 gcloud logging read \
-  "resource.type=cloud_run_revision AND resource.labels.service_name=uno-server" \
+  "resource.type=cloud_run_revision AND resource.labels.service_name=wilddeck-server" \
   --limit=100 \
   --order=desc \
   --format='table(timestamp,severity,textPayload)'
 
 # Filter by severity (ERROR only)
 gcloud logging read \
-  'resource.type=cloud_run_revision AND resource.labels.service_name=uno-server AND severity>=ERROR' \
+  'resource.type=cloud_run_revision AND resource.labels.service_name=wilddeck-server AND severity>=ERROR' \
   --limit=50 --order=desc
 
 # Filter by a specific match ID
 gcloud logging read \
-  'resource.type=cloud_run_revision AND resource.labels.service_name=uno-server AND jsonPayload.match_id="MATCH_UUID"' \
+  'resource.type=cloud_run_revision AND resource.labels.service_name=wilddeck-server AND jsonPayload.match_id="MATCH_UUID"' \
   --limit=50 --order=desc
 
 # Tail live logs (streaming)
-gcloud beta run services logs tail uno-server --region us-central1
+gcloud beta run services logs tail wilddeck-server --region us-central1
 ```
 
 ---
@@ -379,7 +379,7 @@ gcloud beta run services logs tail uno-server --region us-central1
 ```sh
 # 1. Check recent error logs
 gcloud logging read \
-  'resource.type=cloud_run_revision AND resource.labels.service_name=uno-server AND severity>=ERROR' \
+  'resource.type=cloud_run_revision AND resource.labels.service_name=wilddeck-server AND severity>=ERROR' \
   --limit=50 --order=desc
 
 # 2. Check current health
@@ -396,7 +396,7 @@ redis-cli -h REDIS_HOST -p 6379 PING
 # Expected: PONG
 
 # 5. Check Cloud Run service status
-gcloud run services describe uno-server --region us-central1 \
+gcloud run services describe wilddeck-server --region us-central1 \
   --format 'table(status.conditions.type,status.conditions.status,status.conditions.message)'
 ```
 
@@ -458,7 +458,7 @@ psql "$DATABASE_URL" -c \
 kill %1
 
 # Restart the Cloud Run service to flush its connection pool
-gcloud run services update uno-server \
+gcloud run services update wilddeck-server \
   --region us-central1 \
   --update-env-vars=RESTART_TRIGGER="$(date +%s)"
 ```
@@ -507,7 +507,7 @@ psql "$DATABASE_URL" -c \
 # See section 5.5 (FLUSHDB) — acknowledge game loss before proceeding
 
 # Option 3: Scale up Memorystore (requires Terraform apply or gcloud command)
-gcloud redis instances update uno-redis-production \
+gcloud redis instances update wilddeck-redis-production \
   --region us-central1 \
   --size 2   # GB
 ```
@@ -526,18 +526,18 @@ gcloud redis instances update uno-redis-production \
 
 ```sh
 # Check Cloud Run timeout setting (should be 300s for long-lived WS)
-gcloud run services describe uno-server --region us-central1 \
+gcloud run services describe wilddeck-server --region us-central1 \
   --format 'value(spec.template.spec.timeoutSeconds)'
 
 # Look for timeout errors in logs
 gcloud logging read \
-  'resource.type=cloud_run_revision AND resource.labels.service_name=uno-server \
+  'resource.type=cloud_run_revision AND resource.labels.service_name=wilddeck-server \
    AND textPayload:"timeout"' \
   --limit=50 --order=desc
 
 # Check client reconnect attempts (look for repeated ws upgrade requests)
 gcloud logging read \
-  'resource.type=cloud_run_revision AND resource.labels.service_name=uno-server \
+  'resource.type=cloud_run_revision AND resource.labels.service_name=wilddeck-server \
    AND httpRequest.requestUrl:"/ws"' \
   --limit=100 --order=desc
 ```
@@ -546,14 +546,14 @@ gcloud logging read \
 
 ```sh
 # If timeout is < 300s, update it
-gcloud run services update uno-server \
+gcloud run services update wilddeck-server \
   --region us-central1 \
   --timeout 300
 
 # If a specific bad revision caused it, roll back (section 3.3)
 
 # If load-balancer keepalive is the issue, verify h2c port is configured:
-gcloud run services describe uno-server --region us-central1 \
+gcloud run services describe wilddeck-server --region us-central1 \
   --format 'value(spec.template.spec.containers[0].ports)'
 # Should show: name=h2c, containerPort=8080
 ```
@@ -575,13 +575,13 @@ redis-cli -h REDIS_HOST -p 6379 LLEN matchmaking:queue:classic   # adjust key na
 
 # Check matchmaking worker logs
 gcloud logging read \
-  'resource.type=cloud_run_revision AND resource.labels.service_name=uno-server \
+  'resource.type=cloud_run_revision AND resource.labels.service_name=wilddeck-server \
    AND jsonPayload.worker="matchmaking"' \
   --limit=50 --order=desc
 
 # Check if the matchmaking goroutine is alive (look for its ticker log)
 gcloud logging read \
-  'resource.type=cloud_run_revision AND resource.labels.service_name=uno-server \
+  'resource.type=cloud_run_revision AND resource.labels.service_name=wilddeck-server \
    AND textPayload:"matchmaking"' \
   --limit=20 --order=desc
 ```
@@ -590,7 +590,7 @@ gcloud logging read \
 
 ```sh
 # Force a restart of the Cloud Run service to respawn the matchmaking goroutine
-gcloud run services update uno-server \
+gcloud run services update wilddeck-server \
   --region us-central1 \
   --update-env-vars=RESTART_TRIGGER="$(date +%s)"
 
@@ -651,7 +651,7 @@ psql "$DATABASE_URL" -c \
 kill %1
 
 # Scale out to reduce per-instance load
-gcloud run services update uno-server \
+gcloud run services update wilddeck-server \
   --region us-central1 \
   --min-instances 5
 ```
@@ -667,13 +667,13 @@ gcloud run services update uno-server \
 ### 7.1 Connection String Format
 
 ```
-postgresql://uno:PASSWORD@PRIVATE_IP:5432/uno?sslmode=require
+postgresql://wilddeck:PASSWORD@PRIVATE_IP:5432/wilddeck?sslmode=require
 ```
 
 Via Cloud SQL Auth Proxy (from a machine with `CLOUD_SQL_INSTANCE` access):
 
 ```
-postgresql://uno:PASSWORD@127.0.0.1:5432/uno
+postgresql://wilddeck:PASSWORD@127.0.0.1:5432/wilddeck
 ```
 
 The actual value is stored in Secret Manager under `database-url`. Retrieve it with:
@@ -687,12 +687,12 @@ gcloud secrets versions access latest --secret=database-url
 ```sh
 # List automated backups for the instance
 gcloud sql backups list \
-  --instance=uno-postgres-production \
+  --instance=wilddeck-postgres-production \
   --limit=10
 
 # Describe the most recent backup
 gcloud sql backups describe BACKUP_ID \
-  --instance=uno-postgres-production
+  --instance=wilddeck-postgres-production
 ```
 
 ### 7.3 Point-in-Time Recovery (PITR)
@@ -704,11 +704,11 @@ PITR is enabled; recovery granularity is to the nearest second within the 7-day 
 # e.g., recover to 2026-10-03T14:30:00Z
 
 # Step 2: Restore to a NEW instance (never restore over production directly)
-gcloud sql instances clone uno-postgres-production uno-postgres-restore-$(date +%Y%m%d) \
+gcloud sql instances clone wilddeck-postgres-production wilddeck-postgres-restore-$(date +%Y%m%d) \
   --point-in-time="2026-10-03T14:30:00Z"
 
 # Step 3: Verify data integrity on the restored instance
-gcloud sql connect uno-postgres-restore-20261003 --user=uno --database=uno
+gcloud sql connect wilddeck-postgres-restore-20261003 --user=wilddeck --database=wilddeck
 
 # Step 4: If data looks correct, promote the restore instance
 # Update the DATABASE_URL secret to point to the restored instance's IP
@@ -716,7 +716,7 @@ gcloud sql connect uno-postgres-restore-20261003 --user=uno --database=uno
 # See Section 8 for full DR steps
 
 # Step 5: Delete the restore instance when done (billing!)
-gcloud sql instances delete uno-postgres-restore-20261003
+gcloud sql instances delete wilddeck-postgres-restore-20261003
 ```
 
 ### 7.4 Refresh Leaderboard
@@ -738,8 +738,8 @@ Recommended: schedule this to run every 5 minutes via Cloud Scheduler or a cron 
 ### 7.5 Schema Migrations (manual)
 
 ```sh
-export CLOUD_SQL_INSTANCE=uno-multiplayer-prod:us-central1:uno-postgres-production
-export DATABASE_URL="postgres://uno:PASSWORD@127.0.0.1:5432/uno"
+export CLOUD_SQL_INSTANCE=wilddeck-prod:us-central1:wilddeck-postgres-production
+export DATABASE_URL="postgres://wilddeck:PASSWORD@127.0.0.1:5432/wilddeck"
 
 cloud_sql_proxy -instances="$CLOUD_SQL_INSTANCE"=tcp:5432 &
 bash scripts/migrate.sh
@@ -773,13 +773,13 @@ terraform workspace new us-east1-dr || terraform workspace select us-east1-dr
 terraform apply -var="region=us-east1" -var="project_id=$GCP_PROJECT_ID"
 
 # Step 3: Restore the latest backup to the new Cloud SQL instance
-gcloud sql backups list --instance=uno-postgres-production --limit=1
+gcloud sql backups list --instance=wilddeck-postgres-production --limit=1
 gcloud sql backups restore BACKUP_ID \
-  --restore-instance=uno-postgres-dr-$(date +%Y%m%d) \
-  --backup-instance=uno-postgres-production
+  --restore-instance=wilddeck-postgres-dr-$(date +%Y%m%d) \
+  --backup-instance=wilddeck-postgres-production
 
 # Step 4: Update secrets in the new region to point to DR database and Redis
-echo -n "postgresql://uno:PASSWORD@DR_PRIVATE_IP:5432/uno" | \
+echo -n "postgresql://wilddeck:PASSWORD@DR_PRIVATE_IP:5432/wilddeck" | \
   gcloud secrets versions add database-url --data-file=- \
   --project=$GCP_PROJECT_ID
 
@@ -792,7 +792,7 @@ GCP_PROJECT_ID=$GCP_PROJECT_ID CLOUD_RUN_REGION=us-east1 ./scripts/deploy.sh
 
 # Step 6: Update DNS / load balancer to point to the DR Cloud Run URL
 # (Manual step — update your DNS A/CNAME record to the new service URL)
-DR_URL=$(gcloud run services describe uno-server --region us-east1 \
+DR_URL=$(gcloud run services describe wilddeck-server --region us-east1 \
   --format 'value(status.url)')
 echo "Update DNS to: $DR_URL"
 
@@ -816,37 +816,37 @@ Database rows corrupted by a bug, bad migration, or operator error.
 ```sh
 # Step 1: Stop writes immediately to prevent further corruption
 # Scale Cloud Run to 0 instances (this will disconnect all players)
-gcloud run services update uno-server \
+gcloud run services update wilddeck-server \
   --region us-central1 \
   --min-instances 0 \
   --max-instances 0
 
 # Step 2: Take a manual backup snapshot before recovery attempts
 gcloud sql backups create \
-  --instance=uno-postgres-production \
+  --instance=wilddeck-postgres-production \
   --description="pre-recovery-snapshot-$(date +%Y%m%dT%H%M%S)"
 
 # Step 3: Identify the last known-good timestamp
 # (Check deployment times, migration history, and incident timeline)
-gcloud sql backups list --instance=uno-postgres-production --limit=10
+gcloud sql backups list --instance=wilddeck-postgres-production --limit=10
 
 # Step 4: Clone to a restore instance using PITR (section 7.3)
-gcloud sql instances clone uno-postgres-production uno-postgres-restore-$(date +%Y%m%d) \
+gcloud sql instances clone wilddeck-postgres-production wilddeck-postgres-restore-$(date +%Y%m%d) \
   --point-in-time="LAST_KNOWN_GOOD_TIMESTAMP"
 
 # Step 5: Validate the restored data
-gcloud sql connect uno-postgres-restore-$(date +%Y%m%d) --user=uno --database=uno
+gcloud sql connect wilddeck-postgres-restore-$(date +%Y%m%d) --user=wilddeck --database=wilddeck
 # Run verification queries against players, matches tables
 
 # Step 6: If valid, promote: update DATABASE_URL secret to restored instance
-echo -n "postgresql://uno:PASSWORD@RESTORED_PRIVATE_IP:5432/uno" | \
+echo -n "postgresql://wilddeck:PASSWORD@RESTORED_PRIVATE_IP:5432/wilddeck" | \
   gcloud secrets versions add database-url --data-file=-
 
 # Step 7: Apply any missing migrations on top of restored data (if applicable)
 bash scripts/migrate.sh
 
 # Step 8: Scale Cloud Run back up
-gcloud run services update uno-server \
+gcloud run services update wilddeck-server \
   --region us-central1 \
   --min-instances 1 \
   --max-instances 10
@@ -855,7 +855,7 @@ gcloud run services update uno-server \
 curl -s "${SERVICE_URL}/health" | jq .
 
 # Step 10: Decommission old corrupted instance (after data is confirmed good)
-# gcloud sql instances delete uno-postgres-production  # DANGER: only after full verification
+# gcloud sql instances delete wilddeck-postgres-production  # DANGER: only after full verification
 ```
 
 **Post-recovery**:

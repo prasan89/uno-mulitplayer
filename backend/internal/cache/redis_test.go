@@ -9,7 +9,7 @@ import (
 	goredis "github.com/redis/go-redis/v9"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/uno-multiplayer/server/internal/game"
+	"github.com/wilddeck/server/internal/game"
 )
 
 // ─── Test fixtures ─────────────────────────────────────────────────────────────

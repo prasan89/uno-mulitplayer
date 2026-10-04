@@ -47,12 +47,12 @@ variable "jwt_secret_secret_id" {
 
 output "service_url" {
   description = "Public HTTPS URL of the Cloud Run service"
-  value       = google_cloud_run_v2_service.uno_server.uri
+  value       = google_cloud_run_v2_service.wilddeck_server.uri
 }
 
 output "service_name" {
   description = "Name of the Cloud Run service"
-  value       = google_cloud_run_v2_service.uno_server.name
+  value       = google_cloud_run_v2_service.wilddeck_server.name
 }
 
 output "service_account_email" {

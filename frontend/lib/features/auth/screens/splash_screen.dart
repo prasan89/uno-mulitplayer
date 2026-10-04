@@ -42,7 +42,7 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
               child: const Center(
                 child: Text(
-                  'UNO',
+                  'WD',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 36,

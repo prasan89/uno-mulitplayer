@@ -15,9 +15,9 @@ jobs:
       postgres:
         image: postgres:16-alpine
         env:
-          POSTGRES_DB: uno_test
-          POSTGRES_USER: uno_user
-          POSTGRES_PASSWORD: uno_password
+          POSTGRES_DB: wilddeck_test
+          POSTGRES_USER: wilddeck_user
+          POSTGRES_PASSWORD: wilddeck_password
         ports:
           - 5432:5432
         options: >-
@@ -66,7 +66,7 @@ jobs:
       - name: Run Go tests
         working-directory: ./backend
         env:
-          DATABASE_URL: postgres://uno_user:uno_password@localhost:5432/uno_test?sslmode=disable
+          DATABASE_URL: postgres://wilddeck_user:wilddeck_password@localhost:5432/wilddeck_test?sslmode=disable
           REDIS_URL: redis://localhost:6379/0
           JWT_SECRET: test_jwt_secret_for_ci
         run: go test -race -count=1 -coverprofile=coverage.out ./...
@@ -174,6 +174,6 @@ jobs:
           context: ./backend
           file: ./backend/Dockerfile
           push: false
-          tags: uno-multiplayer/backend:${{ github.sha }}
+          tags: wilddeck/backend:${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max

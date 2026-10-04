@@ -1,7 +1,7 @@
 #!/bin/bash
 # scripts/load_test.sh
 #
-# Wrapper script for running the UNO Multiplayer k6 load tests.
+# Wrapper script for running the WildDeck k6 load tests.
 #
 # Usage:
 #   ./scripts/load_test.sh [WS_URL] [SCENARIO]
@@ -9,7 +9,7 @@
 # Arguments:
 #   WS_URL    - WebSocket base URL to test against.
 #               Default: ws://localhost:8080
-#               Example: ws://staging.uno-multiplayer.example.com
+#               Example: ws://staging.wilddeck.example.com
 #
 #   SCENARIO  - Name of a single k6 scenario to run (concurrent_matches,
 #               ramp_players, spike).  Omit to run all scenarios.
@@ -127,7 +127,7 @@ SUMMARY_FILE="${K6_RESULTS_DIR}/load_test_${TIMESTAMP}_summary.txt"
 
 echo ""
 echo -e "${BOLD}========================================${RESET}"
-echo -e "${BOLD} UNO Multiplayer — k6 Load Test Runner  ${RESET}"
+echo -e "${BOLD} WildDeck — k6 Load Test Runner  ${RESET}"
 echo -e "${BOLD}========================================${RESET}"
 echo ""
 info "Target URL   : ${WS_URL}"

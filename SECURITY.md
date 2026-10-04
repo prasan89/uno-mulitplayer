@@ -1,4 +1,4 @@
-# UNO Multiplayer Security Documentation
+# WildDeck Security Documentation
 
 ## 1. Threat Model
 
@@ -73,7 +73,7 @@ If any check fails, the action is rejected with an error and the game state is n
 ### Resource Ownership
 
 - Room management actions (start game, kick player) are restricted to the room creator.
-- Players may only perform actions on their own game state (draw cards, play cards, call UNO).
+- Players may only perform actions on their own game state (draw cards, play cards, declare Last Card).
 - Admin-level operations are restricted by a separate role claim in the JWT and are not accessible to regular players.
 
 ---
@@ -159,15 +159,15 @@ All game rules are enforced exclusively on the server. The client is treated as 
 - If the player holds a matching suit card, the WD4 play is rejected as illegal.
 - This check cannot be bypassed through client manipulation.
 
-### UNO Penalty Enforcement
+### Last Card Penalty Enforcement
 
-- The server tracks whether a player has called UNO after reducing their hand to one card.
+- The server tracks whether a player has declared Last Card after reducing their hand to one card.
 - The penalty window (the interval during which another player may challenge) is enforced server-side with a timestamp.
-- A player cannot retroactively call UNO after the window has closed; the penalty draw is applied automatically.
+- A player cannot retroactively declare Last Card after the window has closed; the Last Card penalty draw is applied automatically.
 
 ### Audit Logging
 
-- All game actions (play card, draw card, call UNO, challenge, skip) are written to the `game_events` table with player ID, timestamp, action type, and relevant card/state data.
+- All game actions (play card, draw card, declare Last Card, challenge, skip) are written to the `game_events` table with player ID, timestamp, action type, and relevant card/state data.
 - Logs are retained for post-game review and anomaly detection.
 
 ---
@@ -298,7 +298,7 @@ Use this checklist before each production deployment. All items must be checked 
 
 ## 11. Responsible Disclosure
 
-We take security seriously and appreciate the security research community's efforts to help keep UNO Multiplayer safe for all players.
+We take security seriously and appreciate the security research community's efforts to help keep WildDeck safe for all players.
 
 ### Reporting a Vulnerability
 

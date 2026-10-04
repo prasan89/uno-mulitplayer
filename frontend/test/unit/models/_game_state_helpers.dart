@@ -4,14 +4,14 @@
 enum _CardColor { red, green, blue, yellow, wild }
 enum _GameStatus { waiting, active, finished }
 
-class _UnoCard {
+class _WildCard {
   final _CardColor color;
   final String value;
 
-  const _UnoCard({required this.color, required this.value});
+  const _WildCard({required this.color, required this.value});
 
-  factory _UnoCard.fromJson(Map<String, dynamic> json) {
-    return _UnoCard(
+  factory _WildCard.fromJson(Map<String, dynamic> json) {
+    return _WildCard(
       color: _CardColor.values.firstWhere(
         (c) => c.name == (json['color'] as String),
         orElse: () => _CardColor.wild,
@@ -27,7 +27,7 @@ class _UnoCard {
 
   @override
   bool operator ==(Object other) =>
-      other is _UnoCard && other.color == color && other.value == value;
+      other is _WildCard && other.color == color && other.value == value;
 
   @override
   int get hashCode => Object.hash(color, value);
@@ -67,8 +67,8 @@ class _GameState {
   final String gameId;
   final String currentPlayerId;
   final List<_Player> players;
-  final List<_UnoCard> hand;
-  final _UnoCard? topCard;
+  final List<_WildCard> hand;
+  final _WildCard? topCard;
   final _CardColor? activeColor;
   final bool isClockwise;
   final _GameStatus status;
@@ -94,10 +94,10 @@ class _GameState {
           .map((p) => _Player.fromJson(p as Map<String, dynamic>))
           .toList(),
       hand: (json['hand'] as List<dynamic>)
-          .map((c) => _UnoCard.fromJson(c as Map<String, dynamic>))
+          .map((c) => _WildCard.fromJson(c as Map<String, dynamic>))
           .toList(),
       topCard: json['topCard'] != null
-          ? _UnoCard.fromJson(json['topCard'] as Map<String, dynamic>)
+          ? _WildCard.fromJson(json['topCard'] as Map<String, dynamic>)
           : null,
       activeColor: json['activeColor'] != null
           ? _CardColor.values.firstWhere(

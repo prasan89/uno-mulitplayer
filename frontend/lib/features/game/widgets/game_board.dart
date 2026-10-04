@@ -6,7 +6,7 @@ import '../widgets/player_hand.dart';
 import '../widgets/player_info_row.dart';
 import '../widgets/color_picker_dialog.dart';
 import '../widgets/game_over_dialog.dart';
-import '../widgets/uno_button.dart';
+import '../widgets/last_card_button.dart';
 
 /// Represents another player in the game (not the current user)
 class OpponentPlayer {
@@ -27,19 +27,19 @@ class GameBoard extends StatelessWidget {
   final String gameId;
   final Duration? turnTimeRemaining;
   final List<OpponentPlayer> opponents;
-  final List<UnoCard> myHand;
+  final List<WildCard> myHand;
   final Set<String> playableCardIds;
   final String? selectedCardId;
-  final UnoCard? discardTopCard;
+  final WildCard? discardTopCard;
   final int discardCount;
   final int drawPileCount;
   final bool isMyTurn;
   final bool canDraw;
-  final bool showUnoButton;
-  final void Function(UnoCard card) onCardSelected;
-  final void Function(UnoCard card) onCardPlayed;
+  final bool showLastCardButton;
+  final void Function(WildCard card) onCardSelected;
+  final void Function(WildCard card) onCardPlayed;
   final VoidCallback onDrawCard;
-  final VoidCallback onCallUno;
+  final VoidCallback onCallLastCard;
   final Future<CardColor?> Function() onColorPick;
 
   const GameBoard({
@@ -55,11 +55,11 @@ class GameBoard extends StatelessWidget {
     this.drawPileCount = 108,
     this.isMyTurn = false,
     this.canDraw = false,
-    this.showUnoButton = false,
+    this.showLastCardButton = false,
     required this.onCardSelected,
     required this.onCardPlayed,
     required this.onDrawCard,
-    required this.onCallUno,
+    required this.onCallLastCard,
     required this.onColorPick,
   });
 
@@ -75,7 +75,7 @@ class GameBoard extends StatelessWidget {
         ),
         // Turn indicator
         _buildTurnIndicator(context),
-        // Player hand + UNO button
+        // Player hand + Last Card button
         _buildBottomSection(context),
       ],
     );
@@ -195,13 +195,13 @@ class GameBoard extends StatelessWidget {
             }
           },
         ),
-        // UNO button floats above the hand
+        // Last Card button floats above the hand
         Positioned(
           top: -22,
           right: 20,
-          child: UnoButton(
-            isVisible: showUnoButton && isMyTurn,
-            onPressed: onCallUno,
+          child: LastCardButton(
+            isVisible: showLastCardButton && isMyTurn,
+            onPressed: onCallLastCard,
           ),
         ),
       ],

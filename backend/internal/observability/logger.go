@@ -1,5 +1,5 @@
 // Package observability provides logging, metrics, and health-check
-// infrastructure for the UNO multiplayer server.
+// infrastructure for the WildDeck server.
 package observability
 
 import (

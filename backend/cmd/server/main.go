@@ -20,12 +20,12 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"go.uber.org/zap"
 
-	"github.com/uno-multiplayer/server/internal/bot"
-	"github.com/uno-multiplayer/server/internal/cache"
-	"github.com/uno-multiplayer/server/internal/db"
-	"github.com/uno-multiplayer/server/internal/game"
-	"github.com/uno-multiplayer/server/internal/hub"
-	"github.com/uno-multiplayer/server/internal/middleware"
+	"github.com/wilddeck/server/internal/bot"
+	"github.com/wilddeck/server/internal/cache"
+	"github.com/wilddeck/server/internal/db"
+	"github.com/wilddeck/server/internal/game"
+	"github.com/wilddeck/server/internal/hub"
+	"github.com/wilddeck/server/internal/middleware"
 )
 
 // validIDRe matches safe alphanumeric/hyphen/underscore IDs up to 64 characters
@@ -51,7 +51,7 @@ func loadConfig() *config {
 	}
 	projectID := os.Getenv("FIREBASE_PROJECT_ID")
 	if projectID == "" {
-		projectID = "uno-multiplayer"
+		projectID = "wilddeck"
 	}
 	redisAddr := os.Getenv("REDIS_ADDR")
 	if redisAddr == "" {

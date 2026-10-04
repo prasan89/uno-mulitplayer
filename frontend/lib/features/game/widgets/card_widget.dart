@@ -20,12 +20,12 @@ enum CardValue {
   wildDrawFour,
 }
 
-class UnoCard {
+class WildCard {
   final CardColor color;
   final CardValue value;
   final String id;
 
-  const UnoCard({
+  const WildCard({
     required this.color,
     required this.value,
     required this.id,
@@ -71,7 +71,7 @@ class UnoCard {
 }
 
 class CardWidget extends StatefulWidget {
-  final UnoCard card;
+  final WildCard card;
   final bool isPlayable;
   final bool isSelected;
   final VoidCallback? onTap;

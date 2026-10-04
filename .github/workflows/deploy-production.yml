@@ -67,15 +67,15 @@ jobs:
           file: ./backend/Dockerfile
           push: true
           tags: |
-            us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/uno-multiplayer/backend:${{ steps.image-tag.outputs.tag }}
-            us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/uno-multiplayer/backend:production-latest
+            us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/wilddeck/backend:${{ steps.image-tag.outputs.tag }}
+            us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/wilddeck/backend:production-latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
       - name: Capture current Cloud Run revision (for rollback)
         id: current-revision
         run: |
-          CURRENT=$(gcloud run services describe uno-multiplayer-production \
+          CURRENT=$(gcloud run services describe wilddeck-production \
             --region us-central1 \
             --project ${{ secrets.GCP_PROJECT_ID }} \
             --format 'value(status.latestReadyRevisionName)' 2>/dev/null || echo "")
@@ -85,10 +85,10 @@ jobs:
         id: deploy
         uses: google-github-actions/deploy-cloudrun@v2
         with:
-          service: uno-multiplayer-production
+          service: wilddeck-production
           region: us-central1
           project_id: ${{ secrets.GCP_PROJECT_ID }}
-          image: us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/uno-multiplayer/backend:${{ steps.image-tag.outputs.tag }}
+          image: us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/wilddeck/backend:${{ steps.image-tag.outputs.tag }}
           flags: >-
             --allow-unauthenticated
             --min-instances=1
@@ -115,7 +115,7 @@ jobs:
         if: failure() && steps.current-revision.outputs.revision != ''
         run: |
           echo "Rolling back to revision: ${{ steps.current-revision.outputs.revision }}"
-          gcloud run services update-traffic uno-multiplayer-production \
+          gcloud run services update-traffic wilddeck-production \
             --region us-central1 \
             --project ${{ secrets.GCP_PROJECT_ID }} \
             --to-revisions=${{ steps.current-revision.outputs.revision }}=100
@@ -156,7 +156,7 @@ jobs:
             ## Deployment
 
             - **Environment**: Production
-            - **Image**: `us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/uno-multiplayer/backend:${{ github.ref_name }}`
+            - **Image**: `us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/wilddeck/backend:${{ github.ref_name }}`
             - **Service URL**: ${{ steps.deploy.outputs.url }}
           draft: false
           prerelease: ${{ contains(github.ref_name, '-rc') || contains(github.ref_name, '-beta') || contains(github.ref_name, '-alpha') }}

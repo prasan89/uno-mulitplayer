@@ -10,8 +10,8 @@ import (
 	"testing"
 	"time"
 
-	gamepkg "github.com/uno-multiplayer/server/internal/game"
-	hubpkg "github.com/uno-multiplayer/server/internal/hub"
+	gamepkg "github.com/wilddeck/server/internal/game"
+	hubpkg "github.com/wilddeck/server/internal/hub"
 )
 
 // joinPublicQueue calls POST /api/match/queue for the given player and game mode.

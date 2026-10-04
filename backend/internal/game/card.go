@@ -1,6 +1,6 @@
 package game
 
-// Color represents the color of a UNO card.
+// Color represents the color of a WildDeck card.
 type Color string
 
 const (
@@ -11,7 +11,7 @@ const (
 	ColorWild   Color = "wild"
 )
 
-// CardType represents the type/face of a UNO card.
+// CardType represents the type/face of a WildDeck card.
 type CardType string
 
 const (
@@ -23,7 +23,7 @@ const (
 	CardTypeWildDrawFour CardType = "wild_draw_four"
 )
 
-// Card represents a single UNO card.
+// Card represents a single WildDeck card.
 type Card struct {
 	ID    string   `json:"id"`
 	Color Color    `json:"color"`

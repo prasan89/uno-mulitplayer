@@ -3,7 +3,7 @@ package bot
 import (
 	"math/rand"
 
-	"github.com/uno-multiplayer/server/internal/game"
+	"github.com/wilddeck/server/internal/game"
 )
 
 // ─── HardStrategy ─────────────────────────────────────────────────────────────
@@ -110,10 +110,10 @@ func (s *HardStrategy) ChooseColor(hand []game.Card) game.Color {
 	return best
 }
 
-// ShouldCallUNO implements Strategy for HardStrategy.
-// The hard bot always calls UNO when it will have exactly 1 card after
+// ShouldCallLastCard implements Strategy for HardStrategy.
+// The hard bot always declares Last Card when it will have exactly 1 card after
 // playing (hand has 2 cards currently — one will be played).
-func (s *HardStrategy) ShouldCallUNO(hand []game.Card) bool {
+func (s *HardStrategy) ShouldCallLastCard(hand []game.Card) bool {
 	return len(hand) == 2
 }
 
@@ -161,8 +161,8 @@ func (s *MediumStrategy) ChooseColor(hand []game.Card) game.Color {
 	return s.hard.ChooseColor(hand)
 }
 
-func (s *MediumStrategy) ShouldCallUNO(hand []game.Card) bool {
-	return s.hard.ShouldCallUNO(hand)
+func (s *MediumStrategy) ShouldCallLastCard(hand []game.Card) bool {
+	return s.hard.ShouldCallLastCard(hand)
 }
 
 func (s *MediumStrategy) ShouldChallengeDraw4(state *game.PublicGameState) bool {
@@ -199,8 +199,8 @@ func (s *EasyStrategy) ChooseColor(hand []game.Card) game.Color {
 	return cols[rand.Intn(len(cols))]
 }
 
-func (s *EasyStrategy) ShouldCallUNO(hand []game.Card) bool {
-	return s.hard.ShouldCallUNO(hand)
+func (s *EasyStrategy) ShouldCallLastCard(hand []game.Card) bool {
+	return s.hard.ShouldCallLastCard(hand)
 }
 
 func (s *EasyStrategy) ShouldChallengeDraw4(state *game.PublicGameState) bool {

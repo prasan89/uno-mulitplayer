@@ -1,11 +1,11 @@
-// Package bot implements the AI player system for UNO multiplayer.
+// Package bot implements the AI player system for WildDeck.
 // It provides configurable difficulty strategies (easy/medium/hard),
 // a BotManager that drives bot turns, and optional takeover of disconnected
 // human players.
 package bot
 
 import (
-	"github.com/uno-multiplayer/server/internal/game"
+	"github.com/wilddeck/server/internal/game"
 )
 
 // Difficulty controls how intelligently a bot plays.
@@ -47,9 +47,9 @@ type Strategy interface {
 	// ChooseColor returns the color to declare when playing a wild card.
 	ChooseColor(hand []game.Card) game.Color
 
-	// ShouldCallUNO returns true when the bot should announce UNO before
+	// ShouldCallLastCard returns true when the bot should declare Last Card before
 	// or immediately after playing down to one card.
-	ShouldCallUNO(hand []game.Card) bool
+	ShouldCallLastCard(hand []game.Card) bool
 
 	// ShouldChallengeDraw4 returns true when the bot should challenge the
 	// most recently played Wild Draw Four.

@@ -12,8 +12,8 @@ import (
 	"github.com/google/uuid"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
-	"github.com/uno-multiplayer/server/internal/game"
-	"github.com/uno-multiplayer/server/internal/hub"
+	"github.com/wilddeck/server/internal/game"
+	"github.com/wilddeck/server/internal/hub"
 	"go.uber.org/zap"
 )
 
@@ -144,9 +144,13 @@ func (m *BotManager) TakeoverPlayer(gameID, playerID string) {
 	key := takeoverKey(gameID, playerID)
 	botID := uuid.New().String()
 
+	suffix := playerID
+	if len(suffix) > 8 {
+		suffix = suffix[:8]
+	}
 	b := &Bot{
 		ID:         botID,
-		Name:       fmt.Sprintf("Bot(sub-%s)", playerID[:8]),
+		Name:       fmt.Sprintf("Bot(sub-%s)", suffix),
 		Difficulty: DifficultyMedium,
 		GameID:     gameID,
 		PlayerID:   playerID,
@@ -309,14 +313,14 @@ func (m *BotManager) executeTurn(b *Bot) {
 		chosenColor = b.strategy.ChooseColor(remaining)
 	}
 
-	// ShouldCallUNO: call before playing when hand will drop to 1.
-	if b.strategy.ShouldCallUNO(state.MyHand) {
-		unoAction := game.Action{
-			Type:     game.ActionCallUNO,
+	// ShouldCallLastCard: call before playing when hand will drop to 1.
+	if b.strategy.ShouldCallLastCard(state.MyHand) {
+		lastCardAction := game.Action{
+			Type:     game.ActionCallLastCard,
 			PlayerID: b.PlayerID,
 		}
 		// Best-effort; ignore error (engine validates).
-		_ = m.engine.ApplyAction(b.GameID, unoAction)
+		_ = m.engine.ApplyAction(b.GameID, lastCardAction)
 	}
 
 	playAction := game.Action{

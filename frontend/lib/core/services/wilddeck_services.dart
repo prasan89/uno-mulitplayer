@@ -259,5 +259,5 @@ class WildGamePlayer {
 
 // ─── Enums reexport (shared by theme + services) ─────────────────────────────
 // WildCardColor and WildCardType are defined in wilddeck_theme.dart
-export 'package:uno_multiplayer/shared/theme/wilddeck_theme.dart'
+export 'package:wilddeck/shared/theme/wilddeck_theme.dart'
     show WildCardColor, WildCardType;

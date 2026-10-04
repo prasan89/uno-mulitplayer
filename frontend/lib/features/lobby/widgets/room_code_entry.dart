@@ -55,7 +55,7 @@ class _RoomCodeEntryState extends State<RoomCodeEntry> {
 
   Future<void> _shareCode() async {
     // In production use share_plus package
-    await Clipboard.setData(ClipboardData(text: 'Join my UNO game! Code: $_displayCode'));
+    await Clipboard.setData(ClipboardData(text: 'Join my WildDeck game! Code: $_displayCode'));
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(

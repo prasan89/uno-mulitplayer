@@ -1,5 +1,5 @@
 /**
- * Reusable scenario configurations for the UNO Multiplayer load test suite.
+ * Reusable scenario configurations for the WildDeck load test suite.
  *
  * Import individual scenario objects or the complete scenarios map into your
  * k6 test scripts.

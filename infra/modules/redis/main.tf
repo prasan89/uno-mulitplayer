@@ -6,9 +6,9 @@
 
 resource "google_redis_instance" "cache" {
   project        = var.project_id
-  name           = "uno-redis-${var.environment}"
+  name           = "wilddeck-redis-${var.environment}"
   region         = var.region
-  display_name   = "UNO Redis Cache (${var.environment})"
+  display_name   = "WildDeck Redis Cache (${var.environment})"
 
   # BASIC tier — single node (no replication); use STANDARD_HA for production HA
   tier           = "BASIC"
@@ -32,6 +32,6 @@ resource "google_redis_instance" "cache" {
 
   labels = {
     environment = var.environment
-    app         = "uno"
+    app         = "wilddeck"
   }
 }

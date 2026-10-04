@@ -83,7 +83,7 @@ type PlayerInfo struct {
 
 // ─── Player ───────────────────────────────────────────────────────────────────
 
-// Player represents one participant in an UNO game.
+// Player represents one participant in a WildDeck game.
 type Player struct {
 	ID          string `json:"id"`
 	Name        string `json:"name"`
@@ -91,7 +91,7 @@ type Player struct {
 	Score       int    `json:"score"`
 	IsBot       bool   `json:"is_bot"`
 	IsConnected bool   `json:"is_connected"`
-	HasCalledUno bool  `json:"has_called_uno"`
+	HasCalledLastCard bool  `json:"has_called_last_card"`
 }
 
 // clone returns a deep copy of the player (including a copy of the hand).
@@ -103,7 +103,7 @@ func (p Player) clone() Player {
 
 // ─── GameState ────────────────────────────────────────────────────────────────
 
-// GameState is the authoritative server-side state for an UNO game.
+// GameState is the authoritative server-side state for a WildDeck game.
 type GameState struct {
 	GameID             string     `json:"game_id"`
 	Players            []Player   `json:"players"`
@@ -141,7 +141,7 @@ type ActionType string
 const (
 	ActionPlayCard       ActionType = "play_card"
 	ActionDrawCard       ActionType = "draw_card"
-	ActionCallUNO        ActionType = "call_uno"
+	ActionCallLastCard        ActionType = "call_last_card"
 	ActionChallengeDraw4 ActionType = "challenge_draw4"
 )
 
@@ -164,7 +164,7 @@ type PublicPlayerView struct {
 	Score        int    `json:"score"`
 	IsBot        bool   `json:"is_bot"`
 	IsConnected  bool   `json:"is_connected"`
-	HasCalledUno bool   `json:"has_called_uno"`
+	HasCalledLastCard bool   `json:"has_called_last_card"`
 }
 
 // PublicGameState is the game state sent to a specific player: they see their

@@ -1,4 +1,4 @@
-// Package cache provides a Redis-backed cache layer for the UNO multiplayer server.
+// Package cache provides a Redis-backed cache layer for the WildDeck server.
 // It wraps go-redis/v9 and exposes typed methods for game state, sessions,
 // presence, matchmaking queues, rate limiting, room codes, and action dedup.
 package cache

@@ -1,4 +1,4 @@
-// Package db provides the PostgreSQL database layer for the UNO multiplayer
+// Package db provides the PostgreSQL database layer for the WildDeck
 // server. It wraps a *sql.DB connection pool with typed query methods and a
 // migration runner.
 package db

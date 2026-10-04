@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'card_widget.dart';
 
 class DiscardPile extends StatefulWidget {
-  final UnoCard? topCard;
+  final WildCard? topCard;
   final int totalDiscarded;
 
   const DiscardPile({
@@ -20,7 +20,7 @@ class _DiscardPileState extends State<DiscardPile>
   late AnimationController _animationController;
   late Animation<Offset> _slideAnimation;
   late Animation<double> _fadeAnimation;
-  UnoCard? _previousCard;
+  WildCard? _previousCard;
 
   @override
   void initState() {

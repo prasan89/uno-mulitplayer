@@ -1,14 +1,14 @@
 # ============================================================
 # Cloud SQL module
 # Provisions: PostgreSQL 15 instance (private IP, HA),
-#             database "uno", user "uno"
+#             database "wilddeck", user "wilddeck"
 # ============================================================
 
 # ---- Cloud SQL Instance ----------------------------------------
 
 resource "google_sql_database_instance" "postgres" {
   project          = var.project_id
-  name             = "uno-postgres-${var.environment}"
+  name             = "wilddeck-postgres-${var.environment}"
   region           = var.region
   database_version = "POSTGRES_15"
 
@@ -55,20 +55,20 @@ resource "google_sql_database_instance" "postgres" {
 # ---- Database --------------------------------------------------
 
 # Application database
-resource "google_sql_database" "uno" {
+resource "google_sql_database" "wilddeck" {
   project  = var.project_id
   instance = google_sql_database_instance.postgres.name
-  name     = "uno"
+  name     = "wilddeck"
 }
 
 # ---- Database User ---------------------------------------------
 
 # Application user — password managed via Secret Manager
-resource "google_sql_user" "uno" {
+resource "google_sql_user" "wilddeck" {
   project  = var.project_id
   instance = google_sql_database_instance.postgres.name
-  name     = "uno"
+  name     = "wilddeck"
   # Password is intentionally set to a placeholder; update via:
-  #   gcloud sql users set-password uno --instance=<name> --password=<strong-pw>
+  #   gcloud sql users set-password wilddeck --instance=<name> --password=<strong-pw>
   password = "CHANGE_ME_SET_VIA_GCLOUD_OR_CONSOLE"
 }

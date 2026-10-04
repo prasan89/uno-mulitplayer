@@ -1,4 +1,4 @@
-# UNO Multiplayer Launch Checklist
+# WildDeck Launch Checklist
 
 > **Instructions:** Each item must be checked off before launch. Update the `Owner` field with the responsible person's name. Mark `[x]` only when the done criteria is fully met.
 
@@ -192,7 +192,7 @@
 - [ ] **Bot takeover tested: AFK player replaced by bot**
   - Owner: QA
   - How to verify: Join game, go AFK past timeout threshold; verify bot takes over; verify bot plays legal moves; verify human can reclaim seat
-  - Done criteria: Bot activates within configured timeout, plays valid UNO moves, human reclaim works correctly
+  - Done criteria: Bot activates within configured timeout, plays valid WildDeck moves, human reclaim works correctly
 
 - [ ] **Load test: 100 concurrent matches without errors**
   - Owner: QA
@@ -214,10 +214,10 @@
   - How to verify: Install APK on physical Android device; complete full game flow; test all gestures and UI elements
   - Done criteria: App installs, launches, authenticates, and plays full game on minimum supported Android version (physical device)
 
-- [ ] **Regression test: card draw mechanics follow UNO rules**
+- [ ] **Regression test: card draw mechanics follow WildDeck rules**
   - Owner: QA
-  - How to verify: Run rule-validation test suite; play scripted game sequences verifying draw-2 stacking, wild card color selection, UNO call penalty
-  - Done criteria: All UNO rule scenarios in test suite pass; no rule violations possible through UI
+  - How to verify: Run rule-validation test suite; play scripted game sequences verifying draw-2 stacking, wild card color selection, Last Card penalty
+  - Done criteria: All WildDeck rule scenarios in test suite pass; no rule violations possible through UI
 
 - [ ] **Regression test: game state consistency across reconnects**
   - Owner: QA

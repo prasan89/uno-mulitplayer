@@ -7,21 +7,21 @@
 
 # ---- VPC -------------------------------------------------------
 
-resource "google_compute_network" "uno_vpc" {
+resource "google_compute_network" "wilddeck_vpc" {
   project                 = var.project_id
-  name                    = "uno-vpc"
+  name                    = "wilddeck-vpc"
   auto_create_subnetworks = false
-  description             = "VPC network for the UNO multiplayer application"
+  description             = "VPC network for the WildDeck application"
 }
 
 # ---- Subnet ----------------------------------------------------
 
 # Primary subnet used by Cloud Run, Cloud SQL, and Redis
-resource "google_compute_subnetwork" "uno_subnet" {
+resource "google_compute_subnetwork" "wilddeck_subnet" {
   project                  = var.project_id
-  name                     = "uno-subnet-${var.region}"
+  name                     = "wilddeck-subnet-${var.region}"
   region                   = var.region
-  network                  = google_compute_network.uno_vpc.id
+  network                  = google_compute_network.wilddeck_vpc.id
   ip_cidr_range            = "10.0.0.0/24"
   private_ip_google_access = true # allows VMs to reach Google APIs without external IPs
 }
@@ -33,9 +33,9 @@ resource "google_vpc_access_connector" "connector" {
   provider = google-beta
 
   project        = var.project_id
-  name           = "uno-vpc-connector"
+  name           = "wilddeck-vpc-connector"
   region         = var.region
-  network        = google_compute_network.uno_vpc.name
+  network        = google_compute_network.wilddeck_vpc.name
   ip_cidr_range  = "10.8.0.0/28" # /28 is the minimum required by the connector
   min_throughput = 200
   max_throughput = 1000
@@ -44,18 +44,18 @@ resource "google_vpc_access_connector" "connector" {
 # ---- Cloud Router + Cloud NAT ----------------------------------
 
 # Router required by Cloud NAT
-resource "google_compute_router" "uno_router" {
+resource "google_compute_router" "wilddeck_router" {
   project = var.project_id
-  name    = "uno-router"
+  name    = "wilddeck-router"
   region  = var.region
-  network = google_compute_network.uno_vpc.id
+  network = google_compute_network.wilddeck_vpc.id
 }
 
 # Cloud NAT provides outbound internet access for instances without external IPs
-resource "google_compute_router_nat" "uno_nat" {
+resource "google_compute_router_nat" "wilddeck_nat" {
   project                            = var.project_id
-  name                               = "uno-nat"
-  router                             = google_compute_router.uno_router.name
+  name                               = "wilddeck-nat"
+  router                             = google_compute_router.wilddeck_router.name
   region                             = var.region
   nat_ip_allocate_option             = "AUTO_ONLY"
   source_subnetwork_ip_ranges_to_nat = "ALL_SUBNETWORKS_ALL_IP_RANGES"
@@ -66,16 +66,16 @@ resource "google_compute_router_nat" "uno_nat" {
 # Reserve a global IP range that Google uses for VPC peering (Cloud SQL)
 resource "google_compute_global_address" "private_ip_range" {
   project       = var.project_id
-  name          = "uno-private-ip-range"
+  name          = "wilddeck-private-ip-range"
   purpose       = "VPC_PEERING"
   address_type  = "INTERNAL"
   prefix_length = 16
-  network       = google_compute_network.uno_vpc.id
+  network       = google_compute_network.wilddeck_vpc.id
 }
 
 # Establish the private service connection so Cloud SQL gets a private IP
 resource "google_service_networking_connection" "private_service_connection" {
-  network                 = google_compute_network.uno_vpc.id
+  network                 = google_compute_network.wilddeck_vpc.id
   service                 = "servicenetworking.googleapis.com"
   reserved_peering_ranges = [google_compute_global_address.private_ip_range.name]
 }

@@ -1,5 +1,5 @@
 /**
- * k6 WebSocket load test for the UNO Multiplayer server.
+ * k6 WebSocket load test for the WildDeck server.
  *
  * Usage:
  *   k6 run --env WS_URL=ws://localhost:8080 load_tests/k6_websocket_test.js
@@ -38,7 +38,7 @@ export const options = {
   scenarios: {
     /**
      * concurrent_matches
-     * Simulates 100 simultaneous UNO matches, each with 4 players (400 VUs).
+     * Simulates 100 simultaneous WildDeck matches, each with 4 players (400 VUs).
      * Steady-state duration: 5 minutes.
      */
     concurrent_matches: {

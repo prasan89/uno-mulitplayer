@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/redis/go-redis/v9"
-	"github.com/uno-multiplayer/server/internal/game"
+	"github.com/wilddeck/server/internal/game"
 )
 
 // Session holds the data stored under session:{playerID}.

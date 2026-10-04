@@ -11,7 +11,7 @@ class PlayerState with _$PlayerState {
     required int cardCount,
     @Default(false) bool isBot,
     @Default(true) bool isConnected,
-    @Default(false) bool hasCalledUno,
+    @Default(false) bool hasCalledLastCard,
     String? avatarUrl,
   }) = _PlayerState;
 

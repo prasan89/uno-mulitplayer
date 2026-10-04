@@ -5,8 +5,8 @@ set -euo pipefail
 
 PROJECT_ID="${GCP_PROJECT_ID:?GCP_PROJECT_ID must be set}"
 REGION="${CLOUD_RUN_REGION:-us-central1}"
-SERVICE_NAME="${CLOUD_RUN_SERVICE:-uno-server}"
-IMAGE_REPO="${GCR_REPO:-gcr.io/${PROJECT_ID}/uno-server}"
+SERVICE_NAME="${CLOUD_RUN_SERVICE:-wilddeck-server}"
+IMAGE_REPO="${GCR_REPO:-gcr.io/${PROJECT_ID}/wilddeck-server}"
 CLOUD_SQL_INSTANCE="${CLOUD_SQL_INSTANCE:-}"
 
 GIT_SHA="$(git rev-parse --short HEAD)"

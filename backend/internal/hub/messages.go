@@ -10,7 +10,7 @@ const (
 	MsgJoinGame       MessageType = "join_game"
 	MsgPlayCard       MessageType = "play_card"
 	MsgDrawCard       MessageType = "draw_card"
-	MsgCallUno        MessageType = "call_uno"
+	MsgCallLastCard    MessageType = "call_last_card"
 	MsgChallengeDraw4 MessageType = "challenge_draw4"
 	MsgPing           MessageType = "ping"
 )
@@ -67,8 +67,8 @@ type PlayCardPayload struct {
 // DrawCardPayload is the payload for draw_card messages.
 type DrawCardPayload struct{}
 
-// CallUnoPayload is the payload for call_uno messages.
-type CallUnoPayload struct{}
+// CallLastCardPayload is the payload for call_last_card messages.
+type CallLastCardPayload struct{}
 
 // ChallengeDraw4Payload is the payload for challenge_draw4 messages.
 type ChallengeDraw4Payload struct{}

@@ -1,4 +1,4 @@
-// Package auth provides Firebase ID token verification for the UNO multiplayer server.
+// Package auth provides Firebase ID token verification for the WildDeck server.
 // It fetches Google's public RSA keys, caches them per Cache-Control TTL, and validates
 // RS256-signed JWTs issued by Firebase Authentication.
 package auth

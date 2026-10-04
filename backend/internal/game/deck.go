@@ -16,7 +16,7 @@ func newCard(color Color, cardType CardType, value int) Card {
 	}
 }
 
-// NewDeck creates and returns a standard shuffled 108-card UNO deck.
+// NewDeck creates and returns a standard shuffled 108-card WildDeck deck.
 //
 // Composition:
 //   - 4 colors x 1 zero card              =  4 cards

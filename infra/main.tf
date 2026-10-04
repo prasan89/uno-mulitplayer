@@ -116,7 +116,7 @@ module "redis" {
 
 # ============================================================
 # Cloud Run module
-# Creates: uno-server service with VPC connector and secrets
+# Creates: wilddeck-server service with VPC connector and secrets
 # ============================================================
 module "cloud_run" {
   source = "./modules/cloud-run"
@@ -163,7 +163,7 @@ resource "google_secret_manager_secret" "database_url" {
 resource "google_secret_manager_secret_version" "database_url" {
   secret = google_secret_manager_secret.database_url.id
   # IMPORTANT: replace this placeholder with the real database URL after provisioning
-  secret_data = "postgresql://uno:CHANGE_ME@CLOUD_SQL_PRIVATE_IP:5432/uno"
+  secret_data = "postgresql://wilddeck:CHANGE_ME@CLOUD_SQL_PRIVATE_IP:5432/wilddeck"
 
   lifecycle {
     # Prevent Terraform from reverting manually updated secret values
@@ -220,9 +220,9 @@ resource "google_secret_manager_secret_version" "jwt_secret" {
 # ============================================================
 
 # Public bucket for Flutter web build artifacts
-resource "google_storage_bucket" "uno_web" {
+resource "google_storage_bucket" "wilddeck_web" {
   project  = var.project_id
-  name     = "${var.project_id}-uno-web"
+  name     = "${var.project_id}-wilddeck-web"
   location = var.region
 
   # Uniform bucket-level access (no per-object ACLs)
@@ -241,8 +241,8 @@ resource "google_storage_bucket" "uno_web" {
 }
 
 # Make all objects in the bucket publicly readable
-resource "google_storage_bucket_iam_member" "uno_web_public" {
-  bucket = google_storage_bucket.uno_web.name
+resource "google_storage_bucket_iam_member" "wilddeck_web_public" {
+  bucket = google_storage_bucket.wilddeck_web.name
   role   = "roles/storage.objectViewer"
   member = "allUsers"
 }

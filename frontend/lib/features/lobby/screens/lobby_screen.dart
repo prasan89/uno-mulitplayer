@@ -110,7 +110,7 @@ class _LobbyScreenState extends State<LobbyScreen>
           ),
           child: const Center(
             child: Text(
-              'UNO',
+              'WD',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 22,

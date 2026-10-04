@@ -184,7 +184,7 @@ class _PlayerInfoRowState extends State<PlayerInfoRow>
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: const Text(
-                      'UNO!',
+                      'LAST CARD!',
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 9,

@@ -21,11 +21,11 @@ void main() {
           _Player(id: 'player-2', displayName: 'Bob', cardCount: 5),
         ],
         hand: const [
-          _UnoCard(color: _CardColor.red, value: '5'),
-          _UnoCard(color: _CardColor.blue, value: 'skip'),
-          _UnoCard(color: _CardColor.wild, value: 'wild'),
+          _WildCard(color: _CardColor.red, value: '5'),
+          _WildCard(color: _CardColor.blue, value: 'skip'),
+          _WildCard(color: _CardColor.wild, value: 'wild'),
         ],
-        topCard: const _UnoCard(color: _CardColor.green, value: '7'),
+        topCard: const _WildCard(color: _CardColor.green, value: '7'),
         activeColor: _CardColor.green,
         isClockwise: true,
         status: _GameStatus.active,
@@ -47,7 +47,7 @@ void main() {
       expect(restored.hand[0].value, equals('5'));
       expect(restored.hand[2].color, equals(_CardColor.wild));
       expect(restored.topCard,
-          equals(const _UnoCard(color: _CardColor.green, value: '7')));
+          equals(const _WildCard(color: _CardColor.green, value: '7')));
       expect(restored.activeColor, equals(_CardColor.green));
       expect(restored.isClockwise, isTrue);
       expect(restored.status, equals(_GameStatus.active));
@@ -141,10 +141,10 @@ void main() {
           _Player(id: 'player-3', displayName: 'Charlie', cardCount: 6),
         ],
         hand: const [
-          _UnoCard(color: _CardColor.yellow, value: '3'),
-          _UnoCard(color: _CardColor.red, value: 'draw_two'),
+          _WildCard(color: _CardColor.yellow, value: '3'),
+          _WildCard(color: _CardColor.red, value: 'draw_two'),
         ],
-        topCard: const _UnoCard(color: _CardColor.yellow, value: '8'),
+        topCard: const _WildCard(color: _CardColor.yellow, value: '8'),
         status: _GameStatus.active,
       );
     });
@@ -192,9 +192,9 @@ void main() {
         currentPlayerId: 'p1',
         players: const [],
         hand: const [
-          _UnoCard(color: _CardColor.red, value: '1'),
-          _UnoCard(color: _CardColor.blue, value: '2'),
-          _UnoCard(color: _CardColor.green, value: 'skip'),
+          _WildCard(color: _CardColor.red, value: '1'),
+          _WildCard(color: _CardColor.blue, value: '2'),
+          _WildCard(color: _CardColor.green, value: 'skip'),
         ],
       );
 
@@ -207,8 +207,8 @@ void main() {
         currentPlayerId: 'p1',
         players: const [],
         hand: const [
-          _UnoCard(color: _CardColor.yellow, value: '9'),
-          _UnoCard(color: _CardColor.wild, value: 'wildDrawFour'),
+          _WildCard(color: _CardColor.yellow, value: '9'),
+          _WildCard(color: _CardColor.wild, value: 'wildDrawFour'),
         ],
       );
 
@@ -256,7 +256,7 @@ void main() {
     test('hand card count equals number of cards in list', () {
       final cards = List.generate(
         7,
-        (i) => _UnoCard(color: _CardColor.red, value: '$i'),
+        (i) => _WildCard(color: _CardColor.red, value: '$i'),
       );
       final state = _GameState(
         gameId: 'g',

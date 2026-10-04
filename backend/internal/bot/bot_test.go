@@ -8,7 +8,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/uno-multiplayer/server/internal/game"
+	"github.com/wilddeck/server/internal/game"
 	"go.uber.org/zap"
 )
 
@@ -184,33 +184,33 @@ func TestHardStrategy_ChooseColor_ValidColorChosen(t *testing.T) {
 		"ChooseColor must return a valid non-wild color")
 }
 
-func TestHardStrategy_ShouldCallUNO_TrueWith2Cards(t *testing.T) {
+func TestHardStrategy_ShouldCallLastCard_TrueWith2Cards(t *testing.T) {
 	hand := []game.Card{
 		newCard(game.ColorRed, game.CardTypeNumber, 1),
 		newCard(game.ColorBlue, game.CardTypeNumber, 2),
 	}
 	s := &HardStrategy{}
-	assert.True(t, s.ShouldCallUNO(hand),
-		"ShouldCallUNO must return true when hand has exactly 2 cards")
+	assert.True(t, s.ShouldCallLastCard(hand),
+		"ShouldCallLastCard must return true when hand has exactly 2 cards")
 }
 
-func TestHardStrategy_ShouldCallUNO_FalseWith3Cards(t *testing.T) {
+func TestHardStrategy_ShouldCallLastCard_FalseWith3Cards(t *testing.T) {
 	hand := []game.Card{
 		newCard(game.ColorRed, game.CardTypeNumber, 1),
 		newCard(game.ColorBlue, game.CardTypeNumber, 2),
 		newCard(game.ColorGreen, game.CardTypeNumber, 3),
 	}
 	s := &HardStrategy{}
-	assert.False(t, s.ShouldCallUNO(hand))
+	assert.False(t, s.ShouldCallLastCard(hand))
 }
 
-func TestHardStrategy_ShouldCallUNO_FalseWith1Card(t *testing.T) {
+func TestHardStrategy_ShouldCallLastCard_FalseWith1Card(t *testing.T) {
 	hand := []game.Card{
 		newCard(game.ColorRed, game.CardTypeNumber, 1),
 	}
 	s := &HardStrategy{}
-	// With 1 card, the bot just played and is about to win — UNO was required before
-	assert.False(t, s.ShouldCallUNO(hand))
+	// With 1 card, the bot just played and is about to win — Last Card declaration was required before
+	assert.False(t, s.ShouldCallLastCard(hand))
 }
 
 func TestHardStrategy_OnlyPlaysLegalMoves(t *testing.T) {
@@ -416,8 +416,8 @@ func TestBotManager_HardBot_PlaysOnlyLegalMoves(t *testing.T) {
 	}
 }
 
-// TestBotManager_HardBot_CallsUNO verifies bot calls UNO when hand drops to 2 cards.
-func TestBotManager_HardBot_CallsUNO(t *testing.T) {
+// TestBotManager_HardBot_CallsLastCard verifies bot declares Last Card when hand drops to 2 cards.
+func TestBotManager_HardBot_CallsLastCard(t *testing.T) {
 	g, pis := newBotGameState(2)
 	p1 := pis[1].ID
 
@@ -430,16 +430,16 @@ func TestBotManager_HardBot_CallsUNO(t *testing.T) {
 	giveCardBot(g, p1, newCard(game.ColorBlue, game.CardTypeNumber, 7)) // will keep this
 
 	engine := newFakeEngine()
-	engine.addGame("game-uno", g)
+	engine.addGame("game-last-card", g)
 
 	mgr := NewBotManager(engine, nil, newNopLogger(t))
 	mgr.thinkDelay = 0
 
 	b := &Bot{
 		ID:         uuid.New().String(),
-		Name:       "UNOBot",
+		Name:       "WildDeckBot",
 		Difficulty: DifficultyHard,
-		GameID:     "game-uno",
+		GameID:     "game-last-card",
 		PlayerID:   p1,
 		strategy:   &HardStrategy{},
 	}
@@ -452,8 +452,8 @@ func TestBotManager_HardBot_CallsUNO(t *testing.T) {
 		newCard(game.ColorRed, game.CardTypeNumber, 3),
 		newCard(game.ColorBlue, game.CardTypeNumber, 7),
 	}
-	assert.True(t, s.ShouldCallUNO(hand),
-		"HardStrategy should call UNO when holding 2 cards")
+	assert.True(t, s.ShouldCallLastCard(hand),
+		"HardStrategy should call Last Card when holding 2 cards")
 }
 
 // TestBotManager_BotCompletesTurnWithin5s verifies time bound.

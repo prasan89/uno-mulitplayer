@@ -120,7 +120,7 @@ class _MatchmakingScreenState extends State<MatchmakingScreen>
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const Spacer(),
-              // Animated UNO logo / spinner
+              // Animated WildDeck logo / spinner
               ScaleTransition(
                 scale: _pulseAnimation,
                 child: Container(
@@ -170,7 +170,7 @@ class _MatchmakingScreenState extends State<MatchmakingScreen>
                         ),
                         child: const Center(
                           child: Text(
-                            'UNO',
+                            'WD',
                             style: TextStyle(
                               color: Color(0xFFE53935),
                               fontSize: 28,

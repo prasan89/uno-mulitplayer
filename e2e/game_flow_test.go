@@ -10,8 +10,8 @@ import (
 	"time"
 
 	"github.com/gorilla/websocket"
-	gamepkg "github.com/uno-multiplayer/server/internal/game"
-	hubpkg "github.com/uno-multiplayer/server/internal/hub"
+	gamepkg "github.com/wilddeck/server/internal/game"
+	hubpkg "github.com/wilddeck/server/internal/hub"
 )
 
 // TestCompleteGame2Players creates two clients that join the same private match,

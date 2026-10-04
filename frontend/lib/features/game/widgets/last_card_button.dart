@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 
-class UnoButton extends StatefulWidget {
+class LastCardButton extends StatefulWidget {
   final VoidCallback? onPressed;
   final bool isVisible;
 
-  const UnoButton({
+  const LastCardButton({
     super.key,
     this.onPressed,
     this.isVisible = false,
   });
 
   @override
-  State<UnoButton> createState() => _UnoButtonState();
+  State<LastCardButton> createState() => _LastCardButtonState();
 }
 
-class _UnoButtonState extends State<UnoButton>
+class _LastCardButtonState extends State<LastCardButton>
     with SingleTickerProviderStateMixin {
   late AnimationController _flashController;
   late Animation<Color?> _colorAnimation;
@@ -37,7 +37,7 @@ class _UnoButtonState extends State<UnoButton>
   }
 
   @override
-  void didUpdateWidget(UnoButton oldWidget) {
+  void didUpdateWidget(LastCardButton oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.isVisible && !oldWidget.isVisible) {
       _flashController.repeat(reverse: true);
@@ -86,7 +86,7 @@ class _UnoButtonState extends State<UnoButton>
                     ],
                   ),
                   child: const Text(
-                    'UNO!',
+                    'LAST CARD!',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 18,

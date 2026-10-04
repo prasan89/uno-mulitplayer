@@ -1,6 +1,6 @@
 # Cloud Run service URL (public HTTPS endpoint for the backend API)
 output "cloud_run_url" {
-  description = "The public HTTPS URL of the Cloud Run uno-server service"
+  description = "The public HTTPS URL of the Cloud Run wilddeck-server service"
   value       = module.cloud_run.service_url
 }
 
@@ -19,5 +19,5 @@ output "redis_host" {
 # Flutter web bucket public URL
 output "web_bucket_url" {
   description = "Public URL of the Cloud Storage bucket serving the Flutter web app"
-  value       = "https://storage.googleapis.com/${google_storage_bucket.uno_web.name}"
+  value       = "https://storage.googleapis.com/${google_storage_bucket.wilddeck_web.name}"
 }

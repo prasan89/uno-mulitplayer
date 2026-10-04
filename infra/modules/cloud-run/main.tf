@@ -1,6 +1,6 @@
 # ============================================================
 # Cloud Run module
-# Provisions: uno-server Cloud Run service
+# Provisions: wilddeck-server Cloud Run service
 #   - Public (unauthenticated) HTTPS endpoint
 #   - Secrets injected as environment variables from Secret Manager
 #   - Connected to VPC via connector for private resource access
@@ -11,8 +11,8 @@
 # Dedicated service account with least-privilege access
 resource "google_service_account" "cloud_run_sa" {
   project      = var.project_id
-  account_id   = "uno-server-sa"
-  display_name = "UNO Server Cloud Run Service Account"
+  account_id   = "wilddeck-server-sa"
+  display_name = "WildDeck Server Cloud Run Service Account"
 }
 
 # Allow the service account to read secrets from Secret Manager
@@ -24,9 +24,9 @@ resource "google_project_iam_member" "secret_accessor" {
 
 # ---- Cloud Run Service ----------------------------------------
 
-resource "google_cloud_run_v2_service" "uno_server" {
+resource "google_cloud_run_v2_service" "wilddeck_server" {
   project  = var.project_id
-  name     = "uno-server"
+  name     = "wilddeck-server"
   location = var.region
 
   # Allow direct VPC egress through the connector
@@ -50,7 +50,7 @@ resource "google_cloud_run_v2_service" "uno_server" {
     # Container specification
     containers {
       # Image built and pushed to GCR by the CI/CD pipeline
-      image = "gcr.io/${var.project_id}/uno-server:latest"
+      image = "gcr.io/${var.project_id}/wilddeck-server:latest"
 
       # Resource limits per container instance
       resources {
@@ -113,17 +113,17 @@ resource "google_cloud_run_v2_service" "uno_server" {
 
   labels = {
     environment = var.environment
-    app         = "uno"
+    app         = "wilddeck"
   }
 }
 
 # ---- IAM — allow unauthenticated (public) access --------------
 
-# The UNO API is a public endpoint; Cloud Run IAM must allow allUsers
+# The WildDeck API is a public endpoint; Cloud Run IAM must allow allUsers
 resource "google_cloud_run_v2_service_iam_member" "public_invoker" {
   project  = var.project_id
   location = var.region
-  name     = google_cloud_run_v2_service.uno_server.name
+  name     = google_cloud_run_v2_service.wilddeck_server.name
   role     = "roles/run.invoker"
   member   = "allUsers"
 }

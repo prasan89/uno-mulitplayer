@@ -125,7 +125,7 @@ class _DrawPileState extends State<DrawPile>
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            'UNO',
+                            'WD',
                             style: TextStyle(
                               color: widget.canDraw
                                   ? const Color(0xFFE53935)

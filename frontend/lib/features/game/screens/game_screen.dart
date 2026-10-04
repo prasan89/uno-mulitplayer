@@ -9,8 +9,8 @@ import '../widgets/game_over_dialog.dart';
 /// In production this would be driven by Riverpod/a WebSocket provider.
 class GameState {
   final String gameId;
-  final List<UnoCard> myHand;
-  final UnoCard? discardTopCard;
+  final List<WildCard> myHand;
+  final WildCard? discardTopCard;
   final int discardCount;
   final int drawPileCount;
   final bool isMyTurn;
@@ -86,15 +86,15 @@ class _GameScreenState extends State<GameScreen> {
     return GameState(
       gameId: widget.gameId,
       myHand: [
-        const UnoCard(color: CardColor.red, value: CardValue.five, id: 'c1'),
-        const UnoCard(color: CardColor.blue, value: CardValue.skip, id: 'c2'),
-        const UnoCard(color: CardColor.green, value: CardValue.two, id: 'c3'),
-        const UnoCard(color: CardColor.yellow, value: CardValue.drawTwo, id: 'c4'),
-        const UnoCard(color: CardColor.wild, value: CardValue.wild, id: 'c5'),
-        const UnoCard(color: CardColor.red, value: CardValue.reverse, id: 'c6'),
-        const UnoCard(color: CardColor.blue, value: CardValue.nine, id: 'c7'),
+        const WildCard(color: CardColor.red, value: CardValue.five, id: 'c1'),
+        const WildCard(color: CardColor.blue, value: CardValue.skip, id: 'c2'),
+        const WildCard(color: CardColor.green, value: CardValue.two, id: 'c3'),
+        const WildCard(color: CardColor.yellow, value: CardValue.drawTwo, id: 'c4'),
+        const WildCard(color: CardColor.wild, value: CardValue.wild, id: 'c5'),
+        const WildCard(color: CardColor.red, value: CardValue.reverse, id: 'c6'),
+        const WildCard(color: CardColor.blue, value: CardValue.nine, id: 'c7'),
       ],
-      discardTopCard: const UnoCard(
+      discardTopCard: const WildCard(
           color: CardColor.red, value: CardValue.four, id: 'top'),
       discardCount: 14,
       drawPileCount: 52,
@@ -164,19 +164,19 @@ class _GameScreenState extends State<GameScreen> {
         .toSet();
   }
 
-  bool get _showUnoButton => _gameState.myHand.length == 1;
+  bool get _showLastCardButton => _gameState.myHand.length == 1;
 
   // ---------------------------------------------------------------------------
   // Actions
   // ---------------------------------------------------------------------------
 
-  void _handleCardSelected(UnoCard card) {
+  void _handleCardSelected(WildCard card) {
     setState(() {
       _selectedCardId = _selectedCardId == card.id ? null : card.id;
     });
   }
 
-  Future<void> _handleCardPlayed(UnoCard card) async {
+  Future<void> _handleCardPlayed(WildCard card) async {
     CardColor? chosenColor;
     if (card.isWild) {
       chosenColor = await ColorPickerDialog.show(context);
@@ -212,7 +212,7 @@ class _GameScreenState extends State<GameScreen> {
         gameId: _gameState.gameId,
         myHand: [
           ..._gameState.myHand,
-          UnoCard(
+          WildCard(
             color: CardColor.values[
                 DateTime.now().millisecond % (CardColor.values.length - 1)],
             value: CardValue.values[
@@ -234,11 +234,11 @@ class _GameScreenState extends State<GameScreen> {
     _turnTimer?.cancel();
   }
 
-  void _handleCallUno() {
-    // TODO: send call_uno event via WebSocket provider
+  void _handleCallLastCard() {
+    // TODO: send call_last_card event via WebSocket provider
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text('UNO called!',
+        content: Text('LAST CARD!',
             style: TextStyle(fontWeight: FontWeight.bold)),
         backgroundColor: Color(0xFFE53935),
         duration: Duration(seconds: 2),
@@ -308,11 +308,11 @@ class _GameScreenState extends State<GameScreen> {
           drawPileCount: _gameState.drawPileCount,
           isMyTurn: _gameState.isMyTurn,
           canDraw: _gameState.canDraw,
-          showUnoButton: _showUnoButton,
+          showLastCardButton: _showLastCardButton,
           onCardSelected: _handleCardSelected,
           onCardPlayed: _handleCardPlayed,
           onDrawCard: _handleDrawCard,
-          onCallUno: _handleCallUno,
+          onCallLastCard: _handleCallLastCard,
           onColorPick: _handleColorPick,
         ),
       ),

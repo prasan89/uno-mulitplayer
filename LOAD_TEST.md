@@ -1,8 +1,8 @@
-# UNO Multiplayer — Load Test Guide
+# WildDeck — Load Test Guide
 
 ## 1. Overview and Goals
 
-This document describes the load testing strategy for the UNO Multiplayer backend.
+This document describes the load testing strategy for the WildDeck backend.
 The test suite is built with [k6](https://k6.io) and targets the WebSocket endpoint
 (`/ws`) that drives all real-time game play.
 
@@ -173,7 +173,7 @@ other auto-scaling policies.
 
 ```bash
 AUTH_TOKEN="<staging-jwt>" \
-  ./scripts/load_test.sh ws://staging.uno-multiplayer.example.com
+  ./scripts/load_test.sh ws://staging.wilddeck.example.com
 ```
 
 ### 4.4 Against production (read-only observation)
@@ -185,7 +185,7 @@ establish a real-traffic baseline without disrupting players:
 AUTH_TOKEN="<prod-jwt>" \
   K6_RESULTS_DIR=./load_test_results/prod \
   k6 run \
-    --env WS_URL=wss://api.uno-multiplayer.example.com \
+    --env WS_URL=wss://api.wilddeck.example.com \
     --env AUTH_TOKEN="$AUTH_TOKEN" \
     --scenario concurrent_matches \
     --vus 40 \
@@ -430,7 +430,7 @@ Add this step to your CI pipeline to fail on performance regressions:
 - name: Run load test (spike scenario, staging)
   run: |
     AUTH_TOKEN="${{ secrets.STAGING_LOAD_TEST_TOKEN }}" \
-      ./scripts/load_test.sh wss://staging.uno-multiplayer.example.com spike
+      ./scripts/load_test.sh wss://staging.wilddeck.example.com spike
   # k6 exits non-zero when thresholds fail; CI step inherits the exit code.
 ```
 

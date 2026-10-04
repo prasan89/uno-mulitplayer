@@ -32,14 +32,14 @@ enum CardType {
 }
 
 @freezed
-class UnoCard with _$UnoCard {
-  const factory UnoCard({
+class WildCard with _$WildCard {
+  const factory WildCard({
     required String id,
     required CardColor color,
     required CardType type,
     int? value,
-  }) = _UnoCard;
+  }) = _WildCard;
 
-  factory UnoCard.fromJson(Map<String, dynamic> json) =>
-      _$UnoCardFromJson(json);
+  factory WildCard.fromJson(Map<String, dynamic> json) =>
+      _$WildCardFromJson(json);
 }

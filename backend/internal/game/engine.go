@@ -8,7 +8,7 @@ import (
 
 // ─── NewGame ─────────────────────────────────────────────────────────────────
 
-// NewGame initialises a fresh UNO game.  It deals 7 cards to each player,
+// NewGame initialises a fresh WildDeck game.  It deals 7 cards to each player,
 // places the first non-wild card face-up on the discard pile, and sets the
 // phase to PhaseWaiting until Start is called (or immediately to PhasePlaying
 // if at least 2 players are given).
@@ -181,11 +181,11 @@ func (g *GameState) PlayCard(playerID, cardID string, chosenColor Color) error {
 		g.lastWildDraw4Hand = nil
 	}
 
-	// Capture UNO call status BEFORE resetting it so we can check the penalty.
-	calledUno := player.HasCalledUno
+	// Capture Last Card call status BEFORE resetting it so we can check the penalty.
+	calledLastCard := player.HasCalledLastCard
 
-	// Reset UNO call flag for the player (they just played, card count changed).
-	player.HasCalledUno = false
+	// Reset Last Card call flag for the player (they just played, card count changed).
+	player.HasCalledLastCard = false
 
 	g.Version++
 
@@ -197,10 +197,10 @@ func (g *GameState) PlayCard(playerID, cardID string, chosenColor Color) error {
 		return nil
 	}
 
-	// UNO penalty: if the player dropped to exactly 1 card and had NOT
-	// previously called UNO, they draw 2 penalty cards.
-	if len(player.Hand) == 1 && !calledUno {
-		_ = g.applyUnoPenalty(playerID)
+	// Last Card penalty: if the player dropped to exactly 1 card and had NOT
+	// previously declared Last Card, they draw 2 penalty cards.
+	if len(player.Hand) == 1 && !calledLastCard {
+		_ = g.applyLastCardPenalty(playerID)
 	}
 
 	// Apply card effect and advance turn.
@@ -343,20 +343,20 @@ func (g *GameState) DrawCard(playerID string) (Card, error) {
 		lastDrawn = card
 	}
 
-	// Drawing a card invalidates any prior UNO declaration; the player now
+	// Drawing a card invalidates any prior Last Card declaration; the player now
 	// holds more than one card so the flag must be cleared.
-	player.HasCalledUno = false
+	player.HasCalledLastCard = false
 
 	g.Version++
 	g.NextPlayer()
 	return lastDrawn, nil
 }
 
-// ─── CallUNO ─────────────────────────────────────────────────────────────────
+// ─── CallLastCard ─────────────────────────────────────────────────────────────────
 
-// CallUNO lets the current player (or any player with one card) announce UNO.
+// CallLastCard lets the current player (or any player with one card) declare Last Card.
 // Must be called before or immediately after playing down to one card.
-func (g *GameState) CallUNO(playerID string) error {
+func (g *GameState) CallLastCard(playerID string) error {
 	if g.Phase != PhasePlaying {
 		return ErrGameNotActive
 	}
@@ -365,16 +365,16 @@ func (g *GameState) CallUNO(playerID string) error {
 		return err
 	}
 	if len(player.Hand) != 1 {
-		// Can only call UNO when holding exactly 1 card.
-		return fmt.Errorf("can only call UNO with exactly 1 card (have %d)", len(player.Hand))
+		// Can only declare Last Card when holding exactly 1 card.
+		return fmt.Errorf("can only declare Last Card with exactly 1 card (have %d)", len(player.Hand))
 	}
-	player.HasCalledUno = true
+	player.HasCalledLastCard = true
 	g.Version++
 	return nil
 }
 
-// applyUnoPenalty draws 2 cards for a player who forgot to call UNO.
-func (g *GameState) applyUnoPenalty(playerID string) error {
+// applyLastCardPenalty draws 2 cards for a player who forgot to declare Last Card.
+func (g *GameState) applyLastCardPenalty(playerID string) error {
 	player, err := g.findPlayer(playerID)
 	if err != nil {
 		return err
@@ -386,7 +386,7 @@ func (g *GameState) applyUnoPenalty(playerID string) error {
 		}
 		player.Hand = append(player.Hand, card)
 	}
-	player.HasCalledUno = false
+	player.HasCalledLastCard = false
 	return nil
 }
 
@@ -497,8 +497,8 @@ func (g *GameState) ApplyAction(action Action) error {
 	case ActionDrawCard:
 		_, err := g.DrawCard(action.PlayerID)
 		return err
-	case ActionCallUNO:
-		return g.CallUNO(action.PlayerID)
+	case ActionCallLastCard:
+		return g.CallLastCard(action.PlayerID)
 	case ActionChallengeDraw4:
 		return g.ChallengeDraw4(action.ChallengerID)
 	default:
@@ -542,7 +542,7 @@ func (g *GameState) ToPublicView(playerID string) PublicGameState {
 			Score:        p.Score,
 			IsBot:        p.IsBot,
 			IsConnected:  p.IsConnected,
-			HasCalledUno: p.HasCalledUno,
+			HasCalledLastCard: p.HasCalledLastCard,
 		}
 		if p.ID == playerID {
 			myHand = cloneCards(p.Hand)

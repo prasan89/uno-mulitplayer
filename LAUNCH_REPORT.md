@@ -1,4 +1,4 @@
-# UNO Multiplayer M18 Launch Report
+# WildDeck M18 Launch Report
 
 ## Build Status
 
@@ -21,8 +21,8 @@
 
 ## Architecture Built
 
-- **Backend (Go / Cloud Run):** HTTP + WebSocket server implementing full UNO game logic. Packages: `game` (engine, rules, deck, card, state), `hub` (WebSocket connection management, room broadcast), `matchmaking` (queue + service + HTTP handler), `auth` (Firebase JWT verification), `middleware` (CORS, rate limiting, recovery), `cache` (Redis for session, presence, rate-limit sliding window), `db` (PostgreSQL via parameterized queries, migrations), `bot` (AI opponent with pluggable strategies), `observability` (structured logging, Prometheus metrics, health endpoint).
-- **Frontend (Flutter / Dart):** Cross-platform mobile app (iOS + Android). Features: Firebase Auth with Google and Apple Sign-In, WebSocket game client with reconnect logic, full game UI (card widget, player hand, draw/discard piles, color picker, UNO button), lobby/matchmaking flow, leaderboard screen, Riverpod state management via `game_provider` and `auth_provider`.
+- **Backend (Go / Cloud Run):** HTTP + WebSocket server implementing full WildDeck game logic. Packages: `game` (engine, rules, deck, card, state), `hub` (WebSocket connection management, room broadcast), `matchmaking` (queue + service + HTTP handler), `auth` (Firebase JWT verification), `middleware` (CORS, rate limiting, recovery), `cache` (Redis for session, presence, rate-limit sliding window), `db` (PostgreSQL via parameterized queries, migrations), `bot` (AI opponent with pluggable strategies), `observability` (structured logging, Prometheus metrics, health endpoint).
+- **Frontend (Flutter / Dart):** Cross-platform mobile app (iOS + Android). Features: Firebase Auth with Google and Apple Sign-In, WebSocket game client with reconnect logic, full game UI (card widget, player hand, draw/discard piles, color picker, Last Card button), lobby/matchmaking flow, leaderboard screen, Riverpod state management via `game_provider` and `auth_provider`.
 - **Database (PostgreSQL / Cloud SQL):** Schema with players, matches, game_events tables. Two migration files for initial schema and indexes. Materialized view support for leaderboard queries. All queries use parameterized statements.
 - **Infrastructure (Terraform / GCP):** Modular Terraform configuration provisioning Cloud Run (backend), Cloud SQL (PostgreSQL), Memorystore (Redis), and VPC networking. Outputs expose service URLs and connection strings. Three GitHub Actions workflows: CI, staging deploy, production deploy.
 - **Operational tooling:** Docker Compose for local development (with test variant), k6 load test suite with 5 named scenarios (concurrent_matches, ramp_players, spike, soak, reconnect_churn), shell scripts for deploy/migrate/seed/load_test, production runbook, launch checklist.
@@ -66,13 +66,13 @@ The SECURITY.md documents a comprehensive threat model covering 10 threat catego
 
 ## Production Documentation
 
-- `/Users/I565711/uno-mulitplayer/PRODUCTION_RUNBOOK.md` — operational procedures for deployment, rollback, incident response
-- `/Users/I565711/uno-mulitplayer/LAUNCH_CHECKLIST.md` — 50-item pre-launch checklist across Infrastructure, Application, Testing, Security, Operations, Mobile Release, and Post-Launch Monitoring sections
-- `/Users/I565711/uno-mulitplayer/SECURITY.md` — threat model, authentication/authorization design, input validation rules, rate limiting spec, anti-cheat design, data security, network security, dependency management, pre-launch security checklist, responsible disclosure policy
-- `/Users/I565711/uno-mulitplayer/LOAD_TEST.md` — load testing instructions and scenario descriptions
-- `/Users/I565711/uno-mulitplayer/.env.example` — required environment variables reference
-- `/Users/I565711/uno-mulitplayer/infra/` — Terraform modules for all GCP infrastructure (Cloud Run, Cloud SQL, Memorystore, VPC networking)
-- `/Users/I565711/uno-mulitplayer/scripts/` — `deploy.sh`, `migrate.sh`, `seed.sh`, `load_test.sh`
+- `/Users/I565711/wilddeck/PRODUCTION_RUNBOOK.md` — operational procedures for deployment, rollback, incident response
+- `/Users/I565711/wilddeck/LAUNCH_CHECKLIST.md` — 50-item pre-launch checklist across Infrastructure, Application, Testing, Security, Operations, Mobile Release, and Post-Launch Monitoring sections
+- `/Users/I565711/wilddeck/SECURITY.md` — threat model, authentication/authorization design, input validation rules, rate limiting spec, anti-cheat design, data security, network security, dependency management, pre-launch security checklist, responsible disclosure policy
+- `/Users/I565711/wilddeck/LOAD_TEST.md` — load testing instructions and scenario descriptions
+- `/Users/I565711/wilddeck/.env.example` — required environment variables reference
+- `/Users/I565711/wilddeck/infra/` — Terraform modules for all GCP infrastructure (Cloud Run, Cloud SQL, Memorystore, VPC networking)
+- `/Users/I565711/wilddeck/scripts/` — `deploy.sh`, `migrate.sh`, `seed.sh`, `load_test.sh`
 
 ---
 
@@ -87,11 +87,11 @@ The SECURITY.md documents a comprehensive threat model covering 10 threat catego
 - Custom domain DNS records must be configured externally at the DNS registrar.
 
 **Requires `go mod tidy` before first build:**
-- `backend/go.mod` lists module dependencies but `go.sum` is not present in the repository snapshot. Run `go mod tidy` from `/Users/I565711/uno-mulitplayer/backend/` before building or running tests to download and verify all module checksums.
+- `backend/go.mod` lists module dependencies but `go.sum` is not present in the repository snapshot. Run `go mod tidy` from `/Users/I565711/wilddeck/backend/` before building or running tests to download and verify all module checksums.
 - The e2e module (`e2e/go.mod`) similarly requires `go mod tidy` before the E2E suite can run.
 
 **Flutter packages require `flutter pub get`:**
-- `frontend/pubspec.yaml` declares all dependencies but the `pubspec.lock` and `.dart_tool/` directory are not committed. Run `flutter pub get` from `/Users/I565711/uno-mulitplayer/frontend/` before building or running tests.
+- `frontend/pubspec.yaml` declares all dependencies but the `pubspec.lock` and `.dart_tool/` directory are not committed. Run `flutter pub get` from `/Users/I565711/wilddeck/frontend/` before building or running tests.
 - Flutter SDK must be installed at a version compatible with the SDK constraint in `pubspec.yaml`.
 
 ---

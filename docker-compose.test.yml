@@ -3,7 +3,7 @@ version: "3.9"
 services:
   postgres:
     environment:
-      POSTGRES_DB: uno_test
+      POSTGRES_DB: wilddeck_test
 
   redis:
     command: redis-server
@@ -11,6 +11,6 @@ services:
   server:
     environment:
       ENV: test
-      DATABASE_URL: postgres://uno:uno_dev@postgres:5432/uno_test?sslmode=disable
+      DATABASE_URL: postgres://wilddeck:wilddeck_dev@postgres:5432/wilddeck_test?sslmode=disable
       REDIS_URL: redis://redis:6379/0
     command: go test ./...

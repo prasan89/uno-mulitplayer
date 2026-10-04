@@ -1,4 +1,4 @@
-// Unit tests for the standalone UnoCard model helpers used in unit tests.
+// Unit tests for the standalone WildCard model helpers used in unit tests.
 // These tests exercise serialization / deserialization and enum coverage
 // using the same self-contained helper types that game_state_test.dart relies on.
 
@@ -53,13 +53,13 @@ enum _CardType {
       _jsonValues[value] ?? (throw ArgumentError('Unknown CardType: $value'));
 }
 
-class _UnoCard {
+class _WildCard {
   final String id;
   final _CardColor color;
   final _CardType type;
   final int? value;
 
-  const _UnoCard({
+  const _WildCard({
     required this.id,
     required this.color,
     required this.type,
@@ -73,8 +73,8 @@ class _UnoCard {
         if (value != null) 'value': value,
       };
 
-  factory _UnoCard.fromJson(Map<String, dynamic> json) {
-    return _UnoCard(
+  factory _WildCard.fromJson(Map<String, dynamic> json) {
+    return _WildCard(
       id: json['id'] as String,
       color: _CardColor.fromJson(json['color'] as String),
       type: _CardType.fromJson(json['type'] as String),
@@ -84,7 +84,7 @@ class _UnoCard {
 
   @override
   bool operator ==(Object other) =>
-      other is _UnoCard &&
+      other is _WildCard &&
       other.id == id &&
       other.color == color &&
       other.type == type &&
@@ -103,9 +103,9 @@ void main() {
   // Serialization
   // -------------------------------------------------------------------------
 
-  group('UnoCard serializes to JSON correctly for all card types', () {
+  group('WildCard serializes to JSON correctly for all card types', () {
     test('number card serializes with value', () {
-      const card = _UnoCard(
+      const card = _WildCard(
         id: 'card-1',
         color: _CardColor.red,
         type: _CardType.number,
@@ -121,7 +121,7 @@ void main() {
     });
 
     test('skip card serializes without value', () {
-      const card = _UnoCard(
+      const card = _WildCard(
         id: 'card-2',
         color: _CardColor.blue,
         type: _CardType.skip,
@@ -134,7 +134,7 @@ void main() {
     });
 
     test('reverse card serializes without value', () {
-      const card = _UnoCard(
+      const card = _WildCard(
         id: 'card-3',
         color: _CardColor.green,
         type: _CardType.reverse,
@@ -146,7 +146,7 @@ void main() {
     });
 
     test('drawTwo card serializes without value', () {
-      const card = _UnoCard(
+      const card = _WildCard(
         id: 'card-4',
         color: _CardColor.yellow,
         type: _CardType.drawTwo,
@@ -158,7 +158,7 @@ void main() {
     });
 
     test('wild card serializes with wild color and null value', () {
-      const card = _UnoCard(
+      const card = _WildCard(
         id: 'card-5',
         color: _CardColor.wild,
         type: _CardType.wild,
@@ -172,7 +172,7 @@ void main() {
     });
 
     test('wildDrawFour card serializes correctly', () {
-      const card = _UnoCard(
+      const card = _WildCard(
         id: 'card-6',
         color: _CardColor.wild,
         type: _CardType.wildDrawFour,
@@ -189,7 +189,7 @@ void main() {
   // Deserialization
   // -------------------------------------------------------------------------
 
-  group('UnoCard deserializes from JSON', () {
+  group('WildCard deserializes from JSON', () {
     test('deserializes a number card', () {
       final json = <String, dynamic>{
         'id': 'c1',
@@ -198,7 +198,7 @@ void main() {
         'value': 7,
       };
 
-      final card = _UnoCard.fromJson(json);
+      final card = _WildCard.fromJson(json);
 
       expect(card.id, equals('c1'));
       expect(card.color, equals(_CardColor.green));
@@ -213,7 +213,7 @@ void main() {
         'type': 'wild',
       };
 
-      final card = _UnoCard.fromJson(json);
+      final card = _WildCard.fromJson(json);
 
       expect(card.color, equals(_CardColor.wild));
       expect(card.type, equals(_CardType.wild));
@@ -227,33 +227,33 @@ void main() {
         'type': 'skip',
       };
 
-      final card = _UnoCard.fromJson(json);
+      final card = _WildCard.fromJson(json);
 
       expect(card.type, equals(_CardType.skip));
       expect(card.value, isNull);
     });
 
     test('roundtrip is lossless', () {
-      const original = _UnoCard(
+      const original = _WildCard(
         id: 'rt-1',
         color: _CardColor.yellow,
         type: _CardType.drawTwo,
       );
 
-      final restored = _UnoCard.fromJson(original.toJson());
+      final restored = _WildCard.fromJson(original.toJson());
 
       expect(restored, equals(original));
     });
 
     test('roundtrip for number card preserves value', () {
-      const original = _UnoCard(
+      const original = _WildCard(
         id: 'rt-2',
         color: _CardColor.blue,
         type: _CardType.number,
         value: 3,
       );
 
-      final restored = _UnoCard.fromJson(original.toJson());
+      final restored = _WildCard.fromJson(original.toJson());
 
       expect(restored, equals(original));
       expect(restored.value, equals(3));
@@ -266,7 +266,7 @@ void main() {
 
   group('Wild card has null value', () {
     test('wild type card constructed without value has null value', () {
-      const card = _UnoCard(
+      const card = _WildCard(
         id: 'w1',
         color: _CardColor.wild,
         type: _CardType.wild,
@@ -276,7 +276,7 @@ void main() {
     });
 
     test('wildDrawFour card constructed without value has null value', () {
-      const card = _UnoCard(
+      const card = _WildCard(
         id: 'w2',
         color: _CardColor.wild,
         type: _CardType.wildDrawFour,
@@ -292,7 +292,7 @@ void main() {
         'type': 'wildDrawFour',
       };
 
-      final card = _UnoCard.fromJson(json);
+      final card = _WildCard.fromJson(json);
 
       expect(card.value, isNull);
     });

@@ -6,7 +6,7 @@ import 'player.dart';
 part 'game_state.freezed.dart';
 part 'game_state.g.dart';
 
-export 'card.dart' show CardColor, CardType, UnoCard;
+export 'card.dart' show CardColor, CardType, WildCard;
 export 'player.dart' show PlayerState;
 
 enum GameStatus {
@@ -26,8 +26,8 @@ class GameState with _$GameState {
     required String gameId,
     required String currentPlayerId,
     required List<PlayerState> players,
-    required List<UnoCard> hand,
-    UnoCard? topCard,
+    required List<WildCard> hand,
+    WildCard? topCard,
     CardColor? activeColor,
     @Default(true) bool isClockwise,
     @Default(GameStatus.waiting) GameStatus status,

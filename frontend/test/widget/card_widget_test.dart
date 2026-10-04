@@ -1,18 +1,18 @@
 // Widget tests for CardWidget.
-// Imports card_widget.dart directly, which exports its own UnoCard,
+// Imports card_widget.dart directly, which exports its own WildCard,
 // CardColor, and CardValue types.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:uno_multiplayer/features/game/widgets/card_widget.dart';
+import 'package:wilddeck/features/game/widgets/card_widget.dart';
 
 // ---------------------------------------------------------------------------
 // Helper
 // ---------------------------------------------------------------------------
 
 Widget _buildCard({
-  required UnoCard card,
+  required WildCard card,
   bool isPlayable = true,
   bool isSelected = false,
   VoidCallback? onTap,
@@ -38,7 +38,7 @@ void main() {
 
   group('CardWidget renders red card with correct color', () {
     testWidgets('red card is present in the widget tree', (tester) async {
-      const card = UnoCard(
+      const card = WildCard(
         color: CardColor.red,
         value: CardValue.five,
         id: 'red-card',
@@ -51,7 +51,7 @@ void main() {
     });
 
     testWidgets('red card displays its value text', (tester) async {
-      const card = UnoCard(
+      const card = WildCard(
         color: CardColor.red,
         value: CardValue.five,
         id: 'red-card',
@@ -64,7 +64,7 @@ void main() {
     });
 
     testWidgets('red card container has correct color', (tester) async {
-      const card = UnoCard(
+      const card = WildCard(
         color: CardColor.red,
         value: CardValue.three,
         id: 'red-card-2',
@@ -91,7 +91,7 @@ void main() {
 
   group('CardWidget renders wild card', () {
     testWidgets('wild card uses gradient decoration', (tester) async {
-      const card = UnoCard(
+      const card = WildCard(
         color: CardColor.wild,
         value: CardValue.wild,
         id: 'wild-card',
@@ -111,7 +111,7 @@ void main() {
     });
 
     testWidgets('wild card shows "W" label', (tester) async {
-      const card = UnoCard(
+      const card = WildCard(
         color: CardColor.wild,
         value: CardValue.wild,
         id: 'wild-card',
@@ -123,7 +123,7 @@ void main() {
     });
 
     testWidgets('wildDrawFour card shows "+4" label', (tester) async {
-      const card = UnoCard(
+      const card = WildCard(
         color: CardColor.wild,
         value: CardValue.wildDrawFour,
         id: 'wdf-card',
@@ -142,7 +142,7 @@ void main() {
   group('Playable card is tappable', () {
     testWidgets('tapping a playable card calls onTap', (tester) async {
       var tapped = false;
-      const card = UnoCard(
+      const card = WildCard(
         color: CardColor.blue,
         value: CardValue.seven,
         id: 'tap-card',
@@ -164,7 +164,7 @@ void main() {
 
     testWidgets('playable card is not wrapped in IgnorePointer that ignores',
         (tester) async {
-      const card = UnoCard(
+      const card = WildCard(
         color: CardColor.green,
         value: CardValue.two,
         id: 'play-card',
@@ -192,7 +192,7 @@ void main() {
   group('Unplayable card is not tappable (IgnorePointer)', () {
     testWidgets('IgnorePointer is set to ignoring=true for unplayable card',
         (tester) async {
-      const card = UnoCard(
+      const card = WildCard(
         color: CardColor.yellow,
         value: CardValue.one,
         id: 'no-tap-card',
@@ -215,7 +215,7 @@ void main() {
 
     testWidgets('tapping unplayable card does not fire onTap', (tester) async {
       var tapped = false;
-      const card = UnoCard(
+      const card = WildCard(
         color: CardColor.blue,
         value: CardValue.skip,
         id: 'no-tap-card-2',
@@ -244,7 +244,7 @@ void main() {
   group('Selected card has higher elevation', () {
     testWidgets('selected card has larger box shadow blur radius',
         (tester) async {
-      const card = UnoCard(
+      const card = WildCard(
         color: CardColor.green,
         value: CardValue.reverse,
         id: 'sel-card',
@@ -269,7 +269,7 @@ void main() {
 
     testWidgets('unselected card has smaller box shadow blur radius',
         (tester) async {
-      const card = UnoCard(
+      const card = WildCard(
         color: CardColor.red,
         value: CardValue.six,
         id: 'unsel-card',

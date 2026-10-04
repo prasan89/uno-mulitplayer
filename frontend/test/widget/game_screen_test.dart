@@ -5,10 +5,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:uno_multiplayer/features/game/screens/game_screen.dart';
-import 'package:uno_multiplayer/features/game/widgets/card_widget.dart';
-import 'package:uno_multiplayer/features/game/widgets/game_board.dart';
-import 'package:uno_multiplayer/features/game/widgets/game_over_dialog.dart';
+import 'package:wilddeck/features/game/screens/game_screen.dart';
+import 'package:wilddeck/features/game/widgets/card_widget.dart';
+import 'package:wilddeck/features/game/widgets/game_board.dart';
+import 'package:wilddeck/features/game/widgets/game_over_dialog.dart';
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -23,11 +23,11 @@ GameState _activeState({
   return GameState(
     gameId: 'test-game-01',
     myHand: [
-      const UnoCard(color: CardColor.red, value: CardValue.five, id: 'c1'),
-      const UnoCard(color: CardColor.blue, value: CardValue.two, id: 'c2'),
+      const WildCard(color: CardColor.red, value: CardValue.five, id: 'c1'),
+      const WildCard(color: CardColor.blue, value: CardValue.two, id: 'c2'),
     ],
     discardTopCard:
-        const UnoCard(color: CardColor.red, value: CardValue.four, id: 'top'),
+        const WildCard(color: CardColor.red, value: CardValue.four, id: 'top'),
     drawPileCount: 40,
     isMyTurn: isMyTurn,
     canDraw: isMyTurn,

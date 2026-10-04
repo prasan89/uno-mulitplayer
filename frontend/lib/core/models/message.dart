@@ -17,8 +17,8 @@ enum ClientMessageType {
   playCard,
   @JsonValue('draw_card')
   drawCard,
-  @JsonValue('call_uno')
-  callUno,
+  @JsonValue('call_last_card')
+  callLastCard,
   @JsonValue('challenge_draw4')
   challengeDraw4,
   @JsonValue('ping')
@@ -38,7 +38,7 @@ class ClientMessage with _$ClientMessage {
 
   const factory ClientMessage.drawCard() = DrawCardMessage;
 
-  const factory ClientMessage.callUno() = CallUnoMessage;
+  const factory ClientMessage.callLastCard() = CallLastCardMessage;
 
   const factory ClientMessage.challengeDraw4() = ChallengeDraw4Message;
 

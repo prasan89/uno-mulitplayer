@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 /// WildDeck Design System — brand colors, gradients, typography, component styles.
 /// Original visual identity: deep navy background, vibrant card colors, bold game aesthetic.
-/// DO NOT reference UNO/Mattel branding.
+/// DO NOT reference any third-party card game branding in the visual identity.
 class WildDeckTheme {
   // ─── Brand Colors ────────────────────────────────────────────────────────────
   static const Color navyDeep     = Color(0xFF0B0E1A);

@@ -109,7 +109,7 @@ class GameNotifier extends AutoDisposeAsyncNotifier<GameState?> {
 
   /// Play a card from the current player's hand.
   ///
-  /// [cardId] is the [UnoCard.id] to play.
+  /// [cardId] is the [WildCard.id] to play.
   /// [chosenColor] must be provided when playing a Wild or Wild Draw Four.
   Future<void> playCard(String cardId, {CardColor? chosenColor}) async {
     _ensureInGame();
@@ -134,11 +134,11 @@ class GameNotifier extends AutoDisposeAsyncNotifier<GameState?> {
     }
   }
 
-  /// Declare UNO before playing your second-to-last card.
-  Future<void> callUno() async {
+  /// Declare Last Card before playing your second-to-last card.
+  Future<void> callLastCard() async {
     _ensureInGame();
     try {
-      await _ws.send(const ClientMessage.callUno());
+      await _ws.send(const ClientMessage.callLastCard());
     } catch (e, st) {
       state = AsyncError(e, st);
       rethrow;

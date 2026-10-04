@@ -40,7 +40,7 @@ class _TestLoginScreenState extends State<_TestLoginScreen> {
             children: [
               // Logo
               const Center(
-                child: Text('UNO', key: Key('app_logo')),
+                child: Text('WildDeck', key: Key('app_logo')),
               ),
               const SizedBox(height: 16),
               // Google button

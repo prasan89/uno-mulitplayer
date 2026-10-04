@@ -9,7 +9,7 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
-// Metrics holds all Prometheus instruments registered for the UNO server.
+// Metrics holds all Prometheus instruments registered for the WildDeck server.
 // Create exactly one instance via NewMetrics and share it via dependency
 // injection. All instruments are registered against a dedicated registry so
 // the server does not pollute the global default registry.
@@ -51,8 +51,8 @@ type Metrics struct {
 	// CardsPlayedTotal counts card-play events, labelled by card_type.
 	CardsPlayedTotal *prometheus.CounterVec
 
-	// UnoCallsTotal counts "UNO!" calls.
-	UnoCallsTotal prometheus.Counter
+	// LastCardCallsTotal counts "LAST CARD!" declarations.
+	LastCardCallsTotal prometheus.Counter
 
 	// Draw4ChallengesTotal counts Draw-Four challenge events.
 	Draw4ChallengesTotal prometheus.Counter
@@ -176,9 +176,9 @@ func NewMetrics() (*Metrics, error) {
 		Help: "Total number of cards played, labelled by card type.",
 	}, []string{"card_type"})
 
-	m.UnoCallsTotal = factory.NewCounter(prometheus.CounterOpts{
-		Name: "uno_calls_total",
-		Help: "Total number of UNO calls made.",
+	m.LastCardCallsTotal = factory.NewCounter(prometheus.CounterOpts{
+		Name: "last_card_calls_total",
+		Help: "Total number of Last Card declarations made.",
 	})
 
 	m.Draw4ChallengesTotal = factory.NewCounter(prometheus.CounterOpts{

@@ -152,7 +152,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         ),
                         child: const Center(
                           child: Text(
-                            'UNO',
+                            'WD',
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 28,
@@ -164,7 +164,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       ),
                       const SizedBox(height: 16),
                       Text(
-                        'UNO Multiplayer',
+                        'WildDeck',
                         style: theme.textTheme.headlineSmall,
                       ),
                       const SizedBox(height: 4),

@@ -3,25 +3,25 @@ version: "3.9"
 services:
   postgres:
     image: postgres:16-alpine
-    container_name: uno_postgres
+    container_name: wilddeck_postgres
     restart: unless-stopped
     environment:
-      POSTGRES_DB: uno
-      POSTGRES_USER: uno
-      POSTGRES_PASSWORD: uno_dev
+      POSTGRES_DB: wilddeck
+      POSTGRES_USER: wilddeck
+      POSTGRES_PASSWORD: wilddeck_dev
     ports:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U uno -d uno"]
+      test: ["CMD-SHELL", "pg_isready -U wilddeck -d wilddeck"]
       interval: 10s
       timeout: 5s
       retries: 5
 
   redis:
     image: redis:7-alpine
-    container_name: uno_redis
+    container_name: wilddeck_redis
     restart: unless-stopped
     command: redis-server --requirepass redis_dev
     ports:
@@ -34,7 +34,7 @@ services:
 
   server:
     build: ./backend
-    container_name: uno_server
+    container_name: wilddeck_server
     restart: unless-stopped
     ports:
       - "8080:8080"

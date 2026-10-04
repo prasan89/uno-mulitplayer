@@ -1,24 +1,24 @@
 // Widget tests for PlayerHand.
-// UnoButton visibility is driven by GameBoard's showUnoButton flag which
-// wraps PlayerHand, so UNO button tests exercise GameBoard directly.
+// LastCardButton visibility is driven by GameBoard's showLastCardButton flag which
+// wraps PlayerHand, so Last Card button tests exercise GameBoard directly.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:uno_multiplayer/features/game/widgets/card_widget.dart';
-import 'package:uno_multiplayer/features/game/widgets/player_hand.dart';
-import 'package:uno_multiplayer/features/game/widgets/game_board.dart';
-import 'package:uno_multiplayer/features/game/widgets/uno_button.dart';
+import 'package:wilddeck/features/game/widgets/card_widget.dart';
+import 'package:wilddeck/features/game/widgets/player_hand.dart';
+import 'package:wilddeck/features/game/widgets/game_board.dart';
+import 'package:wilddeck/features/game/widgets/last_card_button.dart';
 
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
 
 Widget _buildHand({
-  required List<UnoCard> cards,
+  required List<WildCard> cards,
   Set<String>? playableCardIds,
   String? selectedCardId,
-  void Function(UnoCard)? onCardTap,
+  void Function(WildCard)? onCardTap,
 }) {
   return MaterialApp(
     home: Scaffold(
@@ -32,10 +32,10 @@ Widget _buildHand({
   );
 }
 
-/// Builds a minimal [GameBoard] so we can test UnoButton visibility.
+/// Builds a minimal [GameBoard] so we can test LastCardButton visibility.
 Widget _buildBoard({
-  required List<UnoCard> hand,
-  required bool showUnoButton,
+  required List<WildCard> hand,
+  required bool showLastCardButton,
   bool isMyTurn = true,
 }) {
   return MaterialApp(
@@ -47,11 +47,11 @@ Widget _buildBoard({
         playableCardIds: hand.map((c) => c.id).toSet(),
         isMyTurn: isMyTurn,
         canDraw: false,
-        showUnoButton: showUnoButton,
+        showLastCardButton: showLastCardButton,
         onCardSelected: (_) {},
         onCardPlayed: (_) {},
         onDrawCard: () {},
-        onCallUno: () {},
+        onCallLastCard: () {},
         onColorPick: () async => null,
       ),
     ),
@@ -71,7 +71,7 @@ void main() {
     testWidgets('renders 5 CardWidgets for a 5-card hand', (tester) async {
       final cards = List.generate(
         5,
-        (i) => UnoCard(
+        (i) => WildCard(
           color: CardColor.red,
           value: CardValue.values[i],
           id: 'card-$i',
@@ -85,7 +85,7 @@ void main() {
 
     testWidgets('renders 1 CardWidget for a 1-card hand', (tester) async {
       final cards = [
-        const UnoCard(
+        const WildCard(
           color: CardColor.blue,
           value: CardValue.two,
           id: 'solo',
@@ -108,7 +108,7 @@ void main() {
     testWidgets('renders 3 CardWidgets for a 3-card hand', (tester) async {
       final cards = List.generate(
         3,
-        (i) => UnoCard(
+        (i) => WildCard(
           color: CardColor.green,
           value: CardValue.values[i + 1],
           id: 'g-$i',
@@ -122,15 +122,15 @@ void main() {
   });
 
   // -------------------------------------------------------------------------
-  // UNO button visible when 1 card
+  // Last Card button visible when 1 card
   // -------------------------------------------------------------------------
 
-  group('UNO button visible when 1 card', () {
+  group('Last Card button visible when 1 card', () {
     testWidgets(
-        'UnoButton has opacity 1.0 (visible) when hand has 1 card and isMyTurn',
+        'LastCardButton has opacity 1.0 (visible) when hand has 1 card and isMyTurn',
         (tester) async {
       final cards = [
-        const UnoCard(
+        const WildCard(
           color: CardColor.yellow,
           value: CardValue.nine,
           id: 'last-card',
@@ -140,46 +140,46 @@ void main() {
       await tester.pumpWidget(
         _buildBoard(
           hand: cards,
-          showUnoButton: true,
+          showLastCardButton: true,
           isMyTurn: true,
         ),
       );
 
-      final unoButton = tester.widget<UnoButton>(find.byType(UnoButton));
-      expect(unoButton.isVisible, isTrue);
+      final lastCardButton = tester.widget<LastCardButton>(find.byType(LastCardButton));
+      expect(lastCardButton.isVisible, isTrue);
     });
 
-    testWidgets('UnoButton widget is present in GameBoard', (tester) async {
+    testWidgets('LastCardButton widget is present in GameBoard', (tester) async {
       final cards = [
-        const UnoCard(
+        const WildCard(
           color: CardColor.red,
           value: CardValue.five,
-          id: 'uno-card',
+          id: 'wild-card',
         ),
       ];
 
       await tester.pumpWidget(
         _buildBoard(
           hand: cards,
-          showUnoButton: true,
+          showLastCardButton: true,
           isMyTurn: true,
         ),
       );
 
-      expect(find.byType(UnoButton), findsOneWidget);
+      expect(find.byType(LastCardButton), findsOneWidget);
     });
   });
 
   // -------------------------------------------------------------------------
-  // UNO button hidden when 2+ cards
+  // Last Card button hidden when 2+ cards
   // -------------------------------------------------------------------------
 
-  group('UNO button hidden when 2+ cards', () {
-    testWidgets('UnoButton isVisible is false when showUnoButton is false',
+  group('Last Card button hidden when 2+ cards', () {
+    testWidgets('LastCardButton isVisible is false when showLastCardButton is false',
         (tester) async {
       final cards = List.generate(
         3,
-        (i) => UnoCard(
+        (i) => WildCard(
           color: CardColor.blue,
           value: CardValue.values[i],
           id: 'mc-$i',
@@ -189,19 +189,19 @@ void main() {
       await tester.pumpWidget(
         _buildBoard(
           hand: cards,
-          showUnoButton: false,
+          showLastCardButton: false,
         ),
       );
 
-      final unoButton = tester.widget<UnoButton>(find.byType(UnoButton));
-      expect(unoButton.isVisible, isFalse);
+      final lastCardButton = tester.widget<LastCardButton>(find.byType(LastCardButton));
+      expect(lastCardButton.isVisible, isFalse);
     });
 
     testWidgets(
-        'UnoButton isVisible is false when isMyTurn is false even with 1 card',
+        'LastCardButton isVisible is false when isMyTurn is false even with 1 card',
         (tester) async {
       final cards = [
-        const UnoCard(
+        const WildCard(
           color: CardColor.green,
           value: CardValue.three,
           id: 'not-my-turn',
@@ -211,14 +211,14 @@ void main() {
       await tester.pumpWidget(
         _buildBoard(
           hand: cards,
-          showUnoButton: true,
+          showLastCardButton: true,
           isMyTurn: false,
         ),
       );
 
-      final unoButton = tester.widget<UnoButton>(find.byType(UnoButton));
-      // GameBoard passes (showUnoButton && isMyTurn) to UnoButton.
-      expect(unoButton.isVisible, isFalse);
+      final lastCardButton = tester.widget<LastCardButton>(find.byType(LastCardButton));
+      // GameBoard passes (showLastCardButton && isMyTurn) to LastCardButton.
+      expect(lastCardButton.isVisible, isFalse);
     });
   });
 
@@ -228,8 +228,8 @@ void main() {
 
   group('Tap on card calls playCard', () {
     testWidgets('tapping a playable card invokes onCardTap', (tester) async {
-      UnoCard? tappedCard;
-      const card = UnoCard(
+      WildCard? tappedCard;
+      const card = WildCard(
         color: CardColor.red,
         value: CardValue.seven,
         id: 'tap-me',
@@ -252,8 +252,8 @@ void main() {
 
     testWidgets('tapping an unplayable card does not invoke onCardTap',
         (tester) async {
-      UnoCard? tappedCard;
-      const card = UnoCard(
+      WildCard? tappedCard;
+      const card = WildCard(
         color: CardColor.blue,
         value: CardValue.zero,
         id: 'no-play',
@@ -277,9 +277,9 @@ void main() {
         (tester) async {
       final tapped = <String>[];
       final cards = [
-        const UnoCard(color: CardColor.red, value: CardValue.one, id: 'c1'),
-        const UnoCard(color: CardColor.blue, value: CardValue.two, id: 'c2'),
-        const UnoCard(color: CardColor.green, value: CardValue.three, id: 'c3'),
+        const WildCard(color: CardColor.red, value: CardValue.one, id: 'c1'),
+        const WildCard(color: CardColor.blue, value: CardValue.two, id: 'c2'),
+        const WildCard(color: CardColor.green, value: CardValue.three, id: 'c3'),
       ];
 
       await tester.pumpWidget(

@@ -1,4 +1,4 @@
-// Package matchmaking implements the matchmaking service for UNO multiplayer.
+// Package matchmaking implements the matchmaking service for WildDeck.
 package matchmaking
 
 import (

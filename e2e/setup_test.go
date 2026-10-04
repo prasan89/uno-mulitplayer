@@ -12,7 +12,7 @@ import (
 
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/gorilla/websocket"
-	hubpkg "github.com/uno-multiplayer/server/internal/hub"
+	hubpkg "github.com/wilddeck/server/internal/hub"
 )
 
 // serverURL is the base URL of the running test server.
@@ -57,7 +57,7 @@ func generateTestToken(uid string) string {
 		"sub": uid,
 		"uid": uid,
 		"iss": "e2e-test",
-		"aud": jwt.ClaimStrings{"uno-multiplayer"},
+		"aud": jwt.ClaimStrings{"wilddeck"},
 		"iat": now.Unix(),
 		"exp": now.Add(2 * time.Hour).Unix(),
 	}

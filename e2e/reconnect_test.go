@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	hubpkg "github.com/uno-multiplayer/server/internal/hub"
+	hubpkg "github.com/wilddeck/server/internal/hub"
 )
 
 // TestReconnectReceivesGameState verifies that a client who disconnects and
