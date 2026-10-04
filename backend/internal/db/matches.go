@@ -166,7 +166,7 @@ func (d *DB) AbandonStaleMatches(ctx context.Context, staleSeconds int) ([]uuid.
 	if err != nil {
 		return nil, fmt.Errorf("db.AbandonStaleMatches: %w", err)
 	}
-	defer rows.Close()
+	defer rows.Close() //nolint:errcheck
 
 	var ids []uuid.UUID
 	for rows.Next() {

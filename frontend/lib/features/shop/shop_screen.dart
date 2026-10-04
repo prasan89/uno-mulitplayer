@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../core/services/mock_services.dart';
-import '../../shared/theme/wilddeck_theme.dart';
-import '../../shared/widgets/wilddeck_components.dart';
+import 'package:wilddeck/core/services/mock_services.dart';
+import 'package:wilddeck/shared/theme/wilddeck_theme.dart';
+import 'package:wilddeck/shared/widgets/wilddeck_components.dart';
 
 class ShopScreen extends StatefulWidget {
   const ShopScreen({super.key});
@@ -181,7 +181,7 @@ class _ItemCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: WildDeckTheme.navySurface,
         borderRadius: WildDeckTheme.radiusLarge,
-        border: Border.all(color: item.owned ? item.color.withOpacity(0.4) : WildDeckTheme.navyBorder)),
+        border: Border.all(color: item.owned ? item.color.withValues(alpha: 0.4) : WildDeckTheme.navyBorder)),
       child: Column(children: [
         Expanded(
           child: Container(
@@ -201,7 +201,7 @@ class _ItemCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
                 decoration: BoxDecoration(
-                  color: WildDeckTheme.success.withOpacity(0.12),
+                  color: WildDeckTheme.success.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(4)),
                 child: const Text('OWNED', style: TextStyle(
                   color: WildDeckTheme.success, fontSize: 9, fontWeight: FontWeight.w800)))
@@ -211,11 +211,11 @@ class _ItemCard extends StatelessWidget {
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
-                    color: canAfford ? WildDeckTheme.gold.withOpacity(0.15)
+                    color: canAfford ? WildDeckTheme.gold.withValues(alpha: 0.15)
                                      : WildDeckTheme.navyCard,
                     borderRadius: BorderRadius.circular(6),
                     border: Border.all(
-                      color: canAfford ? WildDeckTheme.gold.withOpacity(0.4)
+                      color: canAfford ? WildDeckTheme.gold.withValues(alpha: 0.4)
                                        : WildDeckTheme.navyBorder)),
                   child: Row(mainAxisSize: MainAxisSize.min, children: [
                     Icon(item.gemPrice > 0 ? Icons.diamond : Icons.monetization_on,
@@ -256,7 +256,7 @@ class _EmoteList extends StatelessWidget {
             Container(
               width: 48, height: 48,
               decoration: BoxDecoration(
-                color: e.color.withOpacity(0.15), shape: BoxShape.circle),
+                color: e.color.withValues(alpha: 0.15), shape: BoxShape.circle),
               child: Icon(e.icon, color: e.color, size: 24)),
             const SizedBox(width: 14),
             Expanded(child: Text(e.label, style: const TextStyle(

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../core/providers/wilddeck_providers.dart';
-import '../../core/router/wilddeck_router.dart';
-import '../../shared/theme/wilddeck_theme.dart';
-import '../../shared/widgets/wilddeck_components.dart';
+import 'package:wilddeck/core/providers/wilddeck_providers.dart';
+import 'package:wilddeck/core/router/wilddeck_router.dart';
+import 'package:wilddeck/shared/theme/wilddeck_theme.dart';
+import 'package:wilddeck/shared/widgets/wilddeck_components.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
@@ -180,7 +180,7 @@ class _SwitchRow extends StatelessWidget {
         Switch(
           value: value, onChanged: onChanged,
           activeColor: WildDeckTheme.cardRed,
-          activeTrackColor: WildDeckTheme.cardRed.withOpacity(0.3)),
+          activeTrackColor: WildDeckTheme.cardRed.withValues(alpha: 0.3)),
       ]),
     );
   }

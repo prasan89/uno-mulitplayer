@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../core/providers/auth_provider.dart';
-import '../widgets/apple_sign_in_button.dart';
-import '../widgets/google_sign_in_button.dart';
-import '../../../shared/widgets/loading_overlay.dart';
+import 'package:wilddeck/core/providers/auth_provider.dart';
+import 'package:wilddeck/features/auth/widgets/apple_sign_in_button.dart';
+import 'package:wilddeck/features/auth/widgets/google_sign_in_button.dart';
+import 'package:wilddeck/shared/widgets/loading_overlay.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -171,7 +171,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       Text(
                         'Sign in to play',
                         style: theme.textTheme.bodyMedium?.copyWith(
-                          color: theme.colorScheme.onBackground.withOpacity(0.6),
+                          color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                         ),
                       ),
                     ],

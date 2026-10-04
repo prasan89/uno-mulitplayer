@@ -217,7 +217,7 @@ func (fa *FirebaseAuth) fetchPublicKeys(ctx context.Context) (map[string]*rsa.Pu
 	if err != nil {
 		return nil, 0, fmt.Errorf("auth: key request failed: %w", err)
 	}
-	defer resp.Body.Close()
+	defer resp.Body.Close() //nolint:errcheck
 
 	if resp.StatusCode != http.StatusOK {
 		return nil, 0, fmt.Errorf("auth: key endpoint returned status %d", resp.StatusCode)

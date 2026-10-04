@@ -19,7 +19,7 @@ class AppTheme {
       error: const Color(0xFFCF6679),
       onError: Colors.black,
       background: backgroundDark,
-      onBackground: Colors.white,
+      onSurface: Colors.white,
       surface: surfaceDark,
       onSurface: Colors.white,
     );
@@ -129,7 +129,7 @@ class AppTheme {
       error: const Color(0xFFB00020),
       onError: Colors.white,
       background: backgroundLight,
-      onBackground: Colors.black,
+      onSurface: Colors.black,
       surface: Colors.white,
       onSurface: Colors.black,
     );
@@ -301,7 +301,7 @@ class AppTheme {
         fontFamily: 'Roboto',
         fontSize: 12,
         fontWeight: FontWeight.w400,
-        color: baseColor.withOpacity(0.7),
+        color: baseColor.withValues(alpha: 0.7),
       ),
       labelLarge: TextStyle(
         fontFamily: 'Roboto',
@@ -319,7 +319,7 @@ class AppTheme {
         fontFamily: 'Roboto',
         fontSize: 11,
         fontWeight: FontWeight.w500,
-        color: baseColor.withOpacity(0.7),
+        color: baseColor.withValues(alpha: 0.7),
       ),
     );
   }

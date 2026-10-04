@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../../core/router/wilddeck_router.dart';
-import '../../shared/theme/wilddeck_theme.dart';
+import 'package:wilddeck/core/router/wilddeck_router.dart';
+import 'package:wilddeck/shared/theme/wilddeck_theme.dart';
 
 /// WildDeck Splash screen — original branding, no UNO/Mattel assets.
 class WildDeckSplashScreen extends StatefulWidget {
@@ -142,7 +142,7 @@ class _WildDeckLogo extends StatelessWidget {
         borderRadius: BorderRadius.circular(size * 0.28),
         boxShadow: [
           BoxShadow(
-            color: WildDeckTheme.cardRed.withOpacity(0.5),
+            color: WildDeckTheme.cardRed.withValues(alpha: 0.5),
             blurRadius: 30,
             offset: const Offset(0, 10),
           ),

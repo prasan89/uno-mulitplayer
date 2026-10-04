@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../core/providers/wilddeck_providers.dart';
-import '../../core/router/wilddeck_router.dart';
-import '../../core/services/wilddeck_services.dart';
-import '../../core/services/mock_services.dart';
-import '../../shared/theme/wilddeck_theme.dart';
-import '../../shared/widgets/wilddeck_components.dart';
+import 'package:wilddeck/core/providers/wilddeck_providers.dart';
+import 'package:wilddeck/core/router/wilddeck_router.dart';
+import 'package:wilddeck/core/services/wilddeck_services.dart';
+import 'package:wilddeck/core/services/mock_services.dart';
+import 'package:wilddeck/shared/theme/wilddeck_theme.dart';
+import 'package:wilddeck/shared/widgets/wilddeck_components.dart';
 
 /// Main game table screen — card play, hand, discard pile, player seats.
 class GameTableScreen extends ConsumerStatefulWidget {
@@ -238,7 +238,7 @@ class _ColorIndicator extends StatelessWidget {
       width: 32, height: 32,
       decoration: BoxDecoration(
         color: _c, shape: BoxShape.circle,
-        border: Border.all(color: Colors.white.withOpacity(0.4), width: 2),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.4), width: 2),
         boxShadow: WildDeckTheme.buttonGlow(_c),
       ),
     );

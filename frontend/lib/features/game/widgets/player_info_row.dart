@@ -39,7 +39,7 @@ class _PlayerInfoRowState extends State<PlayerInfoRow>
     );
     _colorAnimation = ColorTween(
       begin: const Color(0xFF1E1E1E),
-      end: const Color(0xFFE53935).withOpacity(0.2),
+      end: const Color(0xFFE53935).withValues(alpha: 0.2),
     ).animate(CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut));
 
     if (widget.isCurrentTurn) {
@@ -87,7 +87,7 @@ class _PlayerInfoRowState extends State<PlayerInfoRow>
               boxShadow: widget.isCurrentTurn
                   ? [
                       BoxShadow(
-                        color: const Color(0xFFE53935).withOpacity(0.3),
+                        color: const Color(0xFFE53935).withValues(alpha: 0.3),
                         blurRadius: 8,
                         spreadRadius: 1,
                       ),

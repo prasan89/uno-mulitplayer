@@ -177,12 +177,12 @@ class _ScoreRow extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
         color: score.isCurrentPlayer
-            ? const Color(0xFFE53935).withOpacity(0.1)
+            ? const Color(0xFFE53935).withValues(alpha: 0.1)
             : const Color(0xFF121212),
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
           color: score.isCurrentPlayer
-              ? const Color(0xFFE53935).withOpacity(0.3)
+              ? const Color(0xFFE53935).withValues(alpha: 0.3)
               : Colors.transparent,
         ),
       ),
@@ -235,8 +235,8 @@ class _ScoreRow extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
             decoration: BoxDecoration(
               color: eloPositive
-                  ? const Color(0xFF2E7D32).withOpacity(0.2)
-                  : const Color(0xFFE53935).withOpacity(0.2),
+                  ? const Color(0xFF2E7D32).withValues(alpha: 0.2)
+                  : const Color(0xFFE53935).withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(4),
             ),
             child: Text(

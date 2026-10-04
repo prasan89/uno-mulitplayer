@@ -3,11 +3,11 @@ import 'dart:developer' as developer;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/card.dart';
-import '../models/game_state.dart';
-import '../models/message.dart';
-import '../network/api_client.dart';
-import '../network/websocket_client.dart';
+import 'package:wilddeck/core/models/card.dart';
+import 'package:wilddeck/core/models/game_state.dart';
+import 'package:wilddeck/core/models/message.dart';
+import 'package:wilddeck/core/network/api_client.dart';
+import 'package:wilddeck/core/network/websocket_client.dart';
 import 'auth_provider.dart';
 
 // ---------------------------------------------------------------------------

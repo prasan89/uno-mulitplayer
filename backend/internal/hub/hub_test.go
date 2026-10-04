@@ -33,20 +33,6 @@ func newTestClient(id, gameID string, h *Hub) *Client {
 	}
 }
 
-// drainHub processes all pending channel operations in the Hub by running one
-// iteration of the event loop.  It starts Run in a goroutine, sends the
-// work, then closes the done channel to stop the loop.
-func runHubOnce(h *Hub, work func()) {
-	done := make(chan struct{})
-	go h.Run(done)
-	// Give the goroutine a moment to start.
-	time.Sleep(5 * time.Millisecond)
-	work()
-	time.Sleep(20 * time.Millisecond)
-	close(done)
-	time.Sleep(10 * time.Millisecond)
-}
-
 // ─── Room Tests ───────────────────────────────────────────────────────────────
 
 func TestRoom_AddAndRemove(t *testing.T) {
@@ -113,7 +99,7 @@ func TestRoom_Broadcast_FullChannelDrops(t *testing.T) {
 	r := NewRoom("room-3")
 
 	// Create a client with a full (size=0) send channel to test the default drop.
-	c := &Client{ID: "c-full", Send: make(chan []byte, 0)}
+	c := &Client{ID: "c-full", Send: make(chan []byte)}
 	r.Add(c)
 
 	// Should not block even though channel is full (uses select/default).

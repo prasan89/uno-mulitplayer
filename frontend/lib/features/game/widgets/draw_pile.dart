@@ -80,7 +80,7 @@ class _DrawPileState extends State<DrawPile>
                         width: 70,
                         height: 100,
                         decoration: BoxDecoration(
-                          color: const Color(0xFF1A237E).withOpacity(0.6 + i * 0.1),
+                          color: const Color(0xFF1A237E).withValues(alpha: 0.6 + i * 0.1),
                           borderRadius: BorderRadius.circular(8),
                           border: Border.all(
                             color: Colors.white12,
@@ -113,7 +113,7 @@ class _DrawPileState extends State<DrawPile>
                           ? [
                               BoxShadow(
                                 color:
-                                    const Color(0xFFE53935).withOpacity(0.4),
+                                    const Color(0xFFE53935).withValues(alpha: 0.4),
                                 blurRadius: 12,
                                 spreadRadius: 2,
                               ),

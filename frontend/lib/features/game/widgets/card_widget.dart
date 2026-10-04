@@ -190,13 +190,12 @@ class _CardWidgetState extends State<CardWidget>
                   border: Border.all(
                     color: widget.isSelected
                         ? Colors.white
-                        : Colors.white.withOpacity(0.3),
+                        : Colors.white.withValues(alpha: 0.3),
                     width: widget.isSelected ? 2.5 : 1.5,
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(
-                          widget.isSelected ? 0.6 : 0.3),
+                      color: Colors.black.withValues(alpha: widget.isSelected ? 0.6 : 0.3),
                       blurRadius: widget.isSelected ? 12 : 6,
                       offset: Offset(0, widget.isSelected ? 6 : 3),
                     ),
@@ -210,7 +209,7 @@ class _CardWidgetState extends State<CardWidget>
                         width: widget.width * 0.75,
                         height: widget.height * 0.75,
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.15),
+                          color: Colors.white.withValues(alpha: 0.15),
                           borderRadius:
                               BorderRadius.circular(widget.width * 0.3),
                         ),

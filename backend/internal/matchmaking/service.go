@@ -239,10 +239,8 @@ func (s *Service) processQueue(ctx context.Context) {
 		}
 
 		// Mark all human players as matched.
-		humanIDs := make([]string, 0, len(group))
 		for _, e := range group {
 			matched[e.PlayerID] = true
-			humanIDs = append(humanIDs, e.PlayerID)
 		}
 
 		// Remove matched humans from the live queue.

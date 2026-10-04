@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../services/wilddeck_services.dart';
-import '../services/mock_services.dart';
+import 'package:wilddeck/core/services/wilddeck_services.dart';
+import 'package:wilddeck/core/services/mock_services.dart';
 
 // ─── Service Providers ────────────────────────────────────────────────────────
 // Swap mock implementations for real ones in future milestones.

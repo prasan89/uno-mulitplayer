@@ -82,12 +82,12 @@ class WildDeckTheme {
   // ─── Shadows ─────────────────────────────────────────────────────────────────
   static List<BoxShadow> cardShadow(Color color, {bool elevated = false}) => [
     BoxShadow(
-      color: color.withOpacity(elevated ? 0.55 : 0.35),
+      color: color.withValues(alpha: elevated ? 0.55 : 0.35),
       blurRadius: elevated ? 24 : 12,
       offset: Offset(0, elevated ? 10 : 4),
     ),
     BoxShadow(
-      color: Colors.black.withOpacity(0.4),
+      color: Colors.black.withValues(alpha: 0.4),
       blurRadius: elevated ? 12 : 6,
       offset: const Offset(0, 2),
     ),
@@ -95,7 +95,7 @@ class WildDeckTheme {
 
   static List<BoxShadow> get panelShadow => [
     BoxShadow(
-      color: Colors.black.withOpacity(0.5),
+      color: Colors.black.withValues(alpha: 0.5),
       blurRadius: 20,
       offset: const Offset(0, 8),
     ),
@@ -103,7 +103,7 @@ class WildDeckTheme {
 
   static List<BoxShadow> buttonGlow(Color color) => [
     BoxShadow(
-      color: color.withOpacity(0.5),
+      color: color.withValues(alpha: 0.5),
       blurRadius: 16,
       offset: const Offset(0, 4),
     ),
@@ -130,7 +130,7 @@ class WildDeckTheme {
         error: error,
         onError: Colors.white,
         background: navyDeep,
-        onBackground: textPrimary,
+        onSurface: textPrimary,
         surface: navySurface,
         onSurface: textPrimary,
       ),
@@ -193,11 +193,11 @@ class WildDeckTheme {
         suffixIconColor: textMuted,
       ),
       switchTheme: SwitchThemeData(
-        thumbColor: MaterialStateProperty.resolveWith((states) =>
-            states.contains(MaterialState.selected) ? gold : textMuted),
-        trackColor: MaterialStateProperty.resolveWith((states) =>
-            states.contains(MaterialState.selected)
-                ? gold.withOpacity(0.3)
+        thumbColor: WidgetStateProperty.resolveWith((states) =>
+            states.contains(WidgetState.selected) ? gold : textMuted),
+        trackColor: WidgetStateProperty.resolveWith((states) =>
+            states.contains(WidgetState.selected)
+                ? gold.withValues(alpha: 0.3)
                 : navyBorder),
       ),
       sliderTheme: const SliderThemeData(

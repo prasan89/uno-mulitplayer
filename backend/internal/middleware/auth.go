@@ -52,8 +52,7 @@ func (ks *FirebaseKeySet) fetchKeys() error {
 	if err != nil {
 		return fmt.Errorf("fetch firebase keys: %w", err)
 	}
-	defer resp.Body.Close()
-
+	defer resp.Body.Close() //nolint:errcheck
 	// Parse cache-control max-age so we know when to refresh.
 	expires := time.Now().Add(1 * time.Hour)
 	if cc := resp.Header.Get("Cache-Control"); cc != "" {

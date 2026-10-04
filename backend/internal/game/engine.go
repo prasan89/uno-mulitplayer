@@ -50,10 +50,7 @@ func NewGame(players []PlayerInfo, rules HouseRules) *GameState {
 	}
 
 	// Flip the first card to the discard pile; skip Wild Draw Four starters.
-	for {
-		if len(g.DrawPile) == 0 {
-			break
-		}
+	for len(g.DrawPile) > 0 {
 		startCard := g.DrawPile[0]
 		g.DrawPile = g.DrawPile[1:]
 		if startCard.Type == CardTypeWildDrawFour {

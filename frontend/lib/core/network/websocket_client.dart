@@ -4,7 +4,7 @@ import 'dart:developer' as developer;
 
 import 'package:web_socket_channel/web_socket_channel.dart';
 
-import '../models/message.dart';
+import 'package:wilddeck/core/models/message.dart';
 
 /// Manages a WebSocket connection to the game server.
 ///

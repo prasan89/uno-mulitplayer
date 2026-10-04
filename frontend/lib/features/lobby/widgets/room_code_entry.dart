@@ -210,7 +210,7 @@ class _RoomCodeEntryState extends State<RoomCodeEntry> {
             counterText: '',
             hintText: '------',
             hintStyle: TextStyle(
-              color: Colors.white.withOpacity(0.15),
+              color: Colors.white.withValues(alpha: 0.15),
               fontSize: 24,
               letterSpacing: 6,
             ),

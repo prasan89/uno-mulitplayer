@@ -96,7 +96,7 @@ class _ColorButton extends StatelessWidget {
           border: Border.all(color: Colors.white30, width: 1.5),
           boxShadow: [
             BoxShadow(
-              color: color.withOpacity(0.4),
+              color: color.withValues(alpha: 0.4),
               blurRadius: 8,
               spreadRadius: 1,
             ),

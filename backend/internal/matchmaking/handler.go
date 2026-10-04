@@ -305,7 +305,7 @@ func decodeBody(r *http.Request, dst interface{}) error {
 	if r.Body == nil {
 		return nil
 	}
-	defer r.Body.Close()
+	defer r.Body.Close() //nolint:errcheck
 	limited := http.MaxBytesReader(nil, r.Body, maxRequestBodyBytes)
 	return json.NewDecoder(limited).Decode(dst)
 }

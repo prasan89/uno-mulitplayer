@@ -2,23 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../providers/wilddeck_providers.dart';
-import '../services/wilddeck_services.dart';
-import '../../features/splash/splash_screen.dart';
-import '../../features/auth/screens/wilddeck_login_screen.dart';
-import '../../features/home/home_screen.dart';
-import '../../features/game_mode/game_mode_screen.dart';
-import '../../features/matchmaking/matchmaking_screen.dart';
-import '../../features/game_lobby/game_lobby_screen.dart';
-import '../../features/game/game_table_screen.dart';
-import '../../features/game/wild_color_picker_screen.dart';
-import '../../features/game/game_result_screen.dart';
-import '../../features/profile/profile_screen.dart';
-import '../../features/friends/friends_screen.dart';
-import '../../features/shop/shop_screen.dart';
-import '../../features/missions/missions_screen.dart';
-import '../../features/leaderboard/leaderboard_screen.dart';
-import '../../features/settings/settings_screen.dart';
+import 'package:wilddeck/core/providers/wilddeck_providers.dart';
+import 'package:wilddeck/core/services/wilddeck_services.dart';
+import 'package:wilddeck/features/splash/splash_screen.dart';
+import 'package:wilddeck/features/auth/screens/wilddeck_login_screen.dart';
+import 'package:wilddeck/features/home/home_screen.dart';
+import 'package:wilddeck/features/game_mode/game_mode_screen.dart';
+import 'package:wilddeck/features/matchmaking/matchmaking_screen.dart';
+import 'package:wilddeck/features/game_lobby/game_lobby_screen.dart';
+import 'package:wilddeck/features/game/game_table_screen.dart';
+import 'package:wilddeck/features/game/wild_color_picker_screen.dart';
+import 'package:wilddeck/features/game/game_result_screen.dart';
+import 'package:wilddeck/features/profile/profile_screen.dart';
+import 'package:wilddeck/features/friends/friends_screen.dart';
+import 'package:wilddeck/features/shop/shop_screen.dart';
+import 'package:wilddeck/features/missions/missions_screen.dart';
+import 'package:wilddeck/features/leaderboard/leaderboard_screen.dart';
+import 'package:wilddeck/features/settings/settings_screen.dart';
 
 // Route name constants — use these everywhere instead of raw strings.
 class WildRoutes {
@@ -256,7 +256,7 @@ class _WildDeckBottomNav extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                         decoration: active
                             ? BoxDecoration(
-                                color: const Color(0xFFFFB300).withOpacity(0.15),
+                                color: const Color(0xFFFFB300).withValues(alpha: 0.15),
                                 borderRadius: BorderRadius.circular(8),
                               )
                             : null,

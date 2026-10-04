@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../core/providers/auth_provider.dart';
-import '../../../shared/widgets/loading_overlay.dart';
+import 'package:wilddeck/core/providers/auth_provider.dart';
+import 'package:wilddeck/shared/widgets/loading_overlay.dart';
 
 class ProfileScreen extends ConsumerStatefulWidget {
   const ProfileScreen({super.key});
@@ -327,7 +327,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                         value: _winRate,
                         minHeight: 8,
                         backgroundColor:
-                            theme.colorScheme.onBackground.withOpacity(0.1),
+                            theme.colorScheme.onSurface.withValues(alpha: 0.1),
                         valueColor: AlwaysStoppedAnimation<Color>(
                           _winRate >= 0.5
                               ? Colors.green

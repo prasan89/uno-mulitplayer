@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../shared/theme/wilddeck_theme.dart';
-import '../../shared/widgets/wilddeck_components.dart';
+import 'package:wilddeck/shared/theme/wilddeck_theme.dart';
+import 'package:wilddeck/shared/widgets/wilddeck_components.dart';
 
 class LeaderboardScreen extends StatefulWidget {
   const LeaderboardScreen({super.key});
@@ -142,7 +142,7 @@ class _PodiumSlot extends StatelessWidget {
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter, end: Alignment.bottomCenter,
-            colors: [color.withOpacity(0.8), color.withOpacity(0.3)]),
+            colors: [color.withValues(alpha: 0.8), color.withValues(alpha: 0.3)]),
           borderRadius: const BorderRadius.vertical(top: Radius.circular(8))),
         child: Center(child: Text('#$rank', style: const TextStyle(
           color: Colors.white, fontSize: 18, fontWeight: FontWeight.w900))),
@@ -167,10 +167,10 @@ class _LeaderList extends StatelessWidget {
           margin: const EdgeInsets.only(bottom: 8),
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
           decoration: BoxDecoration(
-            color: isMe ? WildDeckTheme.gold.withOpacity(0.06) : WildDeckTheme.navySurface,
+            color: isMe ? WildDeckTheme.gold.withValues(alpha: 0.06) : WildDeckTheme.navySurface,
             borderRadius: WildDeckTheme.radiusMedium,
             border: Border.all(
-              color: isMe ? WildDeckTheme.gold.withOpacity(0.3) : WildDeckTheme.navyBorder)),
+              color: isMe ? WildDeckTheme.gold.withValues(alpha: 0.3) : WildDeckTheme.navyBorder)),
           child: Row(children: [
             SizedBox(
               width: 28,

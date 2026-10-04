@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../widgets/room_code_entry.dart';
+import 'package:wilddeck/features/lobby/widgets/room_code_entry.dart';
 
 enum _LobbyMode { idle, quickMatch, createPrivate, joinPrivate }
 
@@ -102,7 +102,7 @@ class _LobbyScreenState extends State<LobbyScreen>
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
-                color: const Color(0xFFE53935).withOpacity(0.4),
+                color: const Color(0xFFE53935).withValues(alpha: 0.4),
                 blurRadius: 20,
                 offset: const Offset(0, 8),
               ),
@@ -171,7 +171,7 @@ class _LobbyScreenState extends State<LobbyScreen>
             boxShadow: [
               BoxShadow(
                 color: const Color(0xFFE53935)
-                    .withOpacity(isActive ? 0.5 : 0.3),
+                    .withValues(alpha: isActive ? 0.5 : 0.3),
                 blurRadius: isActive ? 20 : 12,
                 offset: const Offset(0, 6),
               ),
@@ -194,7 +194,7 @@ class _LobbyScreenState extends State<LobbyScreen>
                       width: 48,
                       height: 48,
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.15),
+                        color: Colors.white.withValues(alpha: 0.15),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: const Icon(
@@ -334,7 +334,7 @@ class _PrivateOptionTile extends StatelessWidget {
       duration: const Duration(milliseconds: 200),
       decoration: BoxDecoration(
         color: isSelected
-            ? const Color(0xFFE53935).withOpacity(0.08)
+            ? const Color(0xFFE53935).withValues(alpha: 0.08)
             : const Color(0xFF1E1E1E),
         borderRadius: BorderRadius.circular(14),
         border: Border.all(
@@ -420,7 +420,7 @@ class _OrDivider extends StatelessWidget {
           child: Text(
             'OR',
             style: TextStyle(
-              color: Colors.white.withOpacity(0.2),
+              color: Colors.white.withValues(alpha: 0.2),
               fontSize: 12,
               fontWeight: FontWeight.w600,
               letterSpacing: 1.5,

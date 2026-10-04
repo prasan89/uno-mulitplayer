@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../core/services/mock_services.dart';
-import '../../shared/theme/wilddeck_theme.dart';
-import '../../shared/widgets/wilddeck_components.dart';
+import 'package:wilddeck/core/services/mock_services.dart';
+import 'package:wilddeck/shared/theme/wilddeck_theme.dart';
+import 'package:wilddeck/shared/widgets/wilddeck_components.dart';
 
 class MissionsScreen extends StatefulWidget {
   const MissionsScreen({super.key});
@@ -159,13 +159,13 @@ class _MissionCard extends StatelessWidget {
         color: WildDeckTheme.navySurface,
         borderRadius: WildDeckTheme.radiusLarge,
         border: Border.all(
-          color: done ? WildDeckTheme.success.withOpacity(0.3) : WildDeckTheme.navyBorder)),
+          color: done ? WildDeckTheme.success.withValues(alpha: 0.3) : WildDeckTheme.navyBorder)),
       child: Column(children: [
         Row(children: [
           Container(
             width: 40, height: 40,
             decoration: BoxDecoration(
-              color: done ? WildDeckTheme.success.withOpacity(0.12) : WildDeckTheme.navyCard,
+              color: done ? WildDeckTheme.success.withValues(alpha: 0.12) : WildDeckTheme.navyCard,
               shape: BoxShape.circle),
             child: Icon(
               done ? Icons.check_circle_outline : Icons.assignment_rounded,
@@ -204,7 +204,7 @@ class _MissionCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(vertical: 6),
             decoration: BoxDecoration(
-              color: WildDeckTheme.success.withOpacity(0.08),
+              color: WildDeckTheme.success.withValues(alpha: 0.08),
               borderRadius: WildDeckTheme.radiusSmall),
             child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
               const Icon(Icons.check, color: WildDeckTheme.success, size: 14),

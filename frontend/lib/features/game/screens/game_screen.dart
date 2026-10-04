@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import '../widgets/card_widget.dart';
-import '../widgets/game_board.dart';
-import '../widgets/color_picker_dialog.dart';
-import '../widgets/game_over_dialog.dart';
+import 'package:wilddeck/features/game/widgets/card_widget.dart';
+import 'package:wilddeck/features/game/widgets/game_board.dart';
+import 'package:wilddeck/features/game/widgets/color_picker_dialog.dart';
+import 'package:wilddeck/features/game/widgets/game_over_dialog.dart';
 
 /// Represents the current state of the game.
 /// In production this would be driven by Riverpod/a WebSocket provider.
@@ -252,6 +252,7 @@ class _GameScreenState extends State<GameScreen> {
 
   Future<void> _showGameOver() async {
     if (_gameState.winnerName == null) return;
+    if (!mounted) return;
     await GameOverDialog.show(
       context: context,
       winnerName: _gameState.winnerName!,
@@ -437,7 +438,7 @@ class _TurnTimerChip extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
         color: isUrgent
-            ? const Color(0xFFE53935).withOpacity(0.15)
+            ? const Color(0xFFE53935).withValues(alpha: 0.15)
             : Colors.white12,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(

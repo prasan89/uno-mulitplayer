@@ -130,11 +130,11 @@ class _MatchmakingScreenState extends State<MatchmakingScreen>
                     shape: BoxShape.circle,
                     color: const Color(0xFF1E1E1E),
                     border: Border.all(
-                        color: const Color(0xFFE53935).withOpacity(0.3),
+                        color: const Color(0xFFE53935).withValues(alpha: 0.3),
                         width: 2),
                     boxShadow: [
                       BoxShadow(
-                        color: const Color(0xFFE53935).withOpacity(0.15),
+                        color: const Color(0xFFE53935).withValues(alpha: 0.15),
                         blurRadius: 30,
                         spreadRadius: 5,
                       ),
@@ -154,7 +154,7 @@ class _MatchmakingScreenState extends State<MatchmakingScreen>
                             gradient: SweepGradient(
                               colors: [
                                 const Color(0xFFE53935),
-                                const Color(0xFFE53935).withOpacity(0.0),
+                                const Color(0xFFE53935).withValues(alpha: 0.0),
                               ],
                               stops: const [0.0, 1.0],
                             ),

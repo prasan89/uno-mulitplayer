@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../core/providers/auth_provider.dart';
-import '../../../shared/widgets/loading_overlay.dart';
+import 'package:wilddeck/core/providers/auth_provider.dart';
+import 'package:wilddeck/shared/widgets/loading_overlay.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
   const RegisterScreen({super.key});
@@ -164,7 +164,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     'Create your account to start playing',
                     style: theme.textTheme.bodyMedium?.copyWith(
                       color:
-                          theme.colorScheme.onBackground.withOpacity(0.6),
+                          theme.colorScheme.onSurface.withValues(alpha: 0.6),
                     ),
                   ),
 

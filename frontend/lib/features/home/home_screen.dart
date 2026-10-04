@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../core/providers/wilddeck_providers.dart';
-import '../../core/router/wilddeck_router.dart';
-import '../../core/services/wilddeck_services.dart';
-import '../../shared/theme/wilddeck_theme.dart';
-import '../../shared/widgets/wilddeck_components.dart';
+import 'package:wilddeck/core/providers/wilddeck_providers.dart';
+import 'package:wilddeck/core/router/wilddeck_router.dart';
+import 'package:wilddeck/core/services/wilddeck_services.dart';
+import 'package:wilddeck/shared/theme/wilddeck_theme.dart';
+import 'package:wilddeck/shared/widgets/wilddeck_components.dart';
 
 /// WildDeck Home Screen — player hub with Play Now CTA and secondary sections.
 class HomeScreen extends ConsumerWidget {
@@ -188,7 +188,7 @@ class _CardFanDecoration extends StatelessWidget {
                 decoration: BoxDecoration(
                   gradient: WildDeckTheme.cardGradient(color),
                   borderRadius: BorderRadius.circular(6),
-                  border: Border.all(color: Colors.white.withOpacity(0.3), width: 1),
+                  border: Border.all(color: Colors.white.withValues(alpha: 0.3), width: 1),
                   boxShadow: WildDeckTheme.cardShadow(color),
                 ),
               ),
@@ -292,7 +292,7 @@ class _GridTile extends StatelessWidget {
             Container(
               width: 42, height: 42,
               decoration: BoxDecoration(
-                color: color.withOpacity(0.15),
+                color: color.withValues(alpha: 0.15),
                 shape: BoxShape.circle,
               ),
               child: Icon(icon, color: color, size: 22),

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import '../widgets/card_widget.dart';
-import '../widgets/discard_pile.dart';
-import '../widgets/draw_pile.dart';
-import '../widgets/player_hand.dart';
-import '../widgets/player_info_row.dart';
-import '../widgets/color_picker_dialog.dart';
-import '../widgets/game_over_dialog.dart';
-import '../widgets/last_card_button.dart';
+import 'package:wilddeck/features/game/widgets/card_widget.dart';
+import 'package:wilddeck/features/game/widgets/discard_pile.dart';
+import 'package:wilddeck/features/game/widgets/draw_pile.dart';
+import 'package:wilddeck/features/game/widgets/player_hand.dart';
+import 'package:wilddeck/features/game/widgets/player_info_row.dart';
+import 'package:wilddeck/features/game/widgets/color_picker_dialog.dart';
+import 'package:wilddeck/features/game/widgets/game_over_dialog.dart';
+import 'package:wilddeck/features/game/widgets/last_card_button.dart';
 
 /// Represents another player in the game (not the current user)
 class OpponentPlayer {
@@ -142,7 +142,7 @@ class GameBoard extends StatelessWidget {
       duration: const Duration(milliseconds: 300),
       padding: const EdgeInsets.symmetric(vertical: 6),
       color: isMyTurn
-          ? const Color(0xFFE53935).withOpacity(0.1)
+          ? const Color(0xFFE53935).withValues(alpha: 0.1)
           : Colors.transparent,
       child: Center(
         child: Row(
@@ -223,7 +223,7 @@ class _TurnTimer extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       decoration: BoxDecoration(
         color: isUrgent
-            ? const Color(0xFFE53935).withOpacity(0.2)
+            ? const Color(0xFFE53935).withValues(alpha: 0.2)
             : Colors.white12,
         borderRadius: BorderRadius.circular(10),
         border: Border.all(

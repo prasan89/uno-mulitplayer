@@ -82,7 +82,7 @@ func (c *Client) ReadPump() {
 				zap.String("client", c.ID),
 			)
 		}
-		c.Conn.Close()
+		c.Conn.Close() //nolint:errcheck
 	}()
 
 	c.Conn.SetReadLimit(ReadLimit)
@@ -141,7 +141,7 @@ func (c *Client) WritePump() {
 	ticker := time.NewTicker(PingInterval)
 	defer func() {
 		ticker.Stop()
-		c.Conn.Close()
+		c.Conn.Close() //nolint:errcheck
 	}()
 
 	for {

@@ -30,10 +30,10 @@ class _ErrorBannerState extends State<ErrorBanner> {
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: theme.colorScheme.error.withOpacity(0.15),
+          color: theme.colorScheme.error.withValues(alpha: 0.15),
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color: theme.colorScheme.error.withOpacity(0.5),
+            color: theme.colorScheme.error.withValues(alpha: 0.5),
           ),
         ),
         child: Padding(

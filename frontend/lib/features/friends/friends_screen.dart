@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../shared/theme/wilddeck_theme.dart';
-import '../../shared/widgets/wilddeck_components.dart';
+import 'package:wilddeck/shared/theme/wilddeck_theme.dart';
+import 'package:wilddeck/shared/widgets/wilddeck_components.dart';
 
 class FriendsScreen extends StatefulWidget {
   const FriendsScreen({super.key});
@@ -181,9 +181,9 @@ class _SmallButton extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         decoration: BoxDecoration(
-          color: color.withOpacity(0.15),
+          color: color.withValues(alpha: 0.15),
           borderRadius: BorderRadius.circular(6),
-          border: Border.all(color: color.withOpacity(0.4))),
+          border: Border.all(color: color.withValues(alpha: 0.4))),
         child: Text(label, style: TextStyle(color: color, fontSize: 11, fontWeight: FontWeight.w700))),
     );
   }

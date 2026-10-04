@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../core/providers/wilddeck_providers.dart';
-import '../../core/services/wilddeck_services.dart';
-import '../../shared/theme/wilddeck_theme.dart';
-import '../../shared/widgets/wilddeck_components.dart';
+import 'package:wilddeck/core/providers/wilddeck_providers.dart';
+import 'package:wilddeck/core/services/wilddeck_services.dart';
+import 'package:wilddeck/shared/theme/wilddeck_theme.dart';
+import 'package:wilddeck/shared/widgets/wilddeck_components.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -109,7 +109,7 @@ class _StatsGrid extends StatelessWidget {
           return Column(children: [
             Container(
               width: 48, height: 48,
-              decoration: BoxDecoration(color: color.withOpacity(0.15), shape: BoxShape.circle),
+              decoration: BoxDecoration(color: color.withValues(alpha: 0.15), shape: BoxShape.circle),
               child: Icon(icon, color: color, size: 24)),
             const SizedBox(height: 8),
             Text(value, style: const TextStyle(color: Colors.white, fontSize: 18,
@@ -150,12 +150,12 @@ class _AchievementsSection extends StatelessWidget {
               color: WildDeckTheme.navySurface,
               borderRadius: WildDeckTheme.radiusMedium,
               border: Border.all(
-                color: unlocked ? color.withOpacity(0.3) : WildDeckTheme.navyBorder)),
+                color: unlocked ? color.withValues(alpha: 0.3) : WildDeckTheme.navyBorder)),
             child: Row(children: [
               Container(
                 width: 40, height: 40,
                 decoration: BoxDecoration(
-                  color: unlocked ? color.withOpacity(0.15) : WildDeckTheme.navyCard,
+                  color: unlocked ? color.withValues(alpha: 0.15) : WildDeckTheme.navyCard,
                   shape: BoxShape.circle),
                 child: Icon(
                   unlocked ? Icons.military_tech : Icons.lock_outline,
@@ -171,7 +171,7 @@ class _AchievementsSection extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                   decoration: BoxDecoration(
-                    color: WildDeckTheme.success.withOpacity(0.12),
+                    color: WildDeckTheme.success.withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(4)),
                   child: const Text('DONE', style: TextStyle(
                     color: WildDeckTheme.success, fontSize: 9, fontWeight: FontWeight.w800))),
@@ -213,8 +213,8 @@ class _MatchHistorySection extends StatelessWidget {
               Container(
                 width: 36, height: 36,
                 decoration: BoxDecoration(
-                  color: win ? WildDeckTheme.success.withOpacity(0.12)
-                             : WildDeckTheme.error.withOpacity(0.12),
+                  color: win ? WildDeckTheme.success.withValues(alpha: 0.12)
+                             : WildDeckTheme.error.withValues(alpha: 0.12),
                   shape: BoxShape.circle),
                 child: Icon(win ? Icons.check_rounded : Icons.close_rounded,
                   color: win ? WildDeckTheme.success : WildDeckTheme.error, size: 18)),

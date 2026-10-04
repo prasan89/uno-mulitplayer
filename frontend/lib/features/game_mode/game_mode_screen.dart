@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../../core/router/wilddeck_router.dart';
-import '../../shared/theme/wilddeck_theme.dart';
-import '../../shared/widgets/wilddeck_components.dart';
+import 'package:wilddeck/core/router/wilddeck_router.dart';
+import 'package:wilddeck/shared/theme/wilddeck_theme.dart';
+import 'package:wilddeck/shared/widgets/wilddeck_components.dart';
 
 /// Game Mode selection screen.
 class GameModeScreen extends StatelessWidget {
@@ -133,7 +133,7 @@ class _ModeCard extends StatelessWidget {
             color: WildDeckTheme.navySurface,
             borderRadius: WildDeckTheme.radiusLarge,
             border: Border.all(
-              color: locked ? WildDeckTheme.navyBorder : iconColor.withOpacity(0.3),
+              color: locked ? WildDeckTheme.navyBorder : iconColor.withValues(alpha: 0.3),
               width: 1.5,
             ),
             boxShadow: locked ? null : WildDeckTheme.cardShadow(iconColor),
@@ -143,7 +143,7 @@ class _ModeCard extends StatelessWidget {
               Container(
                 width: 56, height: 56,
                 decoration: BoxDecoration(
-                  color: iconColor.withOpacity(0.15),
+                  color: iconColor.withValues(alpha: 0.15),
                   borderRadius: WildDeckTheme.radiusMedium,
                 ),
                 child: Icon(icon, color: iconColor, size: 30),
@@ -163,10 +163,10 @@ class _ModeCard extends StatelessWidget {
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
                             decoration: BoxDecoration(
-                              color: (badgeColor ?? WildDeckTheme.cardRed).withOpacity(0.2),
+                              color: (badgeColor ?? WildDeckTheme.cardRed).withValues(alpha: 0.2),
                               borderRadius: BorderRadius.circular(4),
                               border: Border.all(
-                                color: (badgeColor ?? WildDeckTheme.cardRed).withOpacity(0.5),
+                                color: (badgeColor ?? WildDeckTheme.cardRed).withValues(alpha: 0.5),
                               ),
                             ),
                             child: Text(badge!, style: TextStyle(

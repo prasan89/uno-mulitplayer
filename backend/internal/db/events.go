@@ -64,7 +64,7 @@ func (d *DB) GetMatchEvents(ctx context.Context, matchID uuid.UUID) ([]GameEvent
 	if err != nil {
 		return nil, fmt.Errorf("db.GetMatchEvents: %w", err)
 	}
-	defer rows.Close()
+	defer rows.Close() //nolint:errcheck
 	return scanEvents(rows)
 }
 
@@ -75,7 +75,7 @@ func (d *DB) GetMatchEventsSince(ctx context.Context, matchID uuid.UUID, afterSe
 	if err != nil {
 		return nil, fmt.Errorf("db.GetMatchEventsSince: %w", err)
 	}
-	defer rows.Close()
+	defer rows.Close() //nolint:errcheck
 	return scanEvents(rows)
 }
 

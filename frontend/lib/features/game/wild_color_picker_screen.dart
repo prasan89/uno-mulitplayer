@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../../core/services/wilddeck_services.dart';
-import '../../shared/theme/wilddeck_theme.dart';
+import 'package:wilddeck/core/services/wilddeck_services.dart';
+import 'package:wilddeck/shared/theme/wilddeck_theme.dart';
 
 /// Wild color selection screen — 4 large color buttons.
 class WildColorPickerScreen extends StatefulWidget {
@@ -153,14 +153,14 @@ class _ColorButtonState extends State<_ColorButton>
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topLeft, end: Alignment.bottomRight,
-              colors: [widget.color, widget.color.withOpacity(0.6)],
+              colors: [widget.color, widget.color.withValues(alpha: 0.6)],
             ),
             borderRadius: WildDeckTheme.radiusLarge,
             border: Border.all(
               color: widget.isSelected ? Colors.white : Colors.transparent, width: 3),
             boxShadow: [
               BoxShadow(
-                color: widget.color.withOpacity(widget.isSelected ? 0.7 : 0.35),
+                color: widget.color.withValues(alpha: widget.isSelected ? 0.7 : 0.35),
                 blurRadius: widget.isSelected ? 24 : 12,
                 spreadRadius: widget.isSelected ? 4 : 0,
               ),

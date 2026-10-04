@@ -125,7 +125,7 @@ func (d *DB) GetLeaderboard(ctx context.Context) ([]LeaderboardEntry, error) {
 	if err != nil {
 		return nil, fmt.Errorf("db.GetLeaderboard: %w", err)
 	}
-	defer rows.Close()
+	defer rows.Close() //nolint:errcheck
 
 	var out []LeaderboardEntry
 	for rows.Next() {

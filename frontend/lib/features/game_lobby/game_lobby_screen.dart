@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../../core/router/wilddeck_router.dart';
-import '../../core/services/wilddeck_services.dart';
-import '../../shared/theme/wilddeck_theme.dart';
-import '../../shared/widgets/wilddeck_components.dart';
+import 'package:wilddeck/core/router/wilddeck_router.dart';
+import 'package:wilddeck/core/services/wilddeck_services.dart';
+import 'package:wilddeck/shared/theme/wilddeck_theme.dart';
+import 'package:wilddeck/shared/widgets/wilddeck_components.dart';
 
 class GameLobbyScreen extends StatefulWidget {
   final String gameId;
@@ -111,9 +111,9 @@ class _ReadyBanner extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 10),
       decoration: BoxDecoration(
-        color: WildDeckTheme.success.withOpacity(0.1),
+        color: WildDeckTheme.success.withValues(alpha: 0.1),
         borderRadius: WildDeckTheme.radiusMedium,
-        border: Border.all(color: WildDeckTheme.success.withOpacity(0.4)),
+        border: Border.all(color: WildDeckTheme.success.withValues(alpha: 0.4)),
       ),
       child: const Center(
         child: Text('4/4 Players Ready', style: TextStyle(
@@ -135,10 +135,10 @@ class _LobbySeat extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: isMe ? WildDeckTheme.gold.withOpacity(0.06) : WildDeckTheme.navySurface,
+        color: isMe ? WildDeckTheme.gold.withValues(alpha: 0.06) : WildDeckTheme.navySurface,
         borderRadius: WildDeckTheme.radiusMedium,
         border: Border.all(
-          color: isMe ? WildDeckTheme.gold.withOpacity(0.3) : WildDeckTheme.navyBorder),
+          color: isMe ? WildDeckTheme.gold.withValues(alpha: 0.3) : WildDeckTheme.navyBorder),
       ),
       child: Row(children: [
         Container(
@@ -170,9 +170,9 @@ class _LobbySeat extends StatelessWidget {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
           decoration: BoxDecoration(
-            color: WildDeckTheme.success.withOpacity(0.12),
+            color: WildDeckTheme.success.withValues(alpha: 0.12),
             borderRadius: BorderRadius.circular(6),
-            border: Border.all(color: WildDeckTheme.success.withOpacity(0.4))),
+            border: Border.all(color: WildDeckTheme.success.withValues(alpha: 0.4))),
           child: const Text('READY', style: TextStyle(
             color: WildDeckTheme.success, fontSize: 10,
             fontWeight: FontWeight.w800, letterSpacing: 1)),

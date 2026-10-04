@@ -157,16 +157,6 @@ func (g *GameState) findPlayer(playerID string) (*Player, error) {
 	return nil, ErrCardNotInHand // reuse as "player not found" for simplicity
 }
 
-// findPlayerIndex returns the index of the player in the Players slice.
-func (g *GameState) findPlayerIndex(playerID string) int {
-	for i := range g.Players {
-		if g.Players[i].ID == playerID {
-			return i
-		}
-	}
-	return -1
-}
-
 // currentPlayer returns a pointer to the player whose turn it is.
 func (g *GameState) currentPlayer() *Player {
 	return &g.Players[g.CurrentPlayerIndex]

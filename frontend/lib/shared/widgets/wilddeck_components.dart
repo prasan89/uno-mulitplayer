@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../theme/wilddeck_theme.dart';
+import 'package:wilddeck/shared/theme/wilddeck_theme.dart';
 
 // ─── WildDeckCard ─────────────────────────────────────────────────────────────
 
@@ -103,7 +103,7 @@ class _WildDeckCardWidgetState extends State<WildDeckCardWidget>
         child: Text(
           'WD',
           style: TextStyle(
-            color: WildDeckTheme.gold.withOpacity(0.6),
+            color: WildDeckTheme.gold.withValues(alpha: 0.6),
             fontSize: widget.width * 0.28,
             fontWeight: FontWeight.w900,
             letterSpacing: 1,
@@ -124,7 +124,7 @@ class _WildDeckCardWidgetState extends State<WildDeckCardWidget>
             : WildDeckTheme.cardGradient(_baseColor),
         borderRadius: WildDeckTheme.radiusCard,
         border: Border.all(
-          color: widget.isSelected ? Colors.white : Colors.white.withOpacity(0.25),
+          color: widget.isSelected ? Colors.white : Colors.white.withValues(alpha: 0.25),
           width: widget.isSelected ? 2.5 : 1.5,
         ),
         boxShadow: WildDeckTheme.cardShadow(_baseColor, elevated: widget.isSelected),
@@ -137,9 +137,9 @@ class _WildDeckCardWidgetState extends State<WildDeckCardWidget>
               width: widget.width * 0.7,
               height: widget.height * 0.7,
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.12),
+                color: Colors.white.withValues(alpha: 0.12),
                 borderRadius: BorderRadius.circular(widget.width * 0.28),
-                border: Border.all(color: Colors.white.withOpacity(0.08), width: 1),
+                border: Border.all(color: Colors.white.withValues(alpha: 0.08), width: 1),
               ),
             ),
           ),
@@ -179,7 +179,7 @@ class _WildDeckCardWidgetState extends State<WildDeckCardWidget>
                 decoration: BoxDecoration(
                   borderRadius: WildDeckTheme.radiusCard,
                   border: Border.all(
-                    color: Colors.white.withOpacity(0.0),
+                    color: Colors.white.withValues(alpha: 0.0),
                     width: 2,
                   ),
                 ),
@@ -225,7 +225,7 @@ class PlayerAvatar extends StatelessWidget {
           end: Alignment.bottomRight,
           colors: isBot
               ? [const Color(0xFF37474F), const Color(0xFF263238)]
-              : [_colorFromName(displayName), _colorFromName(displayName).withOpacity(0.7)],
+              : [_colorFromName(displayName), _colorFromName(displayName).withValues(alpha: 0.7)],
         ),
         border: showBorder ? Border.all(
           color: isCurrentTurn ? WildDeckTheme.gold : WildDeckTheme.navyBorder,
@@ -509,9 +509,9 @@ class _TurnIndicatorState extends State<TurnIndicator>
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
         decoration: BoxDecoration(
-          color: color.withOpacity(0.12),
+          color: color.withValues(alpha: 0.12),
           borderRadius: WildDeckTheme.radiusSmall,
-          border: Border.all(color: color.withOpacity(0.5)),
+          border: Border.all(color: color.withValues(alpha: 0.5)),
         ),
         child: Text(
           label,
@@ -637,7 +637,7 @@ class _NavItem extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                 decoration: active
                     ? BoxDecoration(
-                        color: WildDeckTheme.gold.withOpacity(0.15),
+                        color: WildDeckTheme.gold.withValues(alpha: 0.15),
                         borderRadius: WildDeckTheme.radiusSmall,
                       )
                     : null,

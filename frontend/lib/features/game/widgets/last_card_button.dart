@@ -79,7 +79,7 @@ class _LastCardButtonState extends State<LastCardButton>
                     boxShadow: [
                       BoxShadow(
                         color: (_colorAnimation.value ?? const Color(0xFFE53935))
-                            .withOpacity(0.5),
+                            .withValues(alpha: 0.5),
                         blurRadius: 12,
                         spreadRadius: 2,
                       ),

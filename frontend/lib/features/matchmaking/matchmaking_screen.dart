@@ -2,12 +2,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../core/providers/wilddeck_providers.dart';
-import '../../core/router/wilddeck_router.dart';
-import '../../core/services/wilddeck_services.dart';
-import '../../core/services/mock_services.dart';
-import '../../shared/theme/wilddeck_theme.dart';
-import '../../shared/widgets/wilddeck_components.dart';
+import 'package:wilddeck/core/providers/wilddeck_providers.dart';
+import 'package:wilddeck/core/router/wilddeck_router.dart';
+import 'package:wilddeck/core/services/wilddeck_services.dart';
+import 'package:wilddeck/core/services/mock_services.dart';
+import 'package:wilddeck/shared/theme/wilddeck_theme.dart';
+import 'package:wilddeck/shared/widgets/wilddeck_components.dart';
 
 /// Matchmaking screen — shows animated slot fill as players join.
 /// Uses IMatchmakingService; mock implementation used in M1.
@@ -161,7 +161,7 @@ class _MatchmakingScreenState extends ConsumerState<MatchmakingScreen>
                           label: 'Cancel',
                           icon: Icons.close,
                           onPressed: _cancel,
-                          borderColor: WildDeckTheme.error.withOpacity(0.5),
+                          borderColor: WildDeckTheme.error.withValues(alpha: 0.5),
                         ),
                     ],
                   ),
@@ -209,7 +209,7 @@ class _SearchIndicator extends StatelessWidget {
                   shape: BoxShape.circle,
                   gradient: SweepGradient(
                     colors: [
-                      WildDeckTheme.cardRed.withOpacity(0),
+                      WildDeckTheme.cardRed.withValues(alpha: 0),
                       WildDeckTheme.cardRed,
                       WildDeckTheme.gold,
                     ],
@@ -221,7 +221,7 @@ class _SearchIndicator extends StatelessWidget {
             width: 90, height: 90,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: isFound ? WildDeckTheme.success.withOpacity(0.15) : WildDeckTheme.navyMid,
+              color: isFound ? WildDeckTheme.success.withValues(alpha: 0.15) : WildDeckTheme.navyMid,
               border: Border.all(
                 color: isFound ? WildDeckTheme.success : WildDeckTheme.navyBorder,
                 width: 2,
@@ -347,7 +347,7 @@ class _SlotRow extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
               decoration: BoxDecoration(
-                color: WildDeckTheme.success.withOpacity(0.15),
+                color: WildDeckTheme.success.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(4),
               ),
               child: const Text('READY', style: TextStyle(
