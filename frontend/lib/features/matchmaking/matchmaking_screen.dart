@@ -2,8 +2,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:wilddeck/core/providers/wilddeck_providers.dart';
 import 'package:wilddeck/core/router/wilddeck_router.dart';
-import 'package:wilddeck/core/services/mock_services.dart';
 import 'package:wilddeck/core/services/wilddeck_services.dart';
 import 'package:wilddeck/shared/theme/wilddeck_theme.dart';
 import 'package:wilddeck/shared/widgets/wilddeck_components.dart';
@@ -24,7 +24,7 @@ class _MatchmakingScreenState extends ConsumerState<MatchmakingScreen>
   late final AnimationController _pulseCtrl;
   late final Animation<double> _pulse;
 
-  final MockMatchmakingService _service = MockMatchmakingService();
+  IMatchmakingService? _service;
   StreamSubscription<MatchmakingState>? _sub;
   MatchmakingState _state = const MatchmakingState(
     status: MatchmakingStatus.searching,
@@ -41,12 +41,14 @@ class _MatchmakingScreenState extends ConsumerState<MatchmakingScreen>
     _pulse = Tween<double>(begin: 0.92, end: 1.08).animate(
       CurvedAnimation(parent: _pulseCtrl, curve: Curves.easeInOut),
     );
+    // Use the real matchmaking service from Riverpod.
+    _service = ref.read(realMatchmakingServiceProvider);
     _startSearch();
   }
 
   void _startSearch() {
     unawaited(_sub?.cancel());
-    _sub = _service.searchForMatch(
+    _sub = _service!.searchForMatch(
       gameMode: widget.gameMode,
       maxPlayers: 4,
       fillWithBots: true,
@@ -66,7 +68,7 @@ class _MatchmakingScreenState extends ConsumerState<MatchmakingScreen>
   }
 
   Future<void> _cancel() async {
-    await _service.cancelSearch();
+    await _service?.cancelSearch();
     if (mounted) Navigator.of(context).pop();
   }
 
@@ -75,7 +77,6 @@ class _MatchmakingScreenState extends ConsumerState<MatchmakingScreen>
     _spinCtrl.dispose();
     _pulseCtrl.dispose();
     unawaited(_sub?.cancel());
-    _service.dispose();
     super.dispose();
   }
 

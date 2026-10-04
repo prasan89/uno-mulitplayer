@@ -8,8 +8,11 @@ import (
 	"strings"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 	"go.uber.org/zap"
+
+	"github.com/wilddeck/server/internal/middleware"
 )
 
 // contextKey is an unexported type for context keys in this package to avoid
@@ -27,13 +30,15 @@ const (
 // Handler exposes the matchmaking HTTP endpoints.
 type Handler struct {
 	service *Service
+	lobby   *LobbyManager
 	logger  *zap.Logger
 }
 
-// NewHandler creates a Handler backed by the given Service.
-func NewHandler(service *Service, logger *zap.Logger) *Handler {
+// NewHandler creates a Handler backed by the given Service and LobbyManager.
+func NewHandler(service *Service, lobby *LobbyManager, logger *zap.Logger) *Handler {
 	return &Handler{
 		service: service,
+		lobby:   lobby,
 		logger:  logger,
 	}
 }
@@ -45,11 +50,17 @@ func NewHandler(service *Service, logger *zap.Logger) *Handler {
 //	POST   /api/match/queue      – join public matchmaking queue
 //	DELETE /api/match/queue      – leave queue
 //	POST   /api/match/{id}/join  – join a private match by room code
+//	POST   /api/match/{id}/ready – mark player ready in lobby
+//	DELETE /api/match/{id}/ready – mark player unready in lobby
+//	POST   /api/match/{id}/start – host starts the lobby (private rooms only)
 func (h *Handler) RegisterRoutes(r *mux.Router) {
 	r.HandleFunc("/api/match", h.CreatePrivateMatch).Methods(http.MethodPost)
 	r.HandleFunc("/api/match/queue", h.JoinQueue).Methods(http.MethodPost)
 	r.HandleFunc("/api/match/queue", h.LeaveQueue).Methods(http.MethodDelete)
 	r.HandleFunc("/api/match/{id}/join", h.JoinByRoomCode).Methods(http.MethodPost)
+	r.HandleFunc("/api/match/{id}/ready", h.SetReady).Methods(http.MethodPost)
+	r.HandleFunc("/api/match/{id}/ready", h.SetUnready).Methods(http.MethodDelete)
+	r.HandleFunc("/api/match/{id}/start", h.StartLobby).Methods(http.MethodPost)
 }
 
 // ----- Request / Response types -----
@@ -92,6 +103,19 @@ type joinRoomResponse struct {
 // errorResponse is returned for all error conditions.
 type errorResponse struct {
 	Error string `json:"error"`
+}
+
+// readyResponse is returned by POST/DELETE /api/match/{id}/ready.
+type readyResponse struct {
+	Status   string `json:"status"`
+	IsReady  bool   `json:"is_ready"`
+}
+
+// startLobbyResponse is returned by POST /api/match/{id}/start.
+type startLobbyResponse struct {
+	Status  string `json:"status"`
+	GameID  string `json:"game_id"`
+	Message string `json:"message,omitempty"`
 }
 
 // ----- Handlers -----
@@ -266,12 +290,105 @@ func (h *Handler) JoinByRoomCode(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+// ----- Lobby handlers -----
+
+// SetReady handles POST /api/match/{id}/ready.
+// Marks the authenticated player as ready in the lobby.
+// The {id} is the match UUID.
+func (h *Handler) SetReady(w http.ResponseWriter, r *http.Request) {
+	h.setReadyState(w, r, true)
+}
+
+// SetUnready handles DELETE /api/match/{id}/ready.
+// Marks the authenticated player as not ready in the lobby.
+func (h *Handler) SetUnready(w http.ResponseWriter, r *http.Request) {
+	h.setReadyState(w, r, false)
+}
+
+func (h *Handler) setReadyState(w http.ResponseWriter, r *http.Request, ready bool) {
+	playerID, _, err := playerFromContext(r)
+	if err != nil {
+		writeError(w, http.StatusUnauthorized, "authentication required")
+		return
+	}
+
+	vars := mux.Vars(r)
+	matchID, parseErr := parseMatchID(vars["id"])
+	if parseErr != nil {
+		writeError(w, http.StatusBadRequest, "invalid match id")
+		return
+	}
+
+	if h.lobby == nil {
+		writeError(w, http.StatusServiceUnavailable, "lobby service unavailable")
+		return
+	}
+
+	if err := h.lobby.SetReady(r.Context(), matchID, playerID, ready); err != nil {
+		h.logger.Error("lobby: SetReady failed",
+			zap.String("match_id", matchID.String()),
+			zap.String("player_id", playerID),
+			zap.Error(err),
+		)
+		writeError(w, http.StatusInternalServerError, "failed to update ready state")
+		return
+	}
+
+	writeJSON(w, http.StatusOK, readyResponse{Status: "ok", IsReady: ready})
+}
+
+// StartLobby handles POST /api/match/{id}/start.
+// The host triggers this to transition the lobby to playing.
+// Requires at least 2 ready players.
+func (h *Handler) StartLobby(w http.ResponseWriter, r *http.Request) {
+	playerID, _, err := playerFromContext(r)
+	if err != nil {
+		writeError(w, http.StatusUnauthorized, "authentication required")
+		return
+	}
+
+	vars := mux.Vars(r)
+	matchID, parseErr := parseMatchID(vars["id"])
+	if parseErr != nil {
+		writeError(w, http.StatusBadRequest, "invalid match id")
+		return
+	}
+
+	if h.lobby == nil {
+		writeError(w, http.StatusServiceUnavailable, "lobby service unavailable")
+		return
+	}
+
+	if err := h.lobby.StartGame(r.Context(), matchID, playerID); err != nil {
+		h.logger.Warn("lobby: StartGame failed",
+			zap.String("match_id", matchID.String()),
+			zap.String("requester", playerID),
+			zap.Error(err),
+		)
+		writeError(w, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	writeJSON(w, http.StatusOK, startLobbyResponse{
+		Status: "started",
+		GameID: matchID.String(),
+	})
+}
+
 // ----- Helpers -----
 
-// playerFromContext extracts the player ID and ELO injected by the auth
-// middleware.  Middleware is expected to call r.WithContext with these values
-// before dispatching to the handler.
+// playerFromContext extracts the player ID
+// middleware.  It first checks for a Firebase-validated Claims in context
+// (the primary path), then falls back to the legacy ContextKeyPlayerID key
+// used in tests.
 func playerFromContext(r *http.Request) (playerID string, elo int, err error) {
+	// Primary: Firebase claims injected by middleware.Auth.
+	if claims := middleware.ClaimsFromContext(r.Context()); claims != nil && claims.UserID != "" {
+		eloVal, _ := r.Context().Value(ContextKeyPlayerELO).(int)
+		return claims.UserID, eloVal, nil
+	}
+
+	// Fallback: explicit ContextKeyPlayerID (tests / internal callers).
 	pid, ok := r.Context().Value(ContextKeyPlayerID).(string)
 	if !ok || pid == "" {
 		return "", 0, errors.New("handler: playerID not in context")
@@ -323,4 +440,12 @@ func writeJSON(w http.ResponseWriter, status int, v interface{}) {
 // writeError writes a JSON error body with the given status code.
 func writeError(w http.ResponseWriter, status int, msg string) {
 	writeJSON(w, status, errorResponse{Error: msg})
+}
+
+// parseMatchID parses a UUID match ID from a URL path variable.
+func parseMatchID(id string) (uuid.UUID, error) {
+	if id == "" {
+		return uuid.UUID{}, errors.New("match id required")
+	}
+	return uuid.Parse(id)
 }

@@ -25,6 +25,7 @@ import (
 	"github.com/wilddeck/server/internal/db"
 	"github.com/wilddeck/server/internal/game"
 	"github.com/wilddeck/server/internal/hub"
+	"github.com/wilddeck/server/internal/matchmaking"
 	"github.com/wilddeck/server/internal/middleware"
 )
 
@@ -149,6 +150,8 @@ type server struct {
 	hub      *hub.Hub
 	logger   *zap.Logger
 	upgrader websocket.Upgrader
+	mmSvc    *matchmaking.Service
+	lobby    *matchmaking.LobbyManager
 }
 
 func main() {
@@ -224,6 +227,15 @@ func main() {
 	})
 	defer rateLimiter.Stop()
 
+	// Wire the real matchmaking service.
+	mmCreator := matchmaking.NewDBGameCreator(dbStore, logger)
+	mmNotifier := matchmaking.NewHubPlayerNotifier(h, logger)
+	mmSvc := matchmaking.NewService(mmCreator, mmNotifier, logger, nil)
+	lobbyMgr := matchmaking.NewLobbyManager(dbStore, h, logger)
+
+	srv.mmSvc = mmSvc
+	srv.lobby = lobbyMgr
+
 	// Build HTTP router.
 	router := buildRouter(srv, rateLimiter)
 
@@ -247,8 +259,8 @@ func main() {
 		h.Run(ctx.Done())
 	}()
 
-	// Start matchmaking background worker.
-	go runMatchmaking(ctx, logger)
+	// Start matchmaking background worker (real service, not stub).
+	go mmSvc.Run(ctx)
 
 	// Start stale session cleanup worker.
 	go runStaleSessionCleanup(ctx, h, dbStore, logger)
@@ -350,10 +362,17 @@ func buildRouter(srv *server, rl *middleware.RateLimiter) http.Handler {
 	api.Use(func(next http.Handler) http.Handler {
 		return authMW(next)
 	})
-	api.HandleFunc("/match", srv.handleCreateMatch).Methods(http.MethodPost)
 	api.HandleFunc("/match/{id}", srv.handleGetMatch).Methods(http.MethodGet)
-	api.HandleFunc("/match/{id}/join", srv.handleJoinMatch).Methods(http.MethodPost)
 	api.HandleFunc("/match/vs-ai", srv.handleCreateVsAI).Methods(http.MethodPost)
+
+	// Register real matchmaking and lobby routes.
+	// These own: POST /api/match, POST /api/match/queue, DELETE /api/match/queue,
+	//            POST /api/match/{id}/join, POST/DELETE /api/match/{id}/ready,
+	//            POST /api/match/{id}/start
+	if srv.mmSvc != nil {
+		mmHandler := matchmaking.NewHandler(srv.mmSvc, srv.lobby, srv.logger)
+		mmHandler.RegisterRoutes(api)
+	}
 
 	return r
 }
@@ -589,22 +608,6 @@ func (s *server) connectedPlayers(roomID string) []string {
 }
 
 // ---- Background workers ----
-
-// runMatchmaking is the background goroutine responsible for pairing waiting
-// players into games. Stubbed here; real logic lives in internal/matchmaking.
-func runMatchmaking(ctx context.Context, logger *zap.Logger) {
-	ticker := time.NewTicker(5 * time.Second)
-	defer ticker.Stop()
-	for {
-		select {
-		case <-ticker.C:
-			// TODO: call matchmaking service.
-		case <-ctx.Done():
-			logger.Info("matchmaking worker stopped")
-			return
-		}
-	}
-}
 
 // runStaleSessionCleanup periodically removes sessions that have been idle
 // beyond the reconnect grace period and triggers bot takeover.

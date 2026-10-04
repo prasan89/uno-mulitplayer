@@ -1,5 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wilddeck/core/providers/auth_provider.dart';
+import 'package:wilddeck/core/providers/game_provider.dart' show apiBaseUrlProvider;
 import 'package:wilddeck/core/services/mock_services.dart';
+import 'package:wilddeck/core/services/real_matchmaking_service.dart';
 import 'package:wilddeck/core/services/wilddeck_services.dart';
 
 // ─── Service Providers ────────────────────────────────────────────────────────
@@ -8,6 +11,26 @@ import 'package:wilddeck/core/services/wilddeck_services.dart';
 final playerServiceProvider = Provider<IPlayerService>(
   (_) => MockPlayerService(),
 );
+
+/// Real matchmaking service backed by the WildDeck backend.
+final realMatchmakingServiceProvider = Provider<RealMatchmakingService>((ref) {
+  final baseUrl = ref.watch(apiBaseUrlProvider);
+  final authNotifier = ref.watch(authProvider.notifier);
+  return RealMatchmakingService(
+    baseUrl: baseUrl,
+    getToken: () => authNotifier.getIdToken(),
+  );
+});
+
+/// Real lobby service for ready/unready/start operations.
+final realLobbyServiceProvider = Provider<RealLobbyService>((ref) {
+  final baseUrl = ref.watch(apiBaseUrlProvider);
+  final authNotifier = ref.watch(authProvider.notifier);
+  return RealLobbyService(
+    baseUrl: baseUrl,
+    getToken: () => authNotifier.getIdToken(),
+  );
+});
 
 final matchmakingServiceProvider = Provider<IMatchmakingService>(
   (_) => MockMatchmakingService(),

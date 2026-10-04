@@ -27,6 +27,19 @@ const (
 	MsgError         MessageType = "error"
 	MsgPong          MessageType = "pong"
 	MsgReconnected   MessageType = "reconnected"
+
+	// Matchmaking events.
+	MsgMatchmakingJoined    MessageType = "matchmaking_joined"
+	MsgMatchmakingCancelled MessageType = "matchmaking_cancelled"
+	MsgMatchmakingTimeout   MessageType = "matchmaking_timeout"
+	MsgMatchFound           MessageType = "match_found"
+
+	// Lobby events.
+	MsgLobbyUpdated  MessageType = "lobby_updated"
+	MsgPlayerReady   MessageType = "player_ready"
+	MsgPlayerUnready MessageType = "player_unready"
+	MsgGameStarting  MessageType = "game_starting"
+	MsgGameStarted   MessageType = "game_started"
 )
 
 // Message is the top-level envelope for all WebSocket messages.
@@ -109,4 +122,60 @@ type GameOverPayload struct {
 type ReconnectedPayload struct {
 	GameID string          `json:"game_id"`
 	State  json.RawMessage `json:"state"`
+}
+
+// MatchmakingJoinedPayload confirms a player entered the matchmaking queue.
+type MatchmakingJoinedPayload struct {
+	QueueSize int    `json:"queue_size"`
+	GameMode  string `json:"game_mode"`
+}
+
+// MatchmakingCancelledPayload confirms a player left the queue.
+type MatchmakingCancelledPayload struct{}
+
+// MatchmakingTimeoutPayload is sent when no match was found within the timeout.
+type MatchmakingTimeoutPayload struct {
+	Message string `json:"message"`
+}
+
+// MatchFoundPayload is sent to all matched players when a lobby is ready.
+type MatchFoundPayload struct {
+	GameID   string   `json:"game_id"`
+	RoomCode string   `json:"room_code"`
+	Players  []string `json:"players"`
+}
+
+// LobbyPlayerInfo describes one player's lobby slot.
+type LobbyPlayerInfo struct {
+	PlayerID    string `json:"player_id"`
+	DisplayName string `json:"display_name"`
+	SeatIndex   int    `json:"seat_index"`
+	IsBot       bool   `json:"is_bot"`
+	IsReady     bool   `json:"is_ready"`
+}
+
+// LobbyUpdatedPayload is broadcast whenever the lobby roster or ready states change.
+type LobbyUpdatedPayload struct {
+	GameID    string            `json:"game_id"`
+	RoomCode  string            `json:"room_code"`
+	Players   []LobbyPlayerInfo `json:"players"`
+	ReadyCount int              `json:"ready_count"`
+	MaxPlayers int              `json:"max_players"`
+}
+
+// PlayerReadyPayload is broadcast when a single player toggles ready.
+type PlayerReadyPayload struct {
+	PlayerID string `json:"player_id"`
+	IsReady  bool   `json:"is_ready"`
+}
+
+// GameStartingPayload signals the countdown before the game actually starts.
+type GameStartingPayload struct {
+	GameID      string `json:"game_id"`
+	CountdownMs int    `json:"countdown_ms"`
+}
+
+// GameStartedPayload signals that the game has transitioned to playing.
+type GameStartedPayload struct {
+	GameID string `json:"game_id"`
 }
