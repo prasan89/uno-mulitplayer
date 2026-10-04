@@ -592,3 +592,135 @@ func newNopLogger(t *testing.T) *zap.Logger {
 	}
 	return logger
 }
+
+// ─── Personality Tests ────────────────────────────────────────────────────────
+
+func TestPersonalityAt_CyclesThrough4Personalities(t *testing.T) {
+	expected := []Personality{PersonalityRex, PersonalityNova, PersonalityMilo, PersonalityBlaze}
+	for i, want := range expected {
+		got := PersonalityAt(i)
+		assert.Equal(t, want, got, "seat %d should map to personality %s", i, want)
+	}
+}
+
+func TestPersonalityAt_WrapsAroundCorrectly(t *testing.T) {
+	// Seat 4 wraps back to Rex, seat 5 to Nova, etc.
+	assert.Equal(t, PersonalityAt(0), PersonalityAt(4), "seat 4 should wrap to same as seat 0")
+	assert.Equal(t, PersonalityAt(1), PersonalityAt(5), "seat 5 should wrap to same as seat 1")
+	assert.Equal(t, PersonalityAt(2), PersonalityAt(6), "seat 6 should wrap to same as seat 2")
+	assert.Equal(t, PersonalityAt(3), PersonalityAt(7), "seat 7 should wrap to same as seat 3")
+}
+
+func TestWeightsFor_ReturnsCorrectWeights(t *testing.T) {
+	rex := WeightsFor(PersonalityRex)
+	assert.Greater(t, rex.Aggression, 1.0, "Rex should have high aggression")
+	assert.Greater(t, rex.ActionCardPreference, 1.0, "Rex should prefer action cards")
+
+	nova := WeightsFor(PersonalityNova)
+	assert.Less(t, nova.WildPreference, 1.0, "Nova should conserve wilds (low preference)")
+
+	blaze := WeightsFor(PersonalityBlaze)
+	assert.Greater(t, blaze.RiskTolerance, 1.5, "Blaze should have very high risk tolerance")
+	assert.Greater(t, blaze.WildPreference, 1.5, "Blaze should love wild cards")
+
+	milo := WeightsFor(PersonalityMilo)
+	assert.Less(t, milo.Aggression, 1.0, "Milo should be low aggression")
+}
+
+func TestWeightsFor_FallsBackToDefaultForUnknown(t *testing.T) {
+	weights := WeightsFor(Personality("unknown_personality"))
+	assert.Equal(t, 1.0, weights.Aggression)
+	assert.Equal(t, 1.0, weights.RiskTolerance)
+	assert.Equal(t, 1.0, weights.WildPreference)
+	assert.Equal(t, 1.0, weights.ActionCardPreference)
+}
+
+// ─── ThinkDelayRange Tests ────────────────────────────────────────────────────
+
+func TestThinkDelayRange_EasyRange(t *testing.T) {
+	minMs, maxMs := ThinkDelayRange(DifficultyEasy)
+	assert.Equal(t, 500, minMs)
+	assert.Equal(t, 1200, maxMs)
+}
+
+func TestThinkDelayRange_MediumRange(t *testing.T) {
+	minMs, maxMs := ThinkDelayRange(DifficultyMedium)
+	assert.Equal(t, 700, minMs)
+	assert.Equal(t, 1500, maxMs)
+}
+
+func TestThinkDelayRange_HardRange(t *testing.T) {
+	minMs, maxMs := ThinkDelayRange(DifficultyHard)
+	assert.Equal(t, 900, minMs)
+	assert.Equal(t, 1800, maxMs)
+}
+
+func TestThinkDelayRange_IncreasesWithDifficulty(t *testing.T) {
+	easyMin, easyMax := ThinkDelayRange(DifficultyEasy)
+	medMin, medMax   := ThinkDelayRange(DifficultyMedium)
+	hardMin, hardMax := ThinkDelayRange(DifficultyHard)
+
+	assert.LessOrEqual(t, easyMin, medMin, "medium min should be >= easy min")
+	assert.LessOrEqual(t, medMin, hardMin, "hard min should be >= medium min")
+	assert.LessOrEqual(t, easyMax, medMax, "medium max should be >= easy max")
+	assert.LessOrEqual(t, medMax, hardMax, "hard max should be >= medium max")
+}
+
+// ─── RandomProvider / SeededRandom Tests ─────────────────────────────────────
+
+func TestSeededRandom_IsDeterministic(t *testing.T) {
+	r1 := SeededRandom(42)
+	r2 := SeededRandom(42)
+	for i := 0; i < 20; i++ {
+		v1 := r1.Intn(100)
+		v2 := r2.Intn(100)
+		assert.Equal(t, v1, v2, "same seed must produce same sequence at step %d", i)
+	}
+}
+
+func TestSeededRandom_InRangeOf_N(t *testing.T) {
+	r := SeededRandom(99)
+	for i := 0; i < 50; i++ {
+		v := r.Intn(10)
+		assert.GreaterOrEqual(t, v, 0)
+		assert.Less(t, v, 10)
+	}
+}
+
+func TestBotManager_WithRNG_IsDeteministic(t *testing.T) {
+	// Two managers with the same seeded rng should pick the same think delay.
+	g, pis := newBotGameState(2)
+	p1 := pis[1].ID
+
+	setTopCardBot(g, newCard(game.ColorRed, game.CardTypeNumber, 5))
+	g.CurrentPlayerIndex = 1
+	clearHandBot(g, p1)
+	giveCardBot(g, p1, newCard(game.ColorRed, game.CardTypeNumber, 3))
+
+	engine := newFakeEngine()
+	engine.addGame("game-rng", g)
+
+	rng := SeededRandom(1234)
+	mgr := NewBotManagerWithRNG(engine, nil, newNopLogger(t), rng)
+	require.NotNil(t, mgr)
+
+	b := mgr.AddBot("game-rng", 1, DifficultyHard)
+	require.NotNil(t, b)
+	assert.Equal(t, PersonalityNova, b.Personality, "seat 1 should get Nova personality")
+}
+
+// TestAddBot_PersonalityAssignment checks that bots get the right personalities by seat.
+func TestAddBot_PersonalityAssignment(t *testing.T) {
+	engine := newFakeEngine()
+	mgr := NewBotManager(engine, nil, newNopLogger(t))
+
+	b0 := mgr.AddBot("game-p", 0, DifficultyHard)
+	b1 := mgr.AddBot("game-p", 1, DifficultyHard)
+	b2 := mgr.AddBot("game-p", 2, DifficultyHard)
+	b3 := mgr.AddBot("game-p", 3, DifficultyHard)
+
+	assert.Equal(t, PersonalityRex,   b0.Personality)
+	assert.Equal(t, PersonalityNova,  b1.Personality)
+	assert.Equal(t, PersonalityMilo,  b2.Personality)
+	assert.Equal(t, PersonalityBlaze, b3.Personality)
+}

@@ -8,6 +8,9 @@ import 'package:wilddeck/features/auth/screens/wilddeck_login_screen.dart';
 import 'package:wilddeck/features/friends/friends_screen.dart';
 import 'package:wilddeck/features/game/game_result_screen.dart';
 import 'package:wilddeck/features/game/game_table_screen.dart';
+import 'package:wilddeck/features/game/vs_ai_game_screen.dart';
+import 'package:wilddeck/features/game/vs_ai_result_screen.dart';
+import 'package:wilddeck/features/game/vs_ai_setup_screen.dart';
 import 'package:wilddeck/features/game/wild_color_picker_screen.dart';
 import 'package:wilddeck/features/game_lobby/game_lobby_screen.dart';
 import 'package:wilddeck/features/game_mode/game_mode_screen.dart';
@@ -38,6 +41,11 @@ class WildRoutes {
 
   static const wildColorPicker = '/wild-color';
   static const gameResult      = '/result/:gameId';
+
+  // VS AI routes
+  static const vsAiSetup  = '/vs-ai';
+  static const vsAiGame   = '/vs-ai/game';
+  static const vsAiResult = '/vs-ai/result';
 
   static String gamePath(String gameId) => '/game/$gameId';
   static String resultPath(String gameId) => '/result/$gameId';
@@ -143,6 +151,29 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) {
           final gameId = state.pathParameters['gameId'] ?? 'demo';
           return GameResultScreen(gameId: gameId);
+        },
+      ),
+      GoRoute(
+        path: WildRoutes.vsAiSetup,
+        name: 'vs-ai-setup',
+        builder: (_, __) => const VsAISetupScreen(),
+      ),
+      GoRoute(
+        path: WildRoutes.vsAiGame,
+        name: 'vs-ai-game',
+        builder: (context, state) {
+          final args = state.extra as VsAIGameArgs?;
+          if (args == null) return const VsAISetupScreen();
+          return VsAIGameScreen(args: args);
+        },
+      ),
+      GoRoute(
+        path: WildRoutes.vsAiResult,
+        name: 'vs-ai-result',
+        builder: (context, state) {
+          final args = state.extra as VsAIResultArgs?;
+          if (args == null) return const VsAISetupScreen();
+          return VsAIResultScreen(args: args);
         },
       ),
       GoRoute(

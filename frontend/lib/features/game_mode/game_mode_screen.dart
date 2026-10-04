@@ -26,6 +26,17 @@ class GameModeScreen extends StatelessWidget {
                     children: [
                       const SizedBox(height: 8),
                       _ModeCard(
+                        title: 'VS AI',
+                        subtitle: '1 Human + 1–3 AI  •  Instant start',
+                        description: 'Challenge AI opponents immediately — no wait. Choose your difficulty.',
+                        icon: Icons.smart_toy_rounded,
+                        iconColor: WildDeckTheme.cardWild,
+                        badge: 'NEW',
+                        badgeColor: WildDeckTheme.cardWild,
+                        onTap: () => context.push(WildRoutes.vsAiSetup),
+                      ),
+                      const SizedBox(height: 16),
+                      _ModeCard(
                         title: 'CLASSIC MATCH',
                         subtitle: '2–4 players  •  Standard rules',
                         description: 'The full WildDeck experience. Match ends when one player empties their hand.',

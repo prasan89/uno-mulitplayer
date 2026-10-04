@@ -28,6 +28,9 @@ type Bot struct {
 	// Difficulty controls the strategy used when choosing moves.
 	Difficulty Difficulty
 
+	// Personality gives the bot a unique play style.
+	Personality Personality
+
 	// GameID is the game this bot is playing in.
 	GameID string
 

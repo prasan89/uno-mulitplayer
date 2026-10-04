@@ -3,7 +3,6 @@ package bot
 import (
 	"context"
 	"fmt"
-	"math/rand"
 	"os"
 	"strconv"
 	"sync"
@@ -65,11 +64,12 @@ type BotManager struct {
 	engine     GameEngine
 	hub        *hub.Hub
 	thinkDelay time.Duration
+	rng        RandomProvider
 	logger     *zap.Logger
 }
 
 // defaultThinkDelayMS is the fallback think delay when BOT_THINK_DELAY_MS is
-// not set.
+// not set and no per-difficulty range applies.
 const defaultThinkDelayMS = 1500
 
 // NewBotManager creates a BotManager, reading BOT_THINK_DELAY_MS from the
@@ -87,24 +87,38 @@ func NewBotManager(engine GameEngine, h *hub.Hub, logger *zap.Logger) *BotManage
 		engine:        engine,
 		hub:           h,
 		thinkDelay:    time.Duration(delay) * time.Millisecond,
+		rng:           GlobalRandom,
 		logger:        logger,
 	}
 }
 
+// NewBotManagerWithRNG creates a BotManager with an injected RandomProvider,
+// useful for deterministic testing.
+func NewBotManagerWithRNG(engine GameEngine, h *hub.Hub, logger *zap.Logger, rng RandomProvider) *BotManager {
+	m := NewBotManager(engine, h, logger)
+	m.rng = rng
+	return m
+}
+
 // AddBot creates a new bot player for the given game and returns it.
-// seatIndex is passed for informational purposes (the bot's player slot in the
-// game is determined by the engine when the player is added to the game).
+// seatIndex is used to assign a personality from the personality pool.
 func (m *BotManager) AddBot(gameID string, seatIndex int, difficulty Difficulty) *Bot {
+	return m.AddBotWithPersonality(gameID, seatIndex, difficulty, PersonalityAt(seatIndex))
+}
+
+// AddBotWithPersonality creates a new bot with an explicit personality.
+func (m *BotManager) AddBotWithPersonality(gameID string, seatIndex int, difficulty Difficulty, personality Personality) *Bot {
 	botID := uuid.New().String()
 	playerID := uuid.New().String()
 
 	b := &Bot{
-		ID:         botID,
-		Name:       fmt.Sprintf("Bot-%s-%d", string(difficulty[:1]), seatIndex),
-		Difficulty: difficulty,
-		GameID:     gameID,
-		PlayerID:   playerID,
-		strategy:   newStrategy(difficulty),
+		ID:          botID,
+		Name:        string(personality),
+		Difficulty:  difficulty,
+		Personality: personality,
+		GameID:      gameID,
+		PlayerID:    playerID,
+		strategy:    newStrategy(difficulty),
 	}
 
 	m.mu.Lock()
@@ -116,6 +130,7 @@ func (m *BotManager) AddBot(gameID string, seatIndex int, difficulty Difficulty)
 		zap.String("player_id", playerID),
 		zap.String("game_id", gameID),
 		zap.String("difficulty", string(difficulty)),
+		zap.String("personality", string(personality)),
 		zap.Int("seat", seatIndex),
 	)
 	return b
@@ -236,14 +251,20 @@ func (m *BotManager) executeTurn(b *Bot) {
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
-	// --- Think delay with ±20% jitter ---
-	base := int(m.thinkDelay.Milliseconds())
-	jitter := base / 5 // 20% of base
+	// --- Think delay using per-difficulty range ---
+	minMs, maxMs := ThinkDelayRange(b.Difficulty)
+	// If the manager has a global thinkDelay override (e.g. in tests set to 0),
+	// use it unconditionally.
 	var actualDelay int
-	if jitter > 0 {
-		actualDelay = base - jitter + rand.Intn(2*jitter+1)
+	if m.thinkDelay == 0 {
+		actualDelay = 0
 	} else {
-		actualDelay = base
+		spread := maxMs - minMs
+		if spread > 0 {
+			actualDelay = minMs + m.rng.Intn(spread+1)
+		} else {
+			actualDelay = minMs
+		}
 	}
 
 	thinkStart := time.Now()

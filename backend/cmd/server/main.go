@@ -353,6 +353,7 @@ func buildRouter(srv *server, rl *middleware.RateLimiter) http.Handler {
 	api.HandleFunc("/match", srv.handleCreateMatch).Methods(http.MethodPost)
 	api.HandleFunc("/match/{id}", srv.handleGetMatch).Methods(http.MethodGet)
 	api.HandleFunc("/match/{id}/join", srv.handleJoinMatch).Methods(http.MethodPost)
+	api.HandleFunc("/match/vs-ai", srv.handleCreateVsAI).Methods(http.MethodPost)
 
 	return r
 }
@@ -487,7 +488,92 @@ func (s *server) handleJoinMatch(w http.ResponseWriter, r *http.Request) {
 	_ = json.NewEncoder(w).Encode(resp)
 }
 
-// connectedPlayers returns the IDs of clients currently in the given room.
+// handleCreateVsAI handles POST /api/match/vs-ai.
+// It creates a single-player game with the requesting human and N bot players,
+// returning a game_id the client can connect to immediately via WebSocket.
+// Request body: {"bot_count": 3, "difficulty": "normal"}
+// Response:     {"game_id": "...", "ws_url": "...", "bots": [...]}
+func (s *server) handleCreateVsAI(w http.ResponseWriter, r *http.Request) {
+	claims := middleware.ClaimsFromContext(r.Context())
+	if claims == nil {
+		http.Error(w, "unauthorized", http.StatusUnauthorized)
+		return
+	}
+
+	const maxBodyBytes = 64 * 1024
+	r.Body = http.MaxBytesReader(w, r.Body, maxBodyBytes)
+
+	var req struct {
+		BotCount   int    `json:"bot_count"`
+		Difficulty string `json:"difficulty"`
+	}
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		http.Error(w, "invalid request body", http.StatusBadRequest)
+		return
+	}
+
+	// Validate and normalise bot count (1-3 bots, default 3).
+	if req.BotCount < 1 {
+		req.BotCount = 3
+	}
+	if req.BotCount > 3 {
+		req.BotCount = 3
+	}
+
+	// Map difficulty string to bot.Difficulty.
+	var difficulty bot.Difficulty
+	switch strings.ToLower(req.Difficulty) {
+	case "easy":
+		difficulty = bot.DifficultyEasy
+	case "hard":
+		difficulty = bot.DifficultyHard
+	default:
+		difficulty = bot.DifficultyMedium
+	}
+
+	gameID := uuid.New().String()
+
+	// Create bot entries; seat 0 is the human.
+	type botInfo struct {
+		PlayerID    string `json:"player_id"`
+		Name        string `json:"name"`
+		Personality string `json:"personality"`
+		Difficulty  string `json:"difficulty"`
+	}
+	bots := make([]botInfo, req.BotCount)
+	for i := 0; i < req.BotCount; i++ {
+		personality := bot.PersonalityAt(i)
+		botID := uuid.New().String()
+		bots[i] = botInfo{
+			PlayerID:    botID,
+			Name:        string(personality),
+			Personality: string(personality),
+			Difficulty:  string(difficulty),
+		}
+	}
+
+	// In a production implementation with a live database, we would:
+	//   1. Persist the game via dbStore.CreateMatch(...)
+	//   2. Register each bot with the BotManager.
+	// For the current milestone the game table is managed by the Flutter
+	// local AI engine; the endpoint exists so the client can request a game
+	// and receive stable IDs. The Flutter VS-AI mode also works fully offline.
+	s.logger.Info("vs-ai game created",
+		zap.String("game_id", gameID),
+		zap.String("human_id", claims.UserID),
+		zap.Int("bot_count", req.BotCount),
+		zap.String("difficulty", string(difficulty)),
+	)
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
+	resp := map[string]interface{}{
+		"game_id": gameID,
+		"ws_url":  fmt.Sprintf("/ws?game_id=%s", gameID),
+		"bots":    bots,
+	}
+	_ = json.NewEncoder(w).Encode(resp)
+}
 func (s *server) connectedPlayers(roomID string) []string {
 	room := s.hub.Room(roomID)
 	if room == nil {
